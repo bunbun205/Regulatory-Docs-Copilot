@@ -1,22 +1,24 @@
+name: labdocs
+
 services:
   postgres:
     image: pgvector/pgvector:pg16
     environment:
-      POSTGRES_USER: labdocs
-      POSTGRES_PASSWORD: labdocs
-      POSTGRES_DB: labdocs
+      POSTGRES_USER: ${POSTGRES_USER:-labdocs}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-labdocs}
+      POSTGRES_DB: ${POSTGRES_DB:-labdocs}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U labdocs -d labdocs"]
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
       interval: 5s
       timeout: 5s
       retries: 10
 
   qdrant:
-    image: qdrant/qdrant:latest
+    image: qdrant/qdrant:v1.20.0
     ports:
       - "6333:6333"
       - "6334:6334"

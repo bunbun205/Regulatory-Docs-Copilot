@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "labdocs"
     ENVIRONMENT: str = "development"
     LOG_LEVEL: str = "info"
+    DATABASE_URL: str = "postgresql+asyncpg://labdocs:labdocs@localhost:5432/labdocs"
 
     @property
     def is_production(self) -> bool:
