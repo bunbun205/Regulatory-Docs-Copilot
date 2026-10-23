@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -25,6 +26,12 @@ class Settings(BaseSettings):
     EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
     EMBEDDING_DIMENSION: int = 384
     EMBEDDING_BATCH_SIZE: int = 32
+
+    VECTOR_BACKEND: Literal["pgvector", "qdrant", "both"] = "pgvector"
+    QDRANT_URL: str = "http://localhost:6333"
+    QDRANT_COLLECTION: str = "labdocs_chunks"
+    QDRANT_API_KEY: str | None = None
+    QDRANT_TIMEOUT_SECONDS: int = 10
 
     @property
     def is_production(self) -> bool:

@@ -17,6 +17,7 @@ from app.ingest.pipeline import (
     IngestionPipeline,
     create_ingestion_job,
 )
+from app.store.qdrant_store import QdrantStore
 
 
 async def _create_key(name: str, scope: Scope) -> int:
@@ -48,6 +49,7 @@ async def _create_key(name: str, scope: Scope) -> int:
 
 async def _ingest(manifest: Path, documents_dir: Path) -> int:
     database = Database(settings.DATABASE_URL)
+    qdrant_store: QdrantStore | None = None
     try:
         if settings.EMBEDDING_DIMENSION != EMBEDDING_DIMENSION:
             print(
@@ -67,8 +69,21 @@ async def _ingest(manifest: Path, documents_dir: Path) -> int:
             embedding_batch_size=settings.EMBEDDING_BATCH_SIZE,
             max_file_bytes=settings.MAX_UPLOAD_BYTES,
         )
+        if settings.VECTOR_BACKEND in {"qdrant", "both"}:
+            qdrant_store = QdrantStore(
+                settings.QDRANT_URL,
+                settings.QDRANT_COLLECTION,
+                dimension=settings.EMBEDDING_DIMENSION,
+                api_key=settings.QDRANT_API_KEY,
+                timeout=settings.QDRANT_TIMEOUT_SECONDS,
+            )
         job_id = await create_ingestion_job(database.sessionmaker)
-        pipeline = IngestionPipeline(database.sessionmaker, embedder, config)
+        pipeline = IngestionPipeline(
+            database.sessionmaker,
+            embedder,
+            config,
+            (qdrant_store,) if qdrant_store is not None else (),
+        )
         report = await pipeline.run_manifest_job(job_id, manifest, documents_dir)
         print(
             json.dumps(
@@ -89,6 +104,8 @@ async def _ingest(manifest: Path, documents_dir: Path) -> int:
         )
         return 1
     finally:
+        if qdrant_store is not None:
+            await qdrant_store.close()
         await database.dispose()
 
 

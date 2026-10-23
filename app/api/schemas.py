@@ -1,8 +1,8 @@
 from datetime import datetime
-from typing import Any, Literal
+from typing import Any, Literal, Self
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class WhoAmIResponse(BaseModel):
@@ -48,3 +48,51 @@ class IngestionJobResponse(BaseModel):
     finished_at: datetime | None
     report: dict[str, Any] | None
     error: str | None
+
+
+class SearchFiltersRequest(BaseModel):
+    doc_type: str | None = Field(default=None, min_length=1, max_length=100)
+    source_agency: str | None = Field(default=None, min_length=1, max_length=200)
+    year_min: int | None = Field(default=None, ge=1900, le=2100)
+    year_max: int | None = Field(default=None, ge=1900, le=2100)
+
+    @model_validator(mode="after")
+    def validate_year_range(self) -> Self:
+        if (
+            self.year_min is not None
+            and self.year_max is not None
+            and self.year_min > self.year_max
+        ):
+            raise ValueError("year_min must be less than or equal to year_max")
+        return self
+
+
+class SearchRequest(BaseModel):
+    query: str = Field(min_length=1, max_length=2000)
+    top_k: int = Field(default=8, ge=1, le=50)
+    filters: SearchFiltersRequest | None = None
+    backend: Literal["pgvector", "qdrant"] | None = None
+
+
+class SearchResult(BaseModel):
+    chunk_id: UUID
+    document_id: UUID
+    chunk_index: int
+    text: str
+    score: float
+    page: int | None
+    section_heading: str | None
+    filename: str
+    title: str
+    source_agency: str
+    doc_type: str
+    year: int
+    version: str
+
+
+class SearchResponse(BaseModel):
+    query: str
+    backend: Literal["pgvector", "qdrant"]
+    top_k: int
+    results: list[SearchResult]
+    latency_ms: float

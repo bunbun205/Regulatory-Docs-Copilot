@@ -20,6 +20,7 @@ dependencies = [
     "sentence-transformers>=3.3,<7",
     "python-multipart>=0.0.20",
     "torch>=2.2,<2.7",
+    "qdrant-client>=1.12,<2",
 ]
 
 [dependency-groups]

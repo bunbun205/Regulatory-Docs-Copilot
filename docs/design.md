@@ -22,7 +22,7 @@ Working notes and decision records for `labdocs`.
 - 2026-10-23 — A single stored scope (`read` or `write`); `write` implies `read`. `/v1/whoami` reports effective scopes, so a write key returns `["read", "write"]`. This is the simplest reading of SEED's single-scope model that still lets write keys read.
 - 2026-10-23 — Error envelope is exactly `{"error": {"code", "message", "request_id"}}`. Validation details are logged, not returned; 500 responses never include exception text.
 - 2026-10-23 — Request IDs: a caller-supplied `X-Request-ID` is accepted when it matches `[A-Za-z0-9._-]{1,128}`, otherwise a UUID4 hex is generated. The value is echoed on every response and bound to structlog context for that request.
-- 2026-10-23 — `/readyz` now checks the database. Qdrant and embedder checks will be added with those dependencies.
+- 2026-10-23 — `/readyz` checks the database. Milestone 3 adds a Qdrant check when that backend is configured; the lazy embedder is not force-loaded by readiness.
 - 2026-10-23 — Only the `api_keys` table is introduced in milestone 1. Documents, chunks and job tables land with the milestones that actually use them rather than being designed speculatively.
 
 ### Ingestion + ETL (milestone 2)
@@ -42,8 +42,8 @@ Working notes and decision records for `labdocs`.
   `vector(384)` embedding, and is unique on `(document_id, chunk_index)` with a
   cascading FK. `ingestion_jobs` stores `queued|running|completed|failed`, a JSONB
   report, safe error text and timestamps. Migration `0002` creates the `vector`
-  extension and the three tables/indexes. HNSW indexing waits for milestone 3,
-  where search and the vector-store contract are implemented.
+  extension and the three tables/indexes. Milestone 3 adds the HNSW cosine index
+  in migration `0003` together with search and the vector-store contract.
 - 2026-10-23 — **Manifest validation.** Pandas reads the CSV as strings. Missing
   required columns, an unreadable/empty CSV, or a header-only file fail the job.
   Bad rows are rejected with reasons instead of aborting: missing fields,
@@ -99,6 +99,33 @@ Working notes and decision records for `labdocs`.
   errors can embed SQL parameters (including chunk text), so tracebacks for
   unexpected database failures are deliberately not rendered. Expected failures
   use the safe reasons in the job report.
+- 2026-10-23 — **Vector-store contract.** `app/store/base.py` defines a shared
+  `VectorStore` Protocol (`upsert`, `search`, `delete_document`, `count`),
+  `VectorRecord` with document metadata and `SearchFilters`
+  (`doc_type`, `source_agency`, `year_min`, `year_max`). `PgVectorStore` uses the
+  canonical Postgres chunk table and an HNSW cosine index
+  (`ix_chunks_embedding_hnsw`, migration `0003`). `QdrantStore` creates a cosine
+  collection with 384 dimensions, stores chunk text and document metadata in
+  point payloads, and applies the same filters with Qdrant conditions. Both
+  return `SearchHit` objects with cosine similarity scores.
+- 2026-10-23 — **Ingestion fan-out and repair.** The pipeline writes document
+  metadata and chunks atomically in Postgres, with chunks going through
+  `PgVectorStore.upsert_chunks` inside that transaction. If
+  `LABDOCS_VECTOR_BACKEND` is `qdrant` or `both`, Qdrant is updated after the
+  Postgres commit. A duplicate content hash normally skips extraction/embedding,
+  but still re-upserts the existing chunks into configured external stores, so
+  re-ingesting repairs a missing Qdrant index. There is no outbox: a Qdrant
+  failure leaves the Postgres document in place and the job reports the failure;
+  re-running the same input is the recovery path. This is deliberate for
+  milestone 3 and avoids claiming exactly-once cross-store writes.
+- 2026-10-23 — **Search API.** `POST /v1/search` accepts `query`, `top_k`,
+  optional nested `filters` and an optional `backend` override (`pgvector` or
+  `qdrant`). It embeds the query with the configured embedder, selects a
+  configured store and returns scored chunks plus document metadata and latency.
+  The default backend is `pgvector`; `LABDOCS_VECTOR_BACKEND=qdrant` makes Qdrant
+  the default, while `both` keeps pgvector as the default and enables Qdrant
+  fan-out. The qdrant backend is only selectable when it is configured; an
+  unavailable store or embedding failure returns a safe 503 envelope.
 - 2026-10-23 — **Synthetic fixture only.** `data/sample/` is clearly labelled
   synthetic and contains a PDF, Markdown, TXT, a byte-identical Markdown copy and
   malformed manifest rows. Its expected first run is 3 unique documents/1
@@ -108,11 +135,19 @@ Working notes and decision records for `labdocs`.
 
 ## Verification
 
-- 2026-10-23 — Full `pytest`, Ruff and mypy suite passed locally against compose
-  Postgres. The sample fixture was also ingested twice through the CLI with the
-  real `bge-small-en-v1.5` model: first run 3 documents / 9 chunks, second run 0
-  new documents / 4 duplicates, with document and chunk counts unchanged and
-  embeddings persisted as normalized 384-dimensional vectors.
+- 2026-10-23 — Full `pytest`, Ruff, format check and mypy suite passed locally
+  against compose Postgres and Qdrant: **71 passed**, no skips. The vector-store
+  contract suite runs the same eight tests against both `PgVectorStore` and
+  `QdrantStore`. API tests cover pgvector search, filters, top-k, validation,
+  auth, Qdrant backend override and duplicate re-ingest repair. `alembic check`
+  is clean and the migration test verifies the HNSW index definition
+  (`USING hnsw` with `vector_cosine_ops`). CI runs Postgres and Qdrant services
+  and executes the same suite.
+- 2026-10-23 — The sample fixture was ingested twice through the CLI with the
+  real `bge-small-en-v1.5` model and `VECTOR_BACKEND=both` in a temporary
+  database. First run: 3 documents / 9 chunks / 1 duplicate / 3 rejected.
+  Second run: 0 new documents / 4 duplicates / 3 rejected. Qdrant held 9 points
+  after both runs. The temporary database and collection were removed.
 - 2026-10-23 — The real corpus was supplied at `data/corpus/` with its
   `manifest.csv`; it remains gitignored. A smoke ingest of the six resolvable
   rows produced 191 chunks, and a second run produced zero new documents and six
@@ -126,7 +161,20 @@ Working notes and decision records for `labdocs`.
 ## Known limitations
 
 - Approximate token counts are not the BGE tokenizer's counts.
-- No Qdrant/vector-store fan-out or HNSW index until milestone 3.
+- Qdrant fan-out is best-effort after the Postgres commit. There is no outbox or
+  exactly-once cross-store transaction; a Qdrant failure is reported and the
+  duplicate re-ingest path repairs the missing points. Pgvector and Qdrant can
+  therefore be temporarily inconsistent.
+- The HNSW indexes use default build parameters. There is no recall/latency
+  tuning or benchmark yet; evaluation belongs to milestone 9.
+- Search is dense-vector retrieval only. There is no hybrid/BM25 component,
+  reranker or score threshold yet.
+- `/readyz` checks the database and the configured Qdrant backend. It does not
+  force-load the lazy sentence-transformer model, so the first query can still
+  pay model-loading latency.
+- `PgVectorStore.upsert` updates records but does not remove stale chunks when a
+  future reindex supplies fewer chunks for an existing document; a full reindex
+  must delete the document first or reconcile chunk indexes.
 - Upload ingestion uses in-process background tasks; no durable queue, retry or
   crash recovery yet.
 - Uploaded source files are retained without a cleanup policy yet.

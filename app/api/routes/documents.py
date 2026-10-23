@@ -100,6 +100,7 @@ async def upload_document(
         job_id,
         stored_path,
         metadata,
+        getattr(request.app.state, "ingestion_vector_stores", ()),
     )
     return UploadResponse(job_id=job_id)
 

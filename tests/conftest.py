@@ -1,5 +1,8 @@
+import asyncio
 from collections.abc import AsyncIterator, Awaitable, Callable
+from contextlib import suppress
 from pathlib import Path
+from uuid import uuid4
 
 import pytest
 from fastapi import FastAPI
@@ -18,7 +21,9 @@ from app.db.models import ApiKey
 from app.db.session import get_session
 from app.ingest.pipeline import IngestionConfig
 from app.main import create_app
-from tests.helpers import TEST_DATABASE_URL, FakeEmbedder
+from app.store.pgvector_store import PgVectorStore
+from app.store.qdrant_store import QdrantStore
+from tests.helpers import TEST_DATABASE_URL, TEST_QDRANT_URL, FakeEmbedder
 
 
 @pytest.fixture()
@@ -60,6 +65,30 @@ def ingestion_config() -> IngestionConfig:
 
 
 @pytest.fixture()
+async def qdrant_store() -> AsyncIterator[QdrantStore]:
+    """A real Qdrant store with an isolated collection for one test."""
+    store = QdrantStore(
+        TEST_QDRANT_URL,
+        f"labdocs_test_{uuid4().hex}",
+        dimension=384,
+    )
+    try:
+        for _ in range(50):
+            try:
+                await store.health()
+                break
+            except Exception:
+                await asyncio.sleep(0.2)
+        else:
+            pytest.fail(f"Qdrant is not available at {TEST_QDRANT_URL}")
+        yield store
+    finally:
+        with suppress(Exception):
+            await store.delete_collection()
+        await store.close()
+
+
+@pytest.fixture()
 def app(
     sessionmaker: async_sessionmaker[AsyncSession],
     fake_embedder: FakeEmbedder,
@@ -71,6 +100,9 @@ def app(
     application.state.embedder = fake_embedder
     application.state.ingestion_config = ingestion_config
     application.state.upload_dir = tmp_path / "uploads"
+    application.state.vector_stores = {"pgvector": PgVectorStore(sessionmaker)}
+    application.state.default_vector_backend = "pgvector"
+    application.state.ingestion_vector_stores = ()
 
     async def override_get_session() -> AsyncIterator[AsyncSession]:
         async with sessionmaker() as session:
