@@ -1,0 +1,19 @@
+SYNTHETIC TRAINING NOTES
+TEST FIXTURE - NOT A REAL TRAINING RECORD
+
+These notes are fictional and exist only to test plain-text ingestion.
+
+Orientation
+A new technician reads the synthetic procedure and reviews the invented sample
+log. The orientation is recorded locally for the fixture.
+
+Refresher
+The fixture mentions a refresher without specifying a real interval or legal
+requirement. No statement in this file describes an actual laboratory.
+
+Incident practice
+If a synthetic container leaks, the technician places it in the fictional
+quarantine cabinet and notifies the fictional supervisor. The event is recorded
+in the synthetic incident log.
+
+End of synthetic notes.

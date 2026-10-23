@@ -42,11 +42,12 @@ class RequestContextMiddleware:
 
         try:
             await self.app(scope, receive, send_with_request_id)
-        except Exception:
-            logger.exception(
+        except Exception as exc:
+            logger.error(
                 "request.failed",
                 method=scope.get("method"),
                 path=scope.get("path"),
+                error_type=type(exc).__name__,
                 duration_ms=round((time.perf_counter() - started_at) * 1000, 2),
             )
             raise

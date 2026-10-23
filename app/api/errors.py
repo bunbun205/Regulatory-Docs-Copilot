@@ -94,7 +94,10 @@ async def validation_error_handler(request: Request, exc: Exception) -> Response
 
 
 async def unhandled_exception_handler(request: Request, exc: Exception) -> Response:
-    structlog.get_logger("labdocs.error").exception("request.unhandled")
+    structlog.get_logger("labdocs.error").error(
+        "request.unhandled",
+        error_type=type(exc).__name__,
+    )
     return error_response(request, 500, "internal_error", "An internal error occurred.")
 
 
