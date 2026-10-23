@@ -13,7 +13,7 @@ Working notes and decision records for `labdocs`.
 - 2026-10-23 — Docker CLI, daemon and Compose are now installed and the daemon is active. The local user is not in the `docker` group yet, so local compose use is blocked; tests use SQLite locally and Postgres in CI until that is fixed. `docker compose config` is validated in CI.
 - 2026-10-23 — `qdrant/qdrant` pinned to `v1.20.0` (latest stable at the time) instead of `latest`; Postgres remains on `pgvector/pgvector:pg16`. Compose project is named `labdocs` and Postgres credentials are environment-overridable.
 - 2026-10-23 — Logging fix: the stdlib format is `%(message)s` so structlog output is pure JSON, and the configured level drives both stdlib and structlog filtering (previously the level was hardcoded to INFO and logs had a text prefix).
-- 2026-10-23 — CI actions bumped to current majors (`actions/checkout@v7`, `actions/setup-python@v7`, `astral-sh/setup-uv@v10`) to clear Node 20 deprecation warnings.
+- 2026-10-23 — CI actions bumped to current published versions (`actions/checkout@v7.0.1`, `actions/setup-python@v7.1.0`, `astral-sh/setup-uv@v10.3.2`) to clear Node 20 deprecation warnings. `setup-uv` has no rolling major tag, so exact versions are pinned.
 
 ### Foundation (milestone 1)
 
