@@ -20,3 +20,7 @@ htmlcov/
 
 # Logs
 *.log
+
+# User-supplied corpus and runtime uploads (never commit)
+data/corpus/
+data/uploads/

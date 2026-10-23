@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -14,6 +16,15 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     LOG_LEVEL: str = "info"
     DATABASE_URL: str = "postgresql+asyncpg://labdocs:labdocs@localhost:5432/labdocs"
+
+    UPLOAD_DIR: Path = Path("data/uploads")
+    MAX_UPLOAD_BYTES: int = 25 * 1024 * 1024
+    CHUNK_MAX_TOKENS: int = 500
+    CHUNK_OVERLAP_TOKENS: int = 80
+
+    EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
+    EMBEDDING_DIMENSION: int = 384
+    EMBEDDING_BATCH_SIZE: int = 32
 
     @property
     def is_production(self) -> bool:
