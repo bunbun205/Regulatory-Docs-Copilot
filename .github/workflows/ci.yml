@@ -10,17 +10,18 @@ jobs:
   lint:
     name: Lint and typecheck
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v10
 
       - name: Install dependencies
         run: uv sync --frozen
@@ -40,20 +41,41 @@ jobs:
   test:
     name: Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: labdocs
+          POSTGRES_PASSWORD: labdocs
+          POSTGRES_DB: labdocs
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U labdocs -d labdocs"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      LABDOCS_DATABASE_URL: postgresql+asyncpg://labdocs:labdocs@localhost:5432/labdocs
+      LABDOCS_TEST_DATABASE_URL: postgresql+asyncpg://labdocs:labdocs@localhost:5432/labdocs
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v10
 
       - name: Install dependencies
         run: uv sync --frozen
+
+      - name: Run migrations against Postgres
+        run: uv run alembic upgrade head
 
       - name: Run tests
         run: uv run pytest
