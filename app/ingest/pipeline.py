@@ -2,6 +2,7 @@ import asyncio
 import hashlib
 import time
 import uuid
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -12,12 +13,14 @@ from sqlalchemy import select, update
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from app.db.models import Chunk, Document, IngestionJob
+from app.db.models import Document, IngestionJob
 from app.ingest.chunk import ChunkDraft, make_chunks
 from app.ingest.embedding import Embedder, normalize_rows
 from app.ingest.extract import ExtractedDocument, ExtractionError, extract_document
 from app.ingest.manifest import ManifestError, ManifestRow, load_manifest
 from app.ingest.report import build_report
+from app.store.base import VectorRecord, VectorStore
+from app.store.pgvector_store import PgVectorStore
 
 logger = structlog.get_logger("labdocs.ingest")
 
@@ -85,10 +88,13 @@ class IngestionPipeline:
         sessionmaker: async_sessionmaker[AsyncSession],
         embedder: Embedder,
         config: IngestionConfig,
+        vector_stores: Sequence[VectorStore] = (),
     ) -> None:
         self.sessionmaker = sessionmaker
         self.embedder = embedder
         self.config = config
+        self.pg_store = PgVectorStore(sessionmaker)
+        self.vector_stores = tuple(vector_stores)
 
     async def run_manifest_job(
         self,
@@ -296,6 +302,7 @@ class IngestionPipeline:
         content_hash = hashlib.sha256(data).hexdigest()
         existing_id = await self._find_document_id(content_hash)
         if existing_id is not None:
+            await self._sync_external_stores(existing_id)
             return _DocumentOutcome(
                 duplicate=True,
                 document_id=existing_id,
@@ -332,17 +339,26 @@ class IngestionPipeline:
             raise IngestionError("Embedding dimension mismatch.")
 
         document_id = uuid.uuid4()
-        chunk_rows = [
-            {
-                "id": uuid.uuid4(),
-                "document_id": document_id,
-                "chunk_index": index,
-                "text": draft.text,
-                "token_count": draft.token_count,
-                "page": draft.page,
-                "section_heading": draft.section_heading,
-                "embedding": [float(value) for value in vectors[index]],
-            }
+        records = [
+            VectorRecord(
+                chunk_id=uuid.uuid4(),
+                document_id=document_id,
+                chunk_index=index,
+                text=draft.text,
+                token_count=draft.token_count,
+                page=draft.page,
+                section_heading=draft.section_heading,
+                embedding=tuple(float(value) for value in vectors[index]),
+                filename=metadata.filename,
+                title=metadata.title,
+                source_agency=metadata.source_agency,
+                doc_type=metadata.doc_type,
+                year=metadata.year,
+                version=metadata.version,
+                content_sha256=content_hash,
+                byte_size=byte_size,
+                page_count=extracted.page_count,
+            )
             for index, draft in enumerate(drafts)
         ]
 
@@ -370,6 +386,8 @@ class IngestionPipeline:
                     select(Document.id).where(Document.content_sha256 == content_hash)
                 )
                 await session.rollback()
+                if existing_id is not None:
+                    await self._sync_external_stores(existing_id)
                 return _DocumentOutcome(
                     duplicate=True,
                     document_id=existing_id,
@@ -378,9 +396,10 @@ class IngestionPipeline:
                     page_count=None,
                 )
 
-            await session.execute(pg_insert(Chunk).values(chunk_rows))
+            await self.pg_store.upsert_chunks(session, records)
             await session.commit()
 
+        await self._write_external_stores(records)
         return _DocumentOutcome(
             duplicate=False,
             document_id=document_id,
@@ -388,6 +407,29 @@ class IngestionPipeline:
             token_counts=tuple(draft.token_count for draft in drafts),
             page_count=extracted.page_count,
         )
+
+    async def _sync_external_stores(self, document_id: uuid.UUID) -> None:
+        if not self.vector_stores:
+            return
+        records = await self.pg_store.records_for_document(document_id)
+        if not records:
+            raise IngestionError("Document has no chunks to index.")
+        await self._write_external_stores(records)
+
+    async def _write_external_stores(self, records: Sequence[VectorRecord]) -> None:
+        if not self.vector_stores or not records:
+            return
+        for store in self.vector_stores:
+            try:
+                await store.upsert(records)
+            except Exception as exc:
+                logger.error(
+                    "ingestion.vector_store_failed",
+                    store=store.name,
+                    document_id=str(records[0].document_id),
+                    error_type=type(exc).__name__,
+                )
+                raise IngestionError(f"Vector store write failed ({store.name}).") from exc
 
     def _extract_and_chunk(self, path: Path) -> tuple[ExtractedDocument, list[ChunkDraft]]:
         extracted = extract_document(path)
@@ -461,9 +503,10 @@ async def run_upload_job_background(
     job_id: uuid.UUID,
     path: Path,
     metadata: DocumentMetadata,
+    vector_stores: Sequence[VectorStore] = (),
 ) -> None:
     """Run an upload ingestion as a FastAPI background task without raising."""
-    pipeline = IngestionPipeline(sessionmaker, embedder, config)
+    pipeline = IngestionPipeline(sessionmaker, embedder, config, vector_stores)
     try:
         await pipeline.run_upload_job(job_id, path, metadata)
     except Exception as exc:

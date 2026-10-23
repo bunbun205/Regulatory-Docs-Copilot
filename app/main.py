@@ -15,6 +15,9 @@ from app.db.models import EMBEDDING_DIMENSION
 from app.db.session import Database
 from app.ingest.embedding import SentenceTransformerEmbedder
 from app.ingest.pipeline import IngestionConfig
+from app.store.base import VectorStore
+from app.store.pgvector_store import PgVectorStore
+from app.store.qdrant_store import QdrantStore
 
 configure_logging(settings.LOG_LEVEL)
 
@@ -42,9 +45,31 @@ async def lifespan(application: FastAPI) -> AsyncIterator[None]:
         embedding_batch_size=settings.EMBEDDING_BATCH_SIZE,
         max_file_bytes=settings.MAX_UPLOAD_BYTES,
     )
+    pg_store = PgVectorStore(
+        database.sessionmaker,
+        dimension=settings.EMBEDDING_DIMENSION,
+    )
+    vector_stores: dict[str, VectorStore] = {"pgvector": pg_store}
+    qdrant_store: QdrantStore | None = None
+    if settings.VECTOR_BACKEND in {"qdrant", "both"}:
+        qdrant_store = QdrantStore(
+            settings.QDRANT_URL,
+            settings.QDRANT_COLLECTION,
+            dimension=settings.EMBEDDING_DIMENSION,
+            api_key=settings.QDRANT_API_KEY,
+            timeout=settings.QDRANT_TIMEOUT_SECONDS,
+        )
+        vector_stores["qdrant"] = qdrant_store
+    application.state.vector_stores = vector_stores
+    application.state.default_vector_backend = (
+        "qdrant" if settings.VECTOR_BACKEND == "qdrant" else "pgvector"
+    )
+    application.state.ingestion_vector_stores = (qdrant_store,) if qdrant_store is not None else ()
     try:
         yield
     finally:
+        if qdrant_store is not None:
+            await qdrant_store.close()
         await database.dispose()
 
 
@@ -69,17 +94,31 @@ def create_app() -> FastAPI:
 
     @application.get("/readyz", tags=["health"])
     async def readyz(request: Request) -> JSONResponse:
-        """Readiness probe: the database must answer. Store/embedder checks follow."""
+        """Readiness probe: the database and configured vector backend must answer."""
+        checks: dict[str, str] = {}
         try:
             sessionmaker = request.app.state.sessionmaker
             async with sessionmaker() as session:
                 await session.execute(text("SELECT 1"))
+            checks["database"] = "ok"
         except Exception:
             return JSONResponse(
                 status_code=503,
                 content={"status": "error", "checks": {"database": "unavailable"}},
             )
-        return JSONResponse(content={"status": "ok", "checks": {"database": "ok"}})
+
+        qdrant_store = getattr(request.app.state, "vector_stores", {}).get("qdrant")
+        if qdrant_store is not None:
+            try:
+                await qdrant_store.health()
+                checks["qdrant"] = "ok"
+            except Exception:
+                checks["qdrant"] = "unavailable"
+                return JSONResponse(
+                    status_code=503,
+                    content={"status": "error", "checks": checks},
+                )
+        return JSONResponse(content={"status": "ok", "checks": checks})
 
     @application.get("/metrics", tags=["health"])
     async def metrics() -> Response:

@@ -43,6 +43,14 @@ async def test_migrations_upgrade_and_downgrade(
         )
     assert embedding_type == "vector"
 
+    async with engine.connect() as connection:
+        index_definition = await connection.scalar(
+            text("SELECT indexdef FROM pg_indexes WHERE indexname = 'ix_chunks_embedding_hnsw'")
+        )
+    assert index_definition is not None
+    assert "USING hnsw" in index_definition
+    assert "vector_cosine_ops" in index_definition
+
     await asyncio.to_thread(command.downgrade, config, "base")
     tables = await _table_names(engine)
     assert tables.isdisjoint({"api_keys", "documents", "chunks", "ingestion_jobs"})

@@ -8,6 +8,7 @@ TEST_DATABASE_URL = os.environ.get(
     "LABDOCS_TEST_DATABASE_URL",
     "postgresql+asyncpg://labdocs:labdocs@localhost:5432/labdocs_test",
 )
+TEST_QDRANT_URL = os.environ.get("LABDOCS_TEST_QDRANT_URL", "http://localhost:6333")
 
 _database_name = make_url(TEST_DATABASE_URL).database or ""
 if not _database_name.endswith("_test"):

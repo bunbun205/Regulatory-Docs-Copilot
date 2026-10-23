@@ -28,6 +28,37 @@ class _BrokenSessionmaker:
         return _BrokenSession()
 
 
+async def test_readyz_qdrant_ok(
+    client: AsyncClient,
+    app: FastAPI,
+    qdrant_store: object,
+) -> None:
+    app.state.vector_stores["qdrant"] = qdrant_store
+    response = await client.get("/readyz")
+    assert response.status_code == 200
+    assert response.json() == {
+        "status": "ok",
+        "checks": {"database": "ok", "qdrant": "ok"},
+    }
+
+
+async def test_readyz_qdrant_unavailable(
+    client: AsyncClient,
+    app: FastAPI,
+) -> None:
+    class BrokenStore:
+        async def health(self) -> None:
+            raise RuntimeError("qdrant unavailable")
+
+    app.state.vector_stores["qdrant"] = BrokenStore()
+    response = await client.get("/readyz")
+    assert response.status_code == 503
+    assert response.json() == {
+        "status": "error",
+        "checks": {"database": "ok", "qdrant": "unavailable"},
+    }
+
+
 async def test_readyz_database_unavailable(app: FastAPI) -> None:
     app.state.sessionmaker = _BrokenSessionmaker()
     transport = ASGITransport(app=app)
