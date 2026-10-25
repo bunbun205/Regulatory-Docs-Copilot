@@ -42,20 +42,31 @@ export function reportMarkdown(report: GapReport) {
   if (metadata.backend) lines.push(`Backend: ${md(metadata.backend)}`);
   if (metadata.duration !== null) lines.push(`Duration: ${(metadata.duration / 1000).toFixed(2)} s`);
   if (metadata.totalTokens !== null) lines.push(`Reported tokens: ${metadata.totalTokens}`);
-  lines.push(`Caps reported: ${report.caps_hit.map(md).join(', ') || 'None reported'}`, '', '## Summary', '');
+  if (metadata.inputTokens !== null) lines.push(`Input tokens: ${metadata.inputTokens}`);
+  if (metadata.outputTokens !== null) lines.push(`Output tokens: ${metadata.outputTokens}`);
+  if (metadata.maxClauses !== null) lines.push(`Clause cap: ${metadata.maxClauses}`);
+  if (metadata.maxRequirements !== null) lines.push(`Requirement cap: ${metadata.maxRequirements}`);
+  if (metadata.maxTokens !== null) lines.push(`Token cap: ${metadata.maxTokens}`);
+  lines.push(`Caps reported: ${report.caps_hit.map(md).join(', ') || 'None reported'}`);
+  if (report.caps_hit.length) lines.push('This run reached a limit; the analysis may be incomplete.');
+  lines.push('Failed judgements are unresolved and require manual review. Outside-corpus findings establish no conclusion.', '', '## Summary', '');
   for (const severity of ['high', 'medium', 'low'] as const) lines.push(`${severityLabels[severity]}: ${report.counts_by_severity[severity] ?? 0}`);
   for (const verdict of verdicts) lines.push(`${verdictLabels[verdict]}: ${report.counts_by_verdict[verdict] ?? 0}`);
   for (const finding of filteredFindings(report, { severity: '', direction: '', verdict: '', q: '' })) {
     lines.push('', `## ${md(finding.finding_id)} — ${verdictLabels[finding.verdict]}`, '', `${severityLabels[finding.severity]} · ${directionLabels[finding.direction]}`, '', '### SOP clauses', '');
+    if (finding.requirement_id) lines.push(`Requirement ID: ${md(finding.requirement_id)}`, '');
+    if (finding.requirement_strength) lines.push(`Requirement strength: ${md(finding.requirement_strength)}`, '');
     for (const id of finding.sop_clause_refs) { const clause = report.sop_clauses.find(item => item.clause_id === id); lines.push(`${md(id)}${clause ? ` — ${md(clause.section)}\n\n${md(clause.text)}` : ' — Clause text not supplied.'}`, ''); }
     if (!finding.sop_clause_refs.length) lines.push('No SOP clause was linked.', '');
     lines.push('### Regulation excerpts', '');
-    for (const citation of finding.regulation_citations) lines.push(`${md(citation.title)}${citation.page !== null ? `, page ${citation.page}` : ''}\n\n${md(citation.snippet)}`, '');
+    for (const citation of finding.regulation_citations) lines.push(`${md(citation.title)}${citation.page !== null ? `, page ${citation.page}` : ''}\n\nDocument ID: ${md(citation.document_id)}\n\nChunk ID: ${md(citation.chunk_id)}${citation.score !== null ? `\n\nRetrieval score (not confidence): ${citation.score}` : ''}\n\n${md(citation.snippet)}`, '');
     if (!finding.regulation_citations.length) lines.push('No regulation excerpt was supplied.', '');
     lines.push('### Rationale', '', md(finding.rationale), '', '### Suggestion, not legal advice', '', md(finding.suggested_fix));
   }
+  lines.push('', '## All supplied SOP clauses', '');
+  for (const clause of report.sop_clauses) lines.push(`### ${md(clause.clause_id)} — ${md(clause.section)}`, '', `Character range: ${clause.char_start}–${clause.char_end}`, '', md(clause.text), '');
   if (!report.findings.length) lines.push('', 'No findings were returned. This does not establish compliance.');
-  return lines.join('\n') + '\n';
+  return lines.join('\n').trimEnd() + '\n';
 }
 export function downloadReport(contents: string, filename: string, type: string) {
   const url = URL.createObjectURL(new Blob([contents], { type })); const link = document.createElement('a');

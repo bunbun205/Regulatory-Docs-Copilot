@@ -11,7 +11,14 @@ Model: fake:synthetic\-report\-fixture
 Backend: pgvector
 Duration: 12.50 s
 Reported tokens: 320
+Input tokens: 240
+Output tokens: 80
+Clause cap: 80
+Requirement cap: 120
+Token cap: 200000
 Caps reported: requirements
+This run reached a limit; the analysis may be incomplete.
+Failed judgements are unresolved and require manual review. Outside-corpus findings establish no conclusion.
 
 ## Summary
 
@@ -33,6 +40,8 @@ High · SOP → regulation
 
 ### SOP clauses
 
+Requirement strength: mandatory
+
 SOP\-001 — Synthetic report fixture — all verdict treatments
 
 Staff record instrument checks\. &lt;script&gt;This is quoted SOP text\.&lt;/script&gt;
@@ -40,6 +49,12 @@ Staff record instrument checks\. &lt;script&gt;This is quoted SOP text\.&lt;/scr
 ### Regulation excerpts
 
 Instrument checks — synthetic browser fixture, page 1
+
+Document ID: 10000000\-0000\-4000\-8000\-000000000005
+
+Chunk ID: 10000000\-0000\-4000\-8000\-000000000004
+
+Retrieval score (not confidence): 0.82
 
 Staff must record instrument checks in a training log before using the equipment\.
 
@@ -57,6 +72,8 @@ High · Regulation → SOP
 
 ### SOP clauses
 
+Requirement strength: mandatory
+
 SOP\-001 — Synthetic report fixture — all verdict treatments
 
 Staff record instrument checks\. &lt;script&gt;This is quoted SOP text\.&lt;/script&gt;
@@ -64,6 +81,12 @@ Staff record instrument checks\. &lt;script&gt;This is quoted SOP text\.&lt;/scr
 ### Regulation excerpts
 
 Instrument checks — synthetic browser fixture, page 1
+
+Document ID: 10000000\-0000\-4000\-8000\-000000000005
+
+Chunk ID: 10000000\-0000\-4000\-8000\-000000000004
+
+Retrieval score (not confidence): 0.82
 
 Staff must record instrument checks in a training log before using the equipment\.
 
@@ -81,6 +104,8 @@ Medium · SOP → regulation
 
 ### SOP clauses
 
+Requirement strength: mandatory
+
 SOP\-001 — Synthetic report fixture — all verdict treatments
 
 Staff record instrument checks\. &lt;script&gt;This is quoted SOP text\.&lt;/script&gt;
@@ -88,6 +113,12 @@ Staff record instrument checks\. &lt;script&gt;This is quoted SOP text\.&lt;/scr
 ### Regulation excerpts
 
 Instrument checks — synthetic browser fixture, page 1
+
+Document ID: 10000000\-0000\-4000\-8000\-000000000005
+
+Chunk ID: 10000000\-0000\-4000\-8000\-000000000004
+
+Retrieval score (not confidence): 0.82
 
 Staff must record instrument checks in a training log before using the equipment\.
 
@@ -105,6 +136,8 @@ Medium · Regulation → SOP
 
 ### SOP clauses
 
+Requirement strength: mandatory
+
 SOP\-001 — Synthetic report fixture — all verdict treatments
 
 Staff record instrument checks\. &lt;script&gt;This is quoted SOP text\.&lt;/script&gt;
@@ -112,6 +145,12 @@ Staff record instrument checks\. &lt;script&gt;This is quoted SOP text\.&lt;/scr
 ### Regulation excerpts
 
 Instrument checks — synthetic browser fixture, page 1
+
+Document ID: 10000000\-0000\-4000\-8000\-000000000005
+
+Chunk ID: 10000000\-0000\-4000\-8000\-000000000004
+
+Retrieval score (not confidence): 0.82
 
 Staff must record instrument checks in a training log before using the equipment\.
 
@@ -129,6 +168,8 @@ Low · SOP → regulation
 
 ### SOP clauses
 
+Requirement strength: mandatory
+
 SOP\-001 — Synthetic report fixture — all verdict treatments
 
 Staff record instrument checks\. &lt;script&gt;This is quoted SOP text\.&lt;/script&gt;
@@ -136,6 +177,12 @@ Staff record instrument checks\. &lt;script&gt;This is quoted SOP text\.&lt;/scr
 ### Regulation excerpts
 
 Instrument checks — synthetic browser fixture, page 1
+
+Document ID: 10000000\-0000\-4000\-8000\-000000000005
+
+Chunk ID: 10000000\-0000\-4000\-8000\-000000000004
+
+Retrieval score (not confidence): 0.82
 
 Staff must record instrument checks in a training log before using the equipment\.
 
@@ -152,6 +199,8 @@ Suggested fix \(not legal advice\): No change suggested\.
 Low · SOP → regulation
 
 ### SOP clauses
+
+Requirement strength: mandatory
 
 SOP\-001 — Synthetic report fixture — all verdict treatments
 
@@ -175,6 +224,8 @@ Low · SOP → regulation
 
 ### SOP clauses
 
+Requirement strength: mandatory
+
 SOP\-001 — Synthetic report fixture — all verdict treatments
 
 Staff record instrument checks\. &lt;script&gt;This is quoted SOP text\.&lt;/script&gt;
@@ -197,6 +248,8 @@ Low · Regulation → SOP
 
 ### SOP clauses
 
+Requirement strength: mandatory
+
 SOP\-001 — Synthetic report fixture — all verdict treatments
 
 Staff record instrument checks\. &lt;script&gt;This is quoted SOP text\.&lt;/script&gt;
@@ -204,6 +257,12 @@ Staff record instrument checks\. &lt;script&gt;This is quoted SOP text\.&lt;/scr
 ### Regulation excerpts
 
 Instrument checks — synthetic browser fixture, page 1
+
+Document ID: 10000000\-0000\-4000\-8000\-000000000005
+
+Chunk ID: 10000000\-0000\-4000\-8000\-000000000004
+
+Retrieval score (not confidence): 0.82
 
 Staff must record instrument checks in a training log before using the equipment\.
 
@@ -214,3 +273,11 @@ Synthetic report fixture: addressed\. Review the SOP beside the supplied regulat
 ### Suggestion, not legal advice
 
 Suggested fix \(not legal advice\): No change suggested\.
+
+## All supplied SOP clauses
+
+### SOP\-001 — Synthetic report fixture — all verdict treatments
+
+Character range: 0–80
+
+Staff record instrument checks\. &lt;script&gt;This is quoted SOP text\.&lt;/script&gt;

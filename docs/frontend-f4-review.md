@@ -1,6 +1,6 @@
 # F4 review: Gap Check
 
-Branch: `feat/frontend-f4-gap-check`. **Review stop: leave this PR unmerged.**
+Branch: `feat/frontend-f4-gap-check`. **Conditional approval: final acceptance recorded in [the acceptance review](frontend-f4-acceptance.md).**
 F1, F2 and F3 merged in PRs #11, #12 and #13 after green CI.
 
 ## What changed
@@ -31,10 +31,10 @@ Unfinished local backend/platform/Docker work remains excluded.
 
 ## Validation and screenshots
 
-**92 Vitest/RTL tests and 32 Playwright tests passed**, zero failures/skips.
+**93 Vitest/RTL tests and 32 Playwright tests passed**, zero failures/skips.
 The three export/print browser cases also passed a focused repeat after the
 final duplicate-beforeprint restoration guard. Strict no-emit TypeScript, warning-fatal Oxlint (zero warnings), live-schema type
-freshness and the production build pass. Initial `/ask` JS is **102,080 bytes gzip
+freshness and the production build pass. Initial `/ask` JS is **102,094 bytes gzip
 (102.1 kB)** against the 110,000-byte budget. Backend checks remain the unchanged
 155-test committed suite; the preserved two platform tests are explained in F1.
 
@@ -59,8 +59,8 @@ for visual inspection and contains all eight comparisons/rationales/suggestions.
 
 **Fake provider:** a real submitted/polled job used the existing app factory,
 Postgres/Qdrant and scripted test-only judge against an isolated synthetic corpus.
-The 1280px run reported **3.061 seconds** of analysis and was observed completed
-at **5.099 seconds**; it returned one compliant, one addressed and one
+The 1280px run reported **3.055 seconds** of analysis and was observed completed
+at **5.171 seconds**; it returned one compliant, one addressed and one
 outside-corpus finding, with no judge failures/caps. Independent runs at the
 other widths, reloads and file-job cooperative cancellation also passed.
 [Recorded 1280px run](verification/frontend-f4/fake-run-1280.json).
@@ -106,4 +106,4 @@ browser upload uses Markdown, while extension/empty/size validation and existing
 backend extraction checks cover the shared path. Full journey/Playwright CI,
 screen-reader/accessibility walkthrough and large-corpus performance remain F6.
 F5 Documents remains untouched beyond the already-approved foundation migration.
-Stop here for the user's F4 review; do not start F5 or merge this PR.
+The user subsequently approved F4 conditionally. Merge only after the final acceptance checks and PR CI pass, then confirm main CI before F5.

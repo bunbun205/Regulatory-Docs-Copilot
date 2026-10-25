@@ -2,7 +2,7 @@
   "milestone": "F4",
   "branch": "feat/frontend-f4-gap-check",
   "unit": {
-    "passed": 92,
+    "passed": 93,
     "failed": 0,
     "skipped": 0
   },
@@ -39,27 +39,27 @@
     "route": "/ask",
     "chunks": [
       {
-        "file": "assets/index-InUZdoY8.js",
-        "gzip_bytes": 94536
+        "file": "assets/index-MX3GdBPC.js",
+        "gzip_bytes": 94543
       },
       {
-        "file": "assets/AskView-BHg1aV8-.js",
-        "gzip_bytes": 1947
+        "file": "assets/AskView-BqYMiN58.js",
+        "gzip_bytes": 1950
       },
       {
-        "file": "assets/Sources-y7nIZHyu.js",
+        "file": "assets/Sources-Byjux5Iq.js",
         "gzip_bytes": 4540
       },
       {
-        "file": "assets/useAsync-C6I-UHMw.js",
-        "gzip_bytes": 654
+        "file": "assets/useAsync-DmX4REZ9.js",
+        "gzip_bytes": 655
       },
       {
-        "file": "assets/RequestStatus-4vAF00uM.js",
-        "gzip_bytes": 403
+        "file": "assets/RequestStatus-CR7Y-rTL.js",
+        "gzip_bytes": 406
       }
     ],
-    "total_gzip_bytes": 102080,
+    "total_gzip_bytes": 102094,
     "budget_gzip_bytes": 110000
   },
   "final_screenshots": 162,
@@ -83,5 +83,26 @@
     "rationales": 8,
     "suggestions": 8,
     "checked_by": "pypdf assertion in the committed browser spec"
+  },
+  "backend": {
+    "passed": 155,
+    "failed": 0,
+    "skipped": 0,
+    "checkout": "clean committed backend"
+  },
+  "final_acceptance_exports": {
+    "startTime": "2026-10-25T20:07:29.150Z",
+    "duration": 10477.981000000002,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "acceptance_review": "../../frontend-f4-acceptance.md",
+  "final_acceptance_full_browser": {
+    "passed": 32,
+    "failed": 0,
+    "skipped": 0,
+    "log": "full clean-checkout F4 acceptance suite"
   }
 }

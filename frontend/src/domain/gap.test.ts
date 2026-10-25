@@ -29,6 +29,21 @@ describe('Gap report rules', () => {
     const markdown = reportMarkdown(report); expect(markdown).toContain(markdownText(gapReport.banner)); expect(markdown).toContain('SOP\\-002'); expect(markdown).toContain('Staff must record instrument checks'); expect(markdown).toContain('&lt;img src=x&gt;'); expect(markdown).not.toContain('<script>'); expect(markdown).not.toContain('[click](javascript:'); expect(markdown).toContain('requirements'); expect(markdownText('`<b>x</b>`')).toBe('\\`&lt;b&gt;x&lt;/b&gt;\\`');
     expect(JSON.parse(JSON.stringify(report))).toEqual(report);
   });
+  it('preserves source provenance, requirement context, limits and unlinked clauses in Markdown', () => {
+    const report = { ...gapReport, findings: [{ ...gapFinding, requirement_id: 'REQ-002' }], caps_hit: ['requirements'] };
+    const markdown = reportMarkdown(report);
+    expect(markdown).toContain('Requirement ID: REQ\\-002');
+    expect(markdown).toContain('Requirement strength: mandatory');
+    for (const citation of gapFinding.regulation_citations) {
+      expect(markdown).toContain(markdownText(citation.document_id));
+      expect(markdown).toContain(markdownText(citation.chunk_id));
+      expect(markdown).toContain(markdownText(citation.snippet));
+    }
+    for (const clause of report.sop_clauses) expect(markdown).toContain(markdownText(clause.text));
+    expect(markdown).toContain('Input tokens: 20'); expect(markdown).toContain('Output tokens: 8');
+    expect(markdown).toContain('Requirement cap: 120'); expect(markdown).toContain('analysis may be incomplete');
+    expect(markdown).toContain('Failed judgements are unresolved');
+  });
   it('makes a client download and releases its object URL', () => {
     vi.useFakeTimers(); const create = vi.fn(() => 'blob:test-report'); const revoke = vi.fn(); vi.stubGlobal('URL', Object.assign(URL, { createObjectURL: create, revokeObjectURL: revoke })); const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
     downloadReport('{}', 'report.json', 'application/json'); expect(create.mock.calls[0]).toBeDefined(); expect(click).toHaveBeenCalledOnce(); expect(document.querySelector('a[download]')).toBeNull(); vi.runAllTimers(); expect(revoke).toHaveBeenCalledWith('blob:test-report');
