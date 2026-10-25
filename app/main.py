@@ -15,6 +15,7 @@ from app.db.models import EMBEDDING_DIMENSION
 from app.db.session import Database
 from app.ingest.embedding import SentenceTransformerEmbedder
 from app.ingest.pipeline import IngestionConfig
+from app.llm.factory import build_llm_client
 from app.store.base import VectorStore
 from app.store.pgvector_store import PgVectorStore, ensure_iterative_scan_supported
 from app.store.qdrant_store import QdrantStore
@@ -39,9 +40,11 @@ async def lifespan(application: FastAPI) -> AsyncIterator[None]:
             f"Embedder dimension must match the database vector dimension ({EMBEDDING_DIMENSION})."
         )
     database = Database(settings.DATABASE_URL)
+    llm_client = build_llm_client(settings)
     try:
         await ensure_iterative_scan_supported(database.sessionmaker)
     except Exception:
+        await llm_client.close()
         await database.dispose()
         raise
     settings.UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
@@ -49,6 +52,7 @@ async def lifespan(application: FastAPI) -> AsyncIterator[None]:
     application.state.sessionmaker = database.sessionmaker
     application.state.upload_dir = settings.UPLOAD_DIR
     application.state.embedder = embedder
+    application.state.llm_client = llm_client
     application.state.ingestion_config = IngestionConfig(
         chunk_max_tokens=settings.CHUNK_MAX_TOKENS,
         chunk_overlap_tokens=settings.CHUNK_OVERLAP_TOKENS,
@@ -74,6 +78,7 @@ async def lifespan(application: FastAPI) -> AsyncIterator[None]:
             await qdrant_store.ensure_ready()
         except Exception:
             await qdrant_store.close()
+            await llm_client.close()
             await database.dispose()
             raise
     application.state.vector_stores = vector_stores
@@ -86,6 +91,7 @@ async def lifespan(application: FastAPI) -> AsyncIterator[None]:
     finally:
         if qdrant_store is not None:
             await qdrant_store.close()
+        await llm_client.close()
         await database.dispose()
 
 

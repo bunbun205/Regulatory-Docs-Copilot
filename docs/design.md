@@ -234,11 +234,77 @@ Working notes and decision records for `labdocs`.
   `python -m app.cli reindex --backend qdrant`. The safe error does not include
   the underlying exception text.
 
+### Milestone 4 — LLM abstraction + RAG (2026-10-25)
+
+- **Provider abstraction.** `app/llm/base.py` defines a small `LLMClient`
+  Protocol with normalized `LLMMessage`, `ToolDefinition`, `ToolCall`,
+  `TokenUsage` and `LLMResult` types. The OpenAI-compatible client (the default
+  development target is Ollama at `http://localhost:11434/v1`), Anthropic
+  client and Azure OpenAI client share bounded retry/timeout behavior for
+  timeouts, transport errors, HTTP 429 and 5xx responses. Provider errors are
+  reduced to one safe `LLMError`; response bodies are not copied into API
+  errors. `FakeLLM` is scripted and deterministic, and the factory refuses the
+  `fake` provider when `LABDOCS_ENVIRONMENT=production`.
+- **Retrieval and grounding.** `POST /v1/ask` retrieves the configured `top_k`
+  (default 8) with the existing filters and vector backends. If there are no
+  hits or the best cosine score is below `LABDOCS_ABSTENTION_THRESHOLD`, the
+  answer is an explicit insufficient-evidence response and the LLM is not
+  called. Otherwise the prompt contains numbered sources with their chunk ids
+  and asks for a strict JSON object:
+  `{"answer": "...", "citations": ["chunk-id", ...]}`. The validator parses
+  fenced or bare JSON, removes duplicate/unknown citation ids, and returns
+  `grounded=false` with a reason (`invalid_json`, `empty_answer`,
+  `invalid_citations`, `no_valid_citations` or `invalid_citations_removed`)
+  when the contract is not met. The API returns the validated citations with
+  title, page, snippet and score, plus input/output token usage and separate
+  retrieval/generation latency.
+- **Threshold evidence.** `eval/abstention_probe.jsonl` contains ten
+  in-corpus and ten out-of-corpus questions. `eval/abstention_probe.py` embeds
+  each question with the real `bge-small-en-v1.5` model and records the top-1
+  score from both stores (`top_k=8`, no filters). The distributions are
+  identical across pgvector and Qdrant to six decimals:
+
+  | Group | n | min | p50 | max | mean |
+  | --- | ---: | ---: | ---: | ---: | ---: |
+  | In-corpus | 10 | 0.771839 | 0.813442 | 0.856611 | 0.818125 |
+  | Out-of-corpus | 10 | 0.623460 | 0.692466 | 0.719895 | 0.683931 |
+
+  The groups are separable: the highest out-of-corpus score is `0.719895` and
+  the lowest in-corpus score is `0.771839`; their midpoint is `0.745867`. The
+  configured threshold is **0.75**, leaving a `0.030105` margin above the
+  highest out-of-corpus score and a `0.021839` margin below the lowest
+  in-corpus score. This is a deliberately small, real-corpus calibration set;
+  milestone 9 should replace it with a larger evaluation set and report the
+  trade-off between false abstentions and ungrounded answers.
+
+  | Question id | Group | Top-1 score |
+  | --- | --- | ---: |
+  | in-01 | in_corpus | 0.804808 |
+  | in-02 | in_corpus | 0.822165 |
+  | in-03 | in_corpus | 0.813082 |
+  | in-04 | in_corpus | 0.771839 |
+  | in-05 | in_corpus | 0.855630 |
+  | in-06 | in_corpus | 0.855347 |
+  | in-07 | in_corpus | 0.778967 |
+  | in-08 | in_corpus | 0.856611 |
+  | in-09 | in_corpus | 0.809000 |
+  | in-10 | in_corpus | 0.813801 |
+  | out-01 | out_of_corpus | 0.694285 |
+  | out-02 | out_of_corpus | 0.652835 |
+  | out-03 | out_of_corpus | 0.696531 |
+  | out-04 | out_of_corpus | 0.701634 |
+  | out-05 | out_of_corpus | 0.690648 |
+  | out-06 | out_of_corpus | 0.719488 |
+  | out-07 | out_of_corpus | 0.719895 |
+  | out-08 | out_of_corpus | 0.677515 |
+  | out-09 | out_of_corpus | 0.663020 |
+  | out-10 | out_of_corpus | 0.623460 |
+
 ## Verification
 
 - 2026-10-25 — Full `pytest`, Ruff, format check, mypy, `alembic check` and
   `docker compose config -q` passed locally against compose Postgres and
-  Qdrant: **91 passed**, no skips. The vector-store contract suite runs the same
+  Qdrant: **113 passed**, no skips. The vector-store contract suite runs the same
   tests against both `PgVectorStore` and `QdrantStore`. API tests cover
   pgvector search, filters, top-k validation, unknown filter fields, auth,
   Qdrant backend override and duplicate re-ingest repair. The migration test
@@ -266,6 +332,14 @@ Working notes and decision records for `labdocs`.
   top-5 chunks, the maximum score difference was `1.5e-7` (mean `5.2e-8`). The
   verification record includes each query text and the first 200 characters of
   every top-three chunk.
+- 2026-10-25 — Milestone 4 tests cover all three provider request/response
+  adapters with `httpx.MockTransport`, retry and safe-error mapping, production
+  refusal for the fake provider, JSON/fenced grounding parsing, invalid and
+  unknown citation removal, abstention below/at the threshold, the `/v1/ask`
+  happy path, 502 mapping, auth, query validation and backend validation. The
+  threshold probe produced the distributions and per-question scores recorded
+  above on both stores; the top-1 scores agree to six decimals across pgvector
+  and Qdrant.
 
 ## Known limitations
 
@@ -279,8 +353,16 @@ Working notes and decision records for `labdocs`.
   tuning or benchmark yet; evaluation belongs to milestone 9. Filtered
   pgvector searches may take the exact-scan fallback for very selective
   filters, trading latency for correctness.
-- Search is dense-vector retrieval only. There is no hybrid/BM25 component,
-  reranker or score threshold yet.
+- Search is dense-vector retrieval only. There is no hybrid/BM25 component or
+  reranker yet. `/v1/ask` has a calibrated abstention threshold, but plain
+  `/v1/search` deliberately returns scored results without hiding low scores.
+- The abstention threshold was calibrated on 20 questions from one small
+  corpus. It is a starting point, not a guarantee; milestone 9 owns a larger
+  evaluation set and the false-abstention/ungrounded-answer trade-off.
+- The LLM clients implement one completion per call with bounded retries, not
+  streaming or provider-specific structured-output modes. Prompt-injection
+  defenses rely on source delimiting and citation validation; documents are
+  still untrusted input.
 - `reindex --backend qdrant` deletes and recreates the collection rather than
   swapping a temporary collection atomically. A failed rebuild can leave a
   partial Qdrant collection; retry the command.

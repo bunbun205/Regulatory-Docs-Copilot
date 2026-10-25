@@ -20,6 +20,7 @@ from app.db.base import Base
 from app.db.models import ApiKey
 from app.db.session import get_session
 from app.ingest.pipeline import IngestionConfig
+from app.llm.fake import FakeLLM
 from app.main import create_app
 from app.store.pgvector_store import PgVectorStore
 from app.store.qdrant_store import QdrantStore
@@ -103,6 +104,7 @@ def app(
     application.state.vector_stores = {"pgvector": PgVectorStore(sessionmaker)}
     application.state.default_vector_backend = "pgvector"
     application.state.ingestion_vector_stores = ()
+    application.state.llm_client = FakeLLM()
 
     async def override_get_session() -> AsyncIterator[AsyncSession]:
         async with sessionmaker() as session:

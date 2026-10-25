@@ -33,6 +33,29 @@ class Settings(BaseSettings):
     QDRANT_API_KEY: str | None = None
     QDRANT_TIMEOUT_SECONDS: int = 10
 
+    LLM_PROVIDER: Literal["fake", "openai_compatible", "anthropic", "azure_openai"] = (
+        "openai_compatible"
+    )
+    LLM_MODEL: str = "qwen2.5:7b"
+    LLM_BASE_URL: str = "http://localhost:11434/v1"
+    LLM_API_KEY: str | None = None
+    LLM_TIMEOUT_SECONDS: float = 60.0
+    LLM_MAX_RETRIES: int = 2
+    LLM_TEMPERATURE: float = 0.0
+    LLM_MAX_TOKENS: int = 1024
+
+    ANTHROPIC_API_KEY: str | None = None
+    ANTHROPIC_BASE_URL: str = "https://api.anthropic.com"
+    ANTHROPIC_VERSION: str = "2023-06-01"
+
+    AZURE_OPENAI_ENDPOINT: str | None = None
+    AZURE_OPENAI_API_KEY: str | None = None
+    AZURE_OPENAI_DEPLOYMENT: str | None = None
+    AZURE_OPENAI_API_VERSION: str = "2024-10-21"
+
+    RAG_TOP_K: int = 8
+    ABSTENTION_THRESHOLD: float = 0.75
+
     @property
     def is_production(self) -> bool:
         return self.ENVIRONMENT == "production"
