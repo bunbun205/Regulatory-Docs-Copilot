@@ -1,0 +1,62 @@
+{
+  "timestamp_utc": "2026-10-25T15:16:11.199141+00:00",
+  "branch": "feat/frontend-f0-audit",
+  "source_baseline": "main 2bdf9ea plus preserved pre-existing uncommitted frontend/platform work",
+  "pytest": {
+    "tests": 157,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duration_seconds": 21.83
+  },
+  "browser": {
+    "provider": "fake",
+    "assertions_passed": 22,
+    "screenshots": 16,
+    "page_errors": [],
+    "remote_requests": [],
+    "scope": "baseline navigation and input states only; no generation or upload"
+  },
+  "build": {
+    "exit_code": 0,
+    "strict_app": true,
+    "strict_node": true,
+    "javascript_gzip_kb": 73.65,
+    "css_gzip_kb": 0.65
+  },
+  "lint": {
+    "tool": "existing oxlint",
+    "exit_code": 0,
+    "warnings": 3,
+    "area": "DocumentsView: unused catch, render-time Date, set-state-in-effect"
+  },
+  "generated_types": {
+    "fresh": true,
+    "sha256": "c6b2cf9fed49ad4f22873af8eea4231d62cd4d56863b4ffecec4635b7fc15388",
+    "source": "live /api/openapi.json regenerated with installed openapi-typescript"
+  },
+  "python_checks": {
+    "ruff": "pass",
+    "format": "pass",
+    "mypy": "pass (69 source files)"
+  },
+  "not_present": [
+    "repository frontend unit test suite",
+    "repository frontend E2E suite"
+  ],
+  "not_exercised": [
+    "generation via browser",
+    "uploads",
+    "gap progress/report in browser",
+    "future layouts/components",
+    "local model manual run"
+  ],
+  "manual_stack_after_audit": {
+    "provider": "openai_compatible",
+    "model": "qwen2.5:3b",
+    "api_port": 8001,
+    "frontend_port": 3100,
+    "readiness": "passed after restoring manual profile",
+    "manual_generation_run": false
+  }
+}
