@@ -1,0 +1,228 @@
+{
+  "origin": "http://127.0.0.1:3100",
+  "api": "http://127.0.0.1:8001",
+  "llm": "fake",
+  "scope": "baseline navigation and input states only; no generation or upload",
+  "checks": [
+    {
+      "name": "no-key state visible at 1280",
+      "passed": true
+    },
+    {
+      "name": "no-key screenshot width is 1280",
+      "passed": true
+    },
+    {
+      "name": "key lives only in sessionStorage at 1280",
+      "passed": true
+    },
+    {
+      "name": "documents screenshot width is 1280",
+      "passed": true
+    },
+    {
+      "name": "documents-library screenshot width is 1280",
+      "passed": true
+    },
+    {
+      "name": "search screenshot width is 1280",
+      "passed": true
+    },
+    {
+      "name": "ask screenshot width is 1280",
+      "passed": true
+    },
+    {
+      "name": "agent screenshot width is 1280",
+      "passed": true
+    },
+    {
+      "name": "gap-check screenshot width is 1280",
+      "passed": true
+    },
+    {
+      "name": "invalid-key screenshot width is 1280",
+      "passed": true
+    },
+    {
+      "name": "no-key state visible at 390",
+      "passed": true
+    },
+    {
+      "name": "no-key screenshot width is 390",
+      "passed": true
+    },
+    {
+      "name": "key lives only in sessionStorage at 390",
+      "passed": true
+    },
+    {
+      "name": "documents screenshot width is 390",
+      "passed": true
+    },
+    {
+      "name": "documents-library screenshot width is 390",
+      "passed": true
+    },
+    {
+      "name": "search screenshot width is 390",
+      "passed": true
+    },
+    {
+      "name": "ask screenshot width is 390",
+      "passed": true
+    },
+    {
+      "name": "agent screenshot width is 390",
+      "passed": true
+    },
+    {
+      "name": "gap-check screenshot width is 390",
+      "passed": true
+    },
+    {
+      "name": "invalid-key screenshot width is 390",
+      "passed": true
+    },
+    {
+      "name": "no uncaught JavaScript exceptions",
+      "passed": true
+    },
+    {
+      "name": "no remote fonts, scripts or other requests",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "no-key-1280.png",
+      "view": "no-key",
+      "viewport_width": 1280,
+      "page_width": 1280,
+      "page_height": 900,
+      "horizontal_overflow": false
+    },
+    {
+      "file": "documents-1280.png",
+      "view": "documents",
+      "viewport_width": 1280,
+      "page_width": 1280,
+      "page_height": 1576,
+      "horizontal_overflow": false
+    },
+    {
+      "file": "documents-library-1280.png",
+      "view": "documents-library",
+      "viewport_width": 1280,
+      "page_width": 1280,
+      "page_height": 1576,
+      "horizontal_overflow": false
+    },
+    {
+      "file": "search-1280.png",
+      "view": "search",
+      "viewport_width": 1280,
+      "page_width": 1280,
+      "page_height": 900,
+      "horizontal_overflow": false
+    },
+    {
+      "file": "ask-1280.png",
+      "view": "ask",
+      "viewport_width": 1280,
+      "page_width": 1280,
+      "page_height": 900,
+      "horizontal_overflow": false
+    },
+    {
+      "file": "agent-1280.png",
+      "view": "agent",
+      "viewport_width": 1280,
+      "page_width": 1280,
+      "page_height": 900,
+      "horizontal_overflow": false
+    },
+    {
+      "file": "gap-check-1280.png",
+      "view": "gap-check",
+      "viewport_width": 1280,
+      "page_width": 1280,
+      "page_height": 900,
+      "horizontal_overflow": false
+    },
+    {
+      "file": "invalid-key-1280.png",
+      "view": "invalid-key",
+      "viewport_width": 1280,
+      "page_width": 1280,
+      "page_height": 1066,
+      "horizontal_overflow": false
+    },
+    {
+      "file": "no-key-390.png",
+      "view": "no-key",
+      "viewport_width": 390,
+      "page_width": 501,
+      "page_height": 844,
+      "horizontal_overflow": true
+    },
+    {
+      "file": "documents-390.png",
+      "view": "documents",
+      "viewport_width": 390,
+      "page_width": 722,
+      "page_height": 2503,
+      "horizontal_overflow": true
+    },
+    {
+      "file": "documents-library-390.png",
+      "view": "documents-library",
+      "viewport_width": 390,
+      "page_width": 722,
+      "page_height": 2503,
+      "horizontal_overflow": true
+    },
+    {
+      "file": "search-390.png",
+      "view": "search",
+      "viewport_width": 390,
+      "page_width": 498,
+      "page_height": 844,
+      "horizontal_overflow": true
+    },
+    {
+      "file": "ask-390.png",
+      "view": "ask",
+      "viewport_width": 390,
+      "page_width": 497,
+      "page_height": 844,
+      "horizontal_overflow": true
+    },
+    {
+      "file": "agent-390.png",
+      "view": "agent",
+      "viewport_width": 390,
+      "page_width": 499,
+      "page_height": 844,
+      "horizontal_overflow": true
+    },
+    {
+      "file": "gap-check-390.png",
+      "view": "gap-check",
+      "viewport_width": 390,
+      "page_width": 498,
+      "page_height": 844,
+      "horizontal_overflow": true
+    },
+    {
+      "file": "invalid-key-390.png",
+      "view": "invalid-key",
+      "viewport_width": 390,
+      "page_width": 501,
+      "page_height": 1177,
+      "horizontal_overflow": true
+    }
+  ],
+  "page_errors": [],
+  "remote_requests": []
+}

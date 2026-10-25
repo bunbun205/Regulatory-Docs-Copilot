@@ -4,6 +4,65 @@ Working notes and decision records for `labdocs`.
 
 ## Decisions
 
+### Frontend upgrade audit (F0, 2026-10-25)
+
+- [FRONTEND_SEED.md](../FRONTEND_SEED.md) overrides SEED on frontend design,
+  dependency and layout choices. [F0 audit and plan](frontend-f0-audit.md)
+  records the reuse map, file layout, gates and untracked-baseline Git issue.
+- Use hand-written components, CSS Modules and shared tokens with system fonts.
+  Settings context plus small async/polling hooks suffice; no query/state library.
+  Retain the existing Oxlint installation; adding ESLint is outside the newly
+  approved dependency list and would require approval.
+- Keys stay in sessionStorage; non-secret preferences use localStorage. Store
+  only the last ten Q&A in sessionStorage. Model/document output remains text.
+- F0 enables strict in both TypeScript projects. Only F1 introduces the approved
+  test/router/icon dependencies. Missing frontend suites are recorded as absent,
+  never made green with skip or allow-no-tests flags.
+- Deterministic browser runs use the fake provider and an isolated test corpus.
+  Its stock default does not provide valid structured outputs. A test-only
+  startup harness can script the existing FakeLLM without modifying app code.
+  The local Qwen model is reserved for manual checks.
+- Browser AbortController cancellation stops waiting locally; only the existing
+  gap-job cancel endpoint supplies cooperative server cancellation. Explain the
+  distinction in UI copy. Never report a job cancelled before the API does.
+- Approved F0 follow-up: label local abort **Stop waiting** and server gap
+  cancellation **Cancel run**. Omit unsupported provider/model chips; mention
+  unavailable values only in Details. Drop document chunk counts if their
+  bounded detail requests make the table slow.
+- Playwright starts in F1 with all-route 1280/390/360px screenshots and page
+  overflow assertions. Commit only final milestone screenshots. Initial route
+  JS has an approximately 110 kB gzip budget, reported per PR. Oxlint permits
+  no new warnings; F5 removes the three Documents warnings and makes them fatal.
+
+## Frontend API needs
+
+Recorded during F0 against the current generated contract. These are proposals
+for separate backend work, **not backend changes authorized by this upgrade**.
+Missing fields must not be invented in frontend interfaces. Render the fallback
+until an approved endpoint/type change exists.
+
+| Need / affected milestone | Current contract | Minimal proposed change | Frontend behavior now |
+| --- | --- | --- | --- |
+| Structured errors and field validation (F1) | Most runtime errors use `{error:{code,message,request_id}}`, but OpenAPI advertises FastAPI's different `HTTPValidationError` for 422 and omits other error responses. Field errors are not returned | Document the existing envelope on response models; optional safe field-name/message details | Parse unknown bodies with guards; validate known field constraints locally; otherwise show form-level error. Never copy request headers/key into details |
+| Readiness detail (F1) | `/readyz` response is only a generic string-keyed object in generated types; runtime returns nested status/checks. No embedder-loaded check | Typed readiness response and optional embedding status | Narrow nested values at runtime. Show only supplied checks; say model readiness is unknown. Do not infer model readiness from database success |
+| Live limits and backend capabilities (F1/F4/F5) | No endpoint reports enabled backends, upload bytes, SOP chars/clause cap or model configuration. Defaults are 25 MiB, 200,000 SOP chars, 80 clauses; env may change them | Optional typed capabilities/limits response | Validate documented default file limits/types, bound fields using known schema constraints, and handle authoritative 413/422. Do not claim defaults reflect runtime overrides; backend selection failures remain visible |
+| Cited chunk text and passage position (F2/F3/F4) | Ask/Agent and gap citations include `document_id`, `chunk_id`, title, page, score and excerpt; no full-chunk lookup or cited-span offsets. Search has full text for its own returned hits | Optional read-scoped chunk lookup with text/span metadata | Show the supplied excerpt labelled as an excerpt. Reuse exact known search-hit text only for the same chunk ID. Enrich agency/year/version with existing document detail; show unavailable if that fails |
+| Inline citation placement (F2/F3) | `answer` is an unconstrained string and citations are an array. `[n]` markers are not guaranteed by the API | Optional structured answer segments or documented stable marker-to-citation ordering | Parse only valid in-range markers as React text/chip nodes. Supply a numbered source list when no markers exist; never invent inline placement or render HTML |
+| Model/provider in Ask/Agent (F2/F3) | Response schemas have no model/provider. Gap report metadata may contain a model string | Optional model/provider fields in response metadata | Omit optional chips; mention unavailable only inside Details. Do not label it Qwen from local assumptions |
+| Agent truncation flag (F3) | `AgentTraceStepResponse` exposes `result_summary` but no `truncated` boolean. Current tools append `; output truncated` to summaries | Optional per-step `truncated: boolean` | Preserve summary as text and label truncation when that explicit marker is present; do not fabricate a response field |
+| Progress-time caps (F4) | `GapCheckProgress` has phase and clause/requirement totals/done; `caps_hit` lives in the final report | Optional `caps_hit` on progress | Show report caps after completion and input cap errors immediately. During active polling, do not suggest caps have been checked |
+| Gap run metadata / ingestion report schemas (F4/F5) | `GapCheckReport.metadata` and `IngestionJobResponse.report` are `Record<string, unknown>`; there is no generated typed report body | Typed nested metadata and ingestion report models | Narrow observed keys safely, show unavailable when absent and preserve JSON export. Render post-commit sync warning from supplied failure/report text; do not assume success across both stores |
+| Document chunks and global search/sort (F5) | List already supports metadata/year filters, limit/offset and total, but no title search/sort parameters or chunk count. Detail returns chunk count | Optional list chunk count and title/sort query parameters | Use existing server pagination/filters. Label text search/sort as applying to the loaded page; fetch/cache detail counts for visible rows with bounded concurrency; drop the column if slow |
+| Alternate API base URL (F1) | Vite `/api` proxy works; API has no configured CORS allowance for other origins | Separate deployment-specific CORS configuration if needed | Default `/api`; allow same-origin proxies, explain cross-origin failure and show network errors. Do not change backend CORS or put keys in URLs |
+| Cancellation (F1/F3/F4/F5) | Gap jobs have POST cancel and terminal status polling. Ask/Search/Agent have no server cancellation API; ingestion has none | Optional server cancellation only as separate work | Abort local requests, retain honest wording about server work, poll gap cancellation to terminal status and do not offer fictitious ingestion cancellation |
+
+Pagination, regulation filters, gap upload and gap cooperative cancellation are
+already supported and need no API change. A 429 from the current limiter may
+lack a request ID; show unavailable and use `Retry-After` where provided.
+
+## Decisions (continued)
+
+
 ### Scaffold (milestone 0)
 
 - 2026-10-23 — Python pinned to `>=3.12,<3.13` per SEED.md §5; `uv` provisions 3.12 (the system interpreter is 3.14).
