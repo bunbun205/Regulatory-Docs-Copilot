@@ -5,6 +5,7 @@ and collection. Fixed test credentials are confined to those isolated stores.
 """
 
 # ruff: noqa: E402
+import asyncio
 import hashlib
 import json
 import os
@@ -40,7 +41,7 @@ os.environ.update(
 from app.core.security import hash_api_key
 from app.db.base import Base
 from app.db.models import ApiKey, GapCheckJob
-from app.gapcheck.report import build_report
+from app.gapcheck.report import ALL_VERDICTS, RegulationCitation, build_report, make_finding
 from app.llm.base import LLMMessage, LLMResult, TokenUsage, ToolCall, ToolDefinition
 from app.llm.fake import FakeLLM, FakeResponse
 from app.main import create_app
@@ -50,6 +51,7 @@ from tests.helpers import FakeEmbedder
 WRITE_KEY = "frontend-e2e-write"
 READ_KEY = "frontend-e2e-read"
 WRITER_ID = UUID("10000000-0000-4000-8000-000000000001")
+REPORT_JOB_ID = UUID("10000000-0000-4000-8000-000000000006")
 JOB_ID = UUID("10000000-0000-4000-8000-000000000003")
 CHUNK_ID = UUID("10000000-0000-4000-8000-000000000004")
 SOURCE = "Staff must record instrument checks in a training log before using the equipment."
@@ -67,6 +69,35 @@ class BrowserLLM(FakeLLM):
         max_tokens: int = 1024,
     ) -> LLMResult:
         if not tools:
+            if messages and messages[0].content.startswith(
+                "You are a regulatory compliance judge."
+            ):
+                # Bounded delay makes the real asynchronous job's progress/cancel states observable.
+                await asyncio.sleep(1.5)
+                quoted = "\n".join(
+                    message.content for message in messages if message.role == "user"
+                )
+                clause_check = "<sop_clause " in quoted
+                ids = re.findall(
+                    r"chunk_id=([0-9a-f-]{36})" if clause_check else r"clause_id=(SOP-\d+)",
+                    quoted,
+                )
+                response = FakeResponse(
+                    text=json.dumps(
+                        {
+                            "verdict": "compliant" if clause_check else "addressed",
+                            "citations": list(dict.fromkeys(ids)),
+                            "rationale": (
+                                "Synthetic browser fixture: the provided training-log text "
+                                "matches the seeded requirement."
+                            ),
+                        }
+                    ),
+                    usage=TokenUsage(input_tokens=24, output_tokens=8),
+                )
+                return await FakeLLM([response]).chat(
+                    messages, temperature=temperature, max_tokens=max_tokens
+                )
             return await super().chat(messages, temperature=temperature, max_tokens=max_tokens)
         completed = [message for message in messages if message.role == "tool"]
         if not completed:
@@ -183,6 +214,77 @@ async def seed(application) -> None:
                     findings=[],
                     metadata={"model": "fake:frontend-fixture", "backend": "pgvector"},
                     caps_hit=[],
+                    generated_at=now,
+                ),
+                created_at=now,
+                started_at=now,
+                finished_at=now,
+            )
+        )
+        # A labelled report fixture covers every verdict treatment. It is not a model run.
+        fixture_citation = RegulationCitation(
+            chunk_id=str(CHUNK_ID),
+            document_id=str(record.document_id),
+            title=record.title,
+            page=1,
+            snippet=SOURCE,
+            score=0.82,
+        )
+        clauses = [
+            {
+                "clause_id": "SOP-001",
+                "section": "Synthetic report fixture — all verdict treatments",
+                "text": "Staff record instrument checks. <script>This is quoted SOP text.</script>",
+                "char_start": 0,
+                "char_end": 80,
+            }
+        ]
+        findings = [
+            make_finding(
+                direction="regulation_to_sop"
+                if verdict in {"addressed", "partially_addressed", "missing"}
+                else "sop_to_regulation",
+                verdict=verdict,
+                sop_clause_refs=["SOP-001"],
+                regulation_citations=[]
+                if verdict in {"judge_failed", "not_covered_by_corpus"}
+                else [fixture_citation],
+                rationale=(
+                    f"Synthetic report fixture: {verdict}. "
+                    "Review the SOP beside the supplied regulation excerpt."
+                ),
+                requirement_strength="mandatory",
+            )
+            for verdict in ALL_VERDICTS
+        ]
+        session.add(
+            GapCheckJob(
+                id=REPORT_JOB_ID,
+                api_key_id=WRITER_ID,
+                status="completed",
+                progress={
+                    "phase": "completed",
+                    "clauses_total": 1,
+                    "clauses_done": 1,
+                    "requirements_total": 1,
+                    "requirements_done": 1,
+                },
+                report=build_report(
+                    job_id=str(REPORT_JOB_ID),
+                    sop_clauses=clauses,
+                    findings=findings,
+                    metadata={
+                        "model": "fake:synthetic-report-fixture",
+                        "backend": "pgvector",
+                        "duration_ms": 12500,
+                        "token_usage": {
+                            "input_tokens": 240,
+                            "output_tokens": 80,
+                            "total_tokens": 320,
+                        },
+                        "caps": {"max_clauses": 80, "max_requirements": 120, "max_tokens": 200000},
+                    },
+                    caps_hit=["requirements"],
                     generated_at=now,
                 ),
                 created_at=now,

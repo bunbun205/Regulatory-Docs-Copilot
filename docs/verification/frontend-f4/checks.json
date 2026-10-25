@@ -1,0 +1,108 @@
+{
+  "milestone": "F4",
+  "branch": "feat/frontend-f4-gap-check",
+  "unit": {
+    "passed": 93,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser_full_suite": {
+    "startTime": "2026-10-25T19:21:42.696Z",
+    "duration": 112625.992,
+    "expected": 32,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "browser_final_print_regression": {
+    "startTime": "2026-10-25T19:42:05.037Z",
+    "duration": 10363.837000000001,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "widths": [
+    1280,
+    390,
+    360
+  ],
+  "horizontal_overflow": false,
+  "lint": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "strict_typecheck": "pass",
+  "generated_type_freshness": "pass against running clean-backend schema in full browser suite",
+  "production_build": "pass",
+  "bundle": {
+    "route": "/ask",
+    "chunks": [
+      {
+        "file": "assets/index-MX3GdBPC.js",
+        "gzip_bytes": 94543
+      },
+      {
+        "file": "assets/AskView-BqYMiN58.js",
+        "gzip_bytes": 1950
+      },
+      {
+        "file": "assets/Sources-Byjux5Iq.js",
+        "gzip_bytes": 4540
+      },
+      {
+        "file": "assets/useAsync-DmX4REZ9.js",
+        "gzip_bytes": 655
+      },
+      {
+        "file": "assets/RequestStatus-CR7Y-rTL.js",
+        "gzip_bytes": 406
+      }
+    ],
+    "total_gzip_bytes": 102094,
+    "budget_gzip_bytes": 110000
+  },
+  "final_screenshots": 162,
+  "visual_review": "Desktop/mobile input, progress, report/comparisons, filtered/manual-review, empty/errors, upload, cancellation, native Qwen result and print PDF opened and inspected. Automated overflow assertions cover every capture.",
+  "recorded_runs": {
+    "fake": "fake-run-1280.json",
+    "native_qwen": "local-model-run.json"
+  },
+  "production_backend_changes": false,
+  "ci_required": [
+    "Web",
+    "Lint and typecheck",
+    "Tests"
+  ],
+  "deferred": [
+    "F5 Documents",
+    "F6 complete browser journey/CI and broader accessibility/performance",
+    "PDF/TXT browser upload journeys"
+  ],
+  "print_pdf_content": {
+    "rationales": 8,
+    "suggestions": 8,
+    "checked_by": "pypdf assertion in the committed browser spec"
+  },
+  "backend": {
+    "passed": 155,
+    "failed": 0,
+    "skipped": 0,
+    "checkout": "clean committed backend"
+  },
+  "final_acceptance_exports": {
+    "startTime": "2026-10-25T20:07:29.150Z",
+    "duration": 10477.981000000002,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "acceptance_review": "../../frontend-f4-acceptance.md",
+  "final_acceptance_full_browser": {
+    "passed": 32,
+    "failed": 0,
+    "skipped": 0,
+    "log": "full clean-checkout F4 acceptance suite"
+  }
+}

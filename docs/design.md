@@ -4,6 +4,39 @@ Working notes and decision records for `labdocs`.
 
 ## Decisions
 
+### Gap Check review (F4)
+
+- Input uses the existing multipart endpoint for exactly one paste or file.
+  Local file prechecks mirror documented default extensions/25 MiB and SOP text
+  uses the documented 200,000-character default; server validation remains
+  authoritative. No capability/limits endpoint is invented. Document scope is
+  debounced and comes from the existing filtered list total, with three titles
+  previewed. Matching documents are a search scope, not a coverage guarantee.
+- Job URLs resume serialized polling. Phases/counters come from API progress;
+  elapsed time starts from the supplied job timestamp. Poll failures keep the
+  last confirmed state alongside a visible error. Cancel run requests server
+  cancellation and waits for a terminal response before saying it is cancelled.
+- Reports preserve the API disclaimer, show all eight verdicts and reported
+  severity counts, and give failed judgements a distinct manual-review count
+  and unresolved treatment. Outside-corpus clauses have a separate neutral group.
+  Model/backend chips appear only for supplied string values; unknown metadata
+  is narrowed without coercion. Tokens/caps are labelled as reported, and an
+  empty caps list is not a promise of complete coverage.
+- Findings filter by severity/direction/verdict/text using URL query parameters;
+  sorting is severity then SOP clause order. A current-parameters ref prevents a
+  rapid selection after Clear filters from restoring cleared parameters. Unit
+  and browser regressions cover that interaction.
+- Comparisons render SOP text and supplied regulation excerpts as React text.
+  Suggestions carry the not-legal-advice label. JSON downloads preserve the
+  complete response; Markdown escapes HTML and Markdown in untrusted text.
+  Downloads include the full report. Printing uses the current selection, opens
+  details for print, restores them afterward and identifies the selected count.
+- The fake-provider job runs through real app-factory submission, retrieval,
+  judge validation, polling and cancellation in isolated stores. A separate,
+  explicitly synthetic report fixture covers all verdicts/caps/errors visually;
+  it is not a model run or regulatory ground truth. Native Qwen manual results
+  and their actual settings/limits are recorded in the F4 review evidence.
+
 ### Agent review (F3)
 
 - Partial status appears before the answer, with plain explanations for time
