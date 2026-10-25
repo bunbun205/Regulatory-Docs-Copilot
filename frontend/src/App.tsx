@@ -68,7 +68,7 @@ export default function App() {
         <div className={styles.pageHeader}><p className={styles.eyebrow}>{page.path === '/settings' ? 'YOUR WORKSPACE' : 'DOCUMENT WORKBENCH'}</p><h1>{page.path === '/ask' ? 'Ask your documents' : page.label}</h1><p>{page.description}</p></div>
         <Suspense fallback={<Card><Skeleton lines={5} /></Card>}>
           {!key && page.path !== '/settings' ? <Card><div className={styles.connectPrompt}><KeyRound size={26} strokeWidth={1.5} /><h2>Make a connection first</h2><p>Add and validate an API key in Settings to start working with your documents.</p><Link to="/settings" className={styles.linkButton}>Open Settings <ChevronRight size={16} /></Link></div></Card> :
-            <div className={['/gap-check', '/documents'].includes(page.path) ? styles.legacy : ''} key={page.path === '/settings' ? 'settings' : `${preferences.baseUrl}:${key}`}><Routes>
+            <div className={page.path === '/documents' ? styles.legacy : ''} key={page.path === '/settings' ? 'settings' : `${preferences.baseUrl}:${key}`}><Routes>
               <Route path="/" element={<Navigate to="/ask" replace />} />
               <Route path="/ask" element={<Ask />} /><Route path="/search" element={<SearchView />} />
               <Route path="/agent" element={<Agent />} /><Route path="/gap-check" element={<GapCheck />} />

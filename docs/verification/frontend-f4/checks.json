@@ -1,0 +1,82 @@
+{
+  "milestone": "F4",
+  "branch": "feat/frontend-f4-gap-check",
+  "unit": {
+    "passed": 92,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser_full_suite": {
+    "startTime": "2026-10-25T19:21:42.696Z",
+    "duration": 112625.992,
+    "expected": 32,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "browser_final_print_regression": {
+    "startTime": "2026-10-25T19:27:21.396Z",
+    "duration": 11458.425,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "widths": [
+    1280,
+    390,
+    360
+  ],
+  "horizontal_overflow": false,
+  "lint": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "strict_typecheck": "pass",
+  "generated_type_freshness": "pass against running clean-backend schema in full browser suite",
+  "production_build": "pass",
+  "bundle": {
+    "route": "/ask",
+    "chunks": [
+      {
+        "file": "assets/index-C-9c1uuy.js",
+        "gzip_bytes": 94541
+      },
+      {
+        "file": "assets/AskView-BTHwMqUS.js",
+        "gzip_bytes": 1948
+      },
+      {
+        "file": "assets/Sources-CLNx9ZZq.js",
+        "gzip_bytes": 4538
+      },
+      {
+        "file": "assets/useAsync-CqlwcnHK.js",
+        "gzip_bytes": 653
+      },
+      {
+        "file": "assets/RequestStatus-AlkWEpJc.js",
+        "gzip_bytes": 402
+      }
+    ],
+    "total_gzip_bytes": 102082,
+    "budget_gzip_bytes": 110000
+  },
+  "final_screenshots": 162,
+  "visual_review": "Desktop/mobile input, progress, report/comparisons, filtered/manual-review, empty/errors, upload, cancellation, native Qwen result and print PDF opened and inspected. Automated overflow assertions cover every capture.",
+  "recorded_runs": {
+    "fake": "fake-run-1280.json",
+    "native_qwen": "local-model-run.json"
+  },
+  "production_backend_changes": false,
+  "ci_required": [
+    "Web",
+    "Lint and typecheck",
+    "Tests"
+  ],
+  "deferred": [
+    "F5 Documents",
+    "F6 complete browser journey/CI and broader accessibility/performance",
+    "PDF/TXT browser upload journeys"
+  ]
+}

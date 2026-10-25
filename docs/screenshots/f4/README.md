@@ -1,0 +1,181 @@
+# F4 final screenshots
+
+Review stop: input, progress and report at both requested widths. These are real Chromium captures. Every automated capture also asserts no horizontal page overflow at 1280, 390 and 360px.
+
+| State | 1280px | 390px |
+| --- | --- | --- |
+| Input | [Open](gap-input-light-1280.png) | [Open](gap-input-light-390.png) |
+| Actual fake-job progress | [Open](gap-progress-light-1280.png) | [Open](gap-progress-light-390.png) |
+| Actual fake-job report | [Open](gap-real-report-light-1280.png) | [Open](gap-real-report-light-390.png) |
+| All-verdict synthetic report fixture | [Open](gap-report-all-verdicts-light-1280.png) | [Open](gap-report-all-verdicts-light-390.png) |
+| Manual Qwen progress | [Open](gap-local-progress-light-1280.png) | [Open](gap-local-progress-light-390.png) |
+| Manual Qwen result | [Open](gap-local-result-light-1280.png) | [Open](gap-local-result-light-390.png) |
+
+The fake job is an actual submitted analysis against an isolated synthetic corpus. The separate all-verdict report is a presentation fixture, not a model run. Phase/poll/input-error and malformed-metadata scenarios are explicit browser response fixtures. Native Qwen images show the recorded capped manual run; its findings are not verified ground truth.
+
+Only the final 162 images are committed. The three focused print/export cases were repeated after the final print-event restoration guard; no failures or skips.
+
+| Capture | Image |
+| --- | --- |
+| agent-error-light-1280 | [Open](agent-error-light-1280.png) |
+| agent-error-light-360 | [Open](agent-error-light-360.png) |
+| agent-error-light-390 | [Open](agent-error-light-390.png) |
+| agent-light-1280 | [Open](agent-light-1280.png) |
+| agent-light-360 | [Open](agent-light-360.png) |
+| agent-light-390 | [Open](agent-light-390.png) |
+| agent-partial-error-truncated-light-1280 | [Open](agent-partial-error-truncated-light-1280.png) |
+| agent-partial-error-truncated-light-360 | [Open](agent-partial-error-truncated-light-360.png) |
+| agent-partial-error-truncated-light-390 | [Open](agent-partial-error-truncated-light-390.png) |
+| agent-pending-light-1280 | [Open](agent-pending-light-1280.png) |
+| agent-pending-light-360 | [Open](agent-pending-light-360.png) |
+| agent-pending-light-390 | [Open](agent-pending-light-390.png) |
+| agent-source-light-1280 | [Open](agent-source-light-1280.png) |
+| agent-source-light-360 | [Open](agent-source-light-360.png) |
+| agent-source-light-390 | [Open](agent-source-light-390.png) |
+| agent-stopped-light-1280 | [Open](agent-stopped-light-1280.png) |
+| agent-stopped-light-360 | [Open](agent-stopped-light-360.png) |
+| agent-stopped-light-390 | [Open](agent-stopped-light-390.png) |
+| agent-timeout-empty-light-1280 | [Open](agent-timeout-empty-light-1280.png) |
+| agent-timeout-empty-light-360 | [Open](agent-timeout-empty-light-360.png) |
+| agent-timeout-empty-light-390 | [Open](agent-timeout-empty-light-390.png) |
+| agent-trace-light-1280 | [Open](agent-trace-light-1280.png) |
+| agent-trace-light-360 | [Open](agent-trace-light-360.png) |
+| agent-trace-light-390 | [Open](agent-trace-light-390.png) |
+| ask-abstention-light-1280 | [Open](ask-abstention-light-1280.png) |
+| ask-abstention-light-360 | [Open](ask-abstention-light-360.png) |
+| ask-abstention-light-390 | [Open](ask-abstention-light-390.png) |
+| ask-answer-history-light-1280 | [Open](ask-answer-history-light-1280.png) |
+| ask-answer-history-light-360 | [Open](ask-answer-history-light-360.png) |
+| ask-answer-history-light-390 | [Open](ask-answer-history-light-390.png) |
+| ask-dark-1280 | [Open](ask-dark-1280.png) |
+| ask-dark-390 | [Open](ask-dark-390.png) |
+| ask-error-light-1280 | [Open](ask-error-light-1280.png) |
+| ask-error-light-360 | [Open](ask-error-light-360.png) |
+| ask-error-light-390 | [Open](ask-error-light-390.png) |
+| ask-filters-invalid-light-1280 | [Open](ask-filters-invalid-light-1280.png) |
+| ask-filters-invalid-light-360 | [Open](ask-filters-invalid-light-360.png) |
+| ask-filters-invalid-light-390 | [Open](ask-filters-invalid-light-390.png) |
+| ask-light-1280 | [Open](ask-light-1280.png) |
+| ask-light-360 | [Open](ask-light-360.png) |
+| ask-light-390 | [Open](ask-light-390.png) |
+| ask-pending-light-1280 | [Open](ask-pending-light-1280.png) |
+| ask-pending-light-360 | [Open](ask-pending-light-360.png) |
+| ask-pending-light-390 | [Open](ask-pending-light-390.png) |
+| ask-rate-limit-light-1280 | [Open](ask-rate-limit-light-1280.png) |
+| ask-rate-limit-light-360 | [Open](ask-rate-limit-light-360.png) |
+| ask-rate-limit-light-390 | [Open](ask-rate-limit-light-390.png) |
+| ask-source-light-1280 | [Open](ask-source-light-1280.png) |
+| ask-source-light-360 | [Open](ask-source-light-360.png) |
+| ask-source-light-390 | [Open](ask-source-light-390.png) |
+| ask-source-metadata-error-light-1280 | [Open](ask-source-metadata-error-light-1280.png) |
+| ask-source-metadata-error-light-360 | [Open](ask-source-metadata-error-light-360.png) |
+| ask-source-metadata-error-light-390 | [Open](ask-source-metadata-error-light-390.png) |
+| ask-stopped-light-1280 | [Open](ask-stopped-light-1280.png) |
+| ask-stopped-light-360 | [Open](ask-stopped-light-360.png) |
+| ask-stopped-light-390 | [Open](ask-stopped-light-390.png) |
+| ask-ungrounded-light-1280 | [Open](ask-ungrounded-light-1280.png) |
+| ask-ungrounded-light-360 | [Open](ask-ungrounded-light-360.png) |
+| ask-ungrounded-light-390 | [Open](ask-ungrounded-light-390.png) |
+| documents-light-1280 | [Open](documents-light-1280.png) |
+| documents-light-360 | [Open](documents-light-360.png) |
+| documents-light-390 | [Open](documents-light-390.png) |
+| gap-cancel-requested-light-1280 | [Open](gap-cancel-requested-light-1280.png) |
+| gap-cancel-requested-light-360 | [Open](gap-cancel-requested-light-360.png) |
+| gap-cancel-requested-light-390 | [Open](gap-cancel-requested-light-390.png) |
+| gap-cancelled-light-1280 | [Open](gap-cancelled-light-1280.png) |
+| gap-cancelled-light-360 | [Open](gap-cancelled-light-360.png) |
+| gap-cancelled-light-390 | [Open](gap-cancelled-light-390.png) |
+| gap-check-light-1280 | [Open](gap-check-light-1280.png) |
+| gap-check-light-360 | [Open](gap-check-light-360.png) |
+| gap-check-light-390 | [Open](gap-check-light-390.png) |
+| gap-empty-report-metadata-light-1280 | [Open](gap-empty-report-metadata-light-1280.png) |
+| gap-empty-report-metadata-light-360 | [Open](gap-empty-report-metadata-light-360.png) |
+| gap-empty-report-metadata-light-390 | [Open](gap-empty-report-metadata-light-390.png) |
+| gap-failed-light-1280 | [Open](gap-failed-light-1280.png) |
+| gap-failed-light-360 | [Open](gap-failed-light-360.png) |
+| gap-failed-light-390 | [Open](gap-failed-light-390.png) |
+| gap-file-invalid-light-1280 | [Open](gap-file-invalid-light-1280.png) |
+| gap-file-invalid-light-360 | [Open](gap-file-invalid-light-360.png) |
+| gap-file-invalid-light-390 | [Open](gap-file-invalid-light-390.png) |
+| gap-file-valid-light-1280 | [Open](gap-file-valid-light-1280.png) |
+| gap-file-valid-light-360 | [Open](gap-file-valid-light-360.png) |
+| gap-file-valid-light-390 | [Open](gap-file-valid-light-390.png) |
+| gap-input-cap-error-light-1280 | [Open](gap-input-cap-error-light-1280.png) |
+| gap-input-cap-error-light-360 | [Open](gap-input-cap-error-light-360.png) |
+| gap-input-cap-error-light-390 | [Open](gap-input-cap-error-light-390.png) |
+| gap-input-light-1280 | [Open](gap-input-light-1280.png) |
+| gap-input-light-360 | [Open](gap-input-light-360.png) |
+| gap-input-light-390 | [Open](gap-input-light-390.png) |
+| gap-job-light-1280 | [Open](gap-job-light-1280.png) |
+| gap-job-light-360 | [Open](gap-job-light-360.png) |
+| gap-job-light-390 | [Open](gap-job-light-390.png) |
+| gap-local-progress-light-1280 | [Open](gap-local-progress-light-1280.png) |
+| gap-local-progress-light-390 | [Open](gap-local-progress-light-390.png) |
+| gap-local-result-light-1280 | [Open](gap-local-result-light-1280.png) |
+| gap-local-result-light-390 | [Open](gap-local-result-light-390.png) |
+| gap-missing-report-light-1280 | [Open](gap-missing-report-light-1280.png) |
+| gap-missing-report-light-360 | [Open](gap-missing-report-light-360.png) |
+| gap-missing-report-light-390 | [Open](gap-missing-report-light-390.png) |
+| gap-phase-finalizing-light-1280 | [Open](gap-phase-finalizing-light-1280.png) |
+| gap-phase-finalizing-light-360 | [Open](gap-phase-finalizing-light-360.png) |
+| gap-phase-finalizing-light-390 | [Open](gap-phase-finalizing-light-390.png) |
+| gap-phase-queued-light-1280 | [Open](gap-phase-queued-light-1280.png) |
+| gap-phase-queued-light-360 | [Open](gap-phase-queued-light-360.png) |
+| gap-phase-queued-light-390 | [Open](gap-phase-queued-light-390.png) |
+| gap-phase-requirements-light-1280 | [Open](gap-phase-requirements-light-1280.png) |
+| gap-phase-requirements-light-360 | [Open](gap-phase-requirements-light-360.png) |
+| gap-phase-requirements-light-390 | [Open](gap-phase-requirements-light-390.png) |
+| gap-poll-error-light-1280 | [Open](gap-poll-error-light-1280.png) |
+| gap-poll-error-light-360 | [Open](gap-poll-error-light-360.png) |
+| gap-poll-error-light-390 | [Open](gap-poll-error-light-390.png) |
+| gap-progress-light-1280 | [Open](gap-progress-light-1280.png) |
+| gap-progress-light-360 | [Open](gap-progress-light-360.png) |
+| gap-progress-light-390 | [Open](gap-progress-light-390.png) |
+| gap-real-report-light-1280 | [Open](gap-real-report-light-1280.png) |
+| gap-real-report-light-360 | [Open](gap-real-report-light-360.png) |
+| gap-real-report-light-390 | [Open](gap-real-report-light-390.png) |
+| gap-report-all-verdicts-light-1280 | [Open](gap-report-all-verdicts-light-1280.png) |
+| gap-report-all-verdicts-light-360 | [Open](gap-report-all-verdicts-light-360.png) |
+| gap-report-all-verdicts-light-390 | [Open](gap-report-all-verdicts-light-390.png) |
+| gap-report-filter-empty-light-1280 | [Open](gap-report-filter-empty-light-1280.png) |
+| gap-report-filter-empty-light-360 | [Open](gap-report-filter-empty-light-360.png) |
+| gap-report-filter-empty-light-390 | [Open](gap-report-filter-empty-light-390.png) |
+| gap-report-filtered-light-1280 | [Open](gap-report-filtered-light-1280.png) |
+| gap-report-filtered-light-360 | [Open](gap-report-filtered-light-360.png) |
+| gap-report-filtered-light-390 | [Open](gap-report-filtered-light-390.png) |
+| gap-report-manual-review-light-1280 | [Open](gap-report-manual-review-light-1280.png) |
+| gap-report-manual-review-light-360 | [Open](gap-report-manual-review-light-360.png) |
+| gap-report-manual-review-light-390 | [Open](gap-report-manual-review-light-390.png) |
+| gap-report-print-1280 | [Open](gap-report-print-1280.png) |
+| search-compare-light-1280 | [Open](search-compare-light-1280.png) |
+| search-compare-light-360 | [Open](search-compare-light-360.png) |
+| search-compare-light-390 | [Open](search-compare-light-390.png) |
+| search-compare-partial-error-light-1280 | [Open](search-compare-partial-error-light-1280.png) |
+| search-compare-partial-error-light-360 | [Open](search-compare-partial-error-light-360.png) |
+| search-compare-partial-error-light-390 | [Open](search-compare-partial-error-light-390.png) |
+| search-empty-light-1280 | [Open](search-empty-light-1280.png) |
+| search-empty-light-360 | [Open](search-empty-light-360.png) |
+| search-empty-light-390 | [Open](search-empty-light-390.png) |
+| search-light-1280 | [Open](search-light-1280.png) |
+| search-light-360 | [Open](search-light-360.png) |
+| search-light-390 | [Open](search-light-390.png) |
+| search-pending-light-1280 | [Open](search-pending-light-1280.png) |
+| search-pending-light-360 | [Open](search-pending-light-360.png) |
+| search-pending-light-390 | [Open](search-pending-light-390.png) |
+| search-results-light-1280 | [Open](search-results-light-1280.png) |
+| search-results-light-360 | [Open](search-results-light-360.png) |
+| search-results-light-390 | [Open](search-results-light-390.png) |
+| search-stopped-light-1280 | [Open](search-stopped-light-1280.png) |
+| search-stopped-light-360 | [Open](search-stopped-light-360.png) |
+| search-stopped-light-390 | [Open](search-stopped-light-390.png) |
+| settings-invalid-light-1280 | [Open](settings-invalid-light-1280.png) |
+| settings-invalid-light-390 | [Open](settings-invalid-light-390.png) |
+| settings-read-only-light-1280 | [Open](settings-read-only-light-1280.png) |
+| settings-read-only-light-390 | [Open](settings-read-only-light-390.png) |
+| settings-valid-dark-1280 | [Open](settings-valid-dark-1280.png) |
+| settings-valid-dark-390 | [Open](settings-valid-dark-390.png) |
+| settings-valid-light-1280 | [Open](settings-valid-light-1280.png) |
+| settings-valid-light-360 | [Open](settings-valid-light-360.png) |
+| settings-valid-light-390 | [Open](settings-valid-light-390.png) |
+| shared-error-light-1280 | [Open](shared-error-light-1280.png) |
+| shared-error-light-390 | [Open](shared-error-light-390.png) |

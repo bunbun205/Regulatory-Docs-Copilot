@@ -1,0 +1,446 @@
+{
+  "check": "Manual native local-model gap run, not a CI or verified quality criterion",
+  "input_fixture": "tests/fixtures/gapcheck/clean_sop.md (synthetic, not verified regulatory ground truth)",
+  "model_profile": "qwen2.5:3b",
+  "profile": {
+    "backend": "pgvector",
+    "judge_concurrency": 1,
+    "judge_max_tokens": 256,
+    "llm_timeout_seconds": 180,
+    "llm_retries": 0,
+    "max_requirements": 3,
+    "note": "A three-requirement cap bounds this manual CPU run; the report must disclose any cap hit. Other settings follow docs/local-testing.md."
+  },
+  "scope": {
+    "source_agency": "FDA",
+    "doc_type": "guidance",
+    "year_min": 2003,
+    "year_max": 2003
+  },
+  "submission_status": 202,
+  "submission": {
+    "job_id": "accf73f9-46f2-484c-b296-8d2f01e53927",
+    "status": "queued"
+  },
+  "progress": [
+    {
+      "elapsed_seconds": 0.172,
+      "status": "running",
+      "progress": {
+        "phase": "clauses",
+        "clauses_total": 5,
+        "clauses_done": 0,
+        "requirements_total": 0,
+        "requirements_done": 0
+      }
+    },
+    {
+      "elapsed_seconds": 5.33,
+      "status": "running",
+      "progress": {
+        "phase": "clauses",
+        "clauses_total": 5,
+        "clauses_done": 1,
+        "requirements_total": 0,
+        "requirements_done": 0
+      }
+    },
+    {
+      "elapsed_seconds": 20.353,
+      "status": "running",
+      "progress": {
+        "phase": "clauses",
+        "clauses_total": 5,
+        "clauses_done": 2,
+        "requirements_total": 0,
+        "requirements_done": 0
+      }
+    },
+    {
+      "elapsed_seconds": 35.386,
+      "status": "running",
+      "progress": {
+        "phase": "clauses",
+        "clauses_total": 5,
+        "clauses_done": 3,
+        "requirements_total": 0,
+        "requirements_done": 0
+      }
+    },
+    {
+      "elapsed_seconds": 40.396,
+      "status": "running",
+      "progress": {
+        "phase": "clauses",
+        "clauses_total": 5,
+        "clauses_done": 4,
+        "requirements_total": 0,
+        "requirements_done": 0
+      }
+    },
+    {
+      "elapsed_seconds": 55.423,
+      "status": "running",
+      "progress": {
+        "phase": "requirements",
+        "clauses_total": 5,
+        "clauses_done": 5,
+        "requirements_total": 3,
+        "requirements_done": 0
+      }
+    },
+    {
+      "elapsed_seconds": 60.433,
+      "status": "running",
+      "progress": {
+        "phase": "requirements",
+        "clauses_total": 5,
+        "clauses_done": 5,
+        "requirements_total": 3,
+        "requirements_done": 2
+      }
+    },
+    {
+      "elapsed_seconds": 65.444,
+      "status": "completed",
+      "progress": {
+        "phase": "completed",
+        "clauses_total": 5,
+        "clauses_done": 5,
+        "requirements_total": 3,
+        "requirements_done": 3
+      }
+    }
+  ],
+  "elapsed_seconds": 65.444,
+  "job": {
+    "id": "accf73f9-46f2-484c-b296-8d2f01e53927",
+    "status": "completed",
+    "progress": {
+      "phase": "completed",
+      "clauses_total": 5,
+      "clauses_done": 5,
+      "requirements_total": 3,
+      "requirements_done": 3
+    },
+    "report": {
+      "job_id": "accf73f9-46f2-484c-b296-8d2f01e53927",
+      "generated_at": "2026-10-25T19:21:05.734403Z",
+      "banner": "Decision support only, not legal advice. This report is limited to the ingested corpus and does not establish legal compliance.",
+      "metadata": {
+        "caps": {
+          "max_tokens": 200000,
+          "max_clauses": 80,
+          "max_requirements": 3,
+          "requirements_capped": true
+        },
+        "model": "openai_compatible:qwen2.5:3b",
+        "backend": "pgvector",
+        "filters": {
+          "doc_type": "guidance",
+          "year_max": 2003,
+          "year_min": 2003,
+          "source_agency": "FDA"
+        },
+        "duration_ms": 61826.83,
+        "token_usage": {
+          "input_tokens": 8334,
+          "total_tokens": 9203,
+          "output_tokens": 869
+        },
+        "clauses_total": 5,
+        "judge_failures": 0,
+        "retrieval_top_k": 5,
+        "sop_match_top_k": 3,
+        "judge_cache_hits": 0,
+        "judge_concurrency": 1,
+        "requirements_total": 3,
+        "relevance_threshold": 0.6,
+        "global_top_documents": 2,
+        "requirement_document_ids": [
+          "951f0481-d887-4230-bb44-ed3afb21d581"
+        ]
+      },
+      "caps_hit": [
+        "requirements"
+      ],
+      "counts_by_verdict": {
+        "missing": 3,
+        "partial": 4,
+        "conflict": 0,
+        "addressed": 0,
+        "compliant": 0,
+        "judge_failed": 0,
+        "partially_addressed": 0,
+        "not_covered_by_corpus": 1
+      },
+      "counts_by_severity": {
+        "low": 1,
+        "high": 0,
+        "medium": 7
+      },
+      "counts_by_direction": {
+        "regulation_to_sop": 3,
+        "sop_to_regulation": 5
+      },
+      "sop_clauses": [
+        {
+          "clause_id": "SOP-001",
+          "section": "Purpose",
+          "text": "This SOP describes electronic record controls for the laboratory.",
+          "char_start": 87,
+          "char_end": 152
+        },
+        {
+          "clause_id": "SOP-002",
+          "section": "Electronic records",
+          "text": "1. The laboratory uses a closed electronic record system.",
+          "char_start": 175,
+          "char_end": 232
+        },
+        {
+          "clause_id": "SOP-003",
+          "section": "Electronic records",
+          "text": "2. Access to the system is limited to authorized personnel.",
+          "char_start": 233,
+          "char_end": 292
+        },
+        {
+          "clause_id": "SOP-004",
+          "section": "Electronic records",
+          "text": "3. Electronic signatures are linked to their records.",
+          "char_start": 293,
+          "char_end": 346
+        },
+        {
+          "clause_id": "SOP-005",
+          "section": "Training",
+          "text": "4. Personnel complete training before using the system.",
+          "char_start": 359,
+          "char_end": 414
+        }
+      ],
+      "findings": [
+        {
+          "finding_id": "GAP-0001",
+          "direction": "sop_to_regulation",
+          "verdict": "partial",
+          "severity": "medium",
+          "sop_clause_refs": [
+            "SOP-001"
+          ],
+          "regulation_citations": [
+            {
+              "chunk_id": "da8e8aaa-39eb-47fd-9503-2212198136ab",
+              "document_id": "951f0481-d887-4230-bb44-ed3afb21d581",
+              "title": "Part 11, Electronic Records; Electronic Signatures - Scope and Application",
+              "page": 8,
+              "snippet": "That is, the Agency may take your business practices into 193 account in determining whether part 11 applies. 194 Accordingly, we recommend that, for each record required to be maintained under 195 predicate rules, you determine in advance whether you plan to rely on the electronic 196 record or pap",
+              "score": 0.625704
+            },
+            {
+              "chunk_id": "5af1e0eb-6e27-4e91-9418-9eb01782aea4",
+              "document_id": "951f0481-d887-4230-bb44-ed3afb21d581",
+              "title": "Part 11, Electronic Records; Electronic Signatures - Scope and Application",
+              "page": 1,
+              "snippet": "Guidance for Industry Part 11, Electronic Records; Electronic Signatures \u2014 Scope and Application U.S. Department of Health and Human Services Food and Drug Administration Center for Drug Evaluation and Research (CDER) Center for Biologics Evaluation and Research (CBER) Center for Devices and Radiolo",
+              "score": 0.661376
+            }
+          ],
+          "rationale": "The SOP clause describes electronic record controls for the laboratory but does not provide specific details about access controls, retention, or validation as required by the regulation. The regulation recommends providing reasonable and useful access to records during inspections and enforcing record retention and validation. The SOP does not address these aspects, which are required by the regulation.",
+          "suggested_fix": "Suggested fix (not legal advice): Add the missing detail from the cited regulation to the relevant SOP clause.",
+          "requirement_strength": null,
+          "requirement_id": null
+        },
+        {
+          "finding_id": "GAP-0002",
+          "direction": "sop_to_regulation",
+          "verdict": "partial",
+          "severity": "medium",
+          "sop_clause_refs": [
+            "SOP-002"
+          ],
+          "regulation_citations": [
+            {
+              "chunk_id": "6a381eff-3349-4358-ab02-17b07e9ddd56",
+              "document_id": "951f0481-d887-4230-bb44-ed3afb21d581",
+              "title": "Part 11, Electronic Records; Electronic Signatures - Scope and Application",
+              "page": 8,
+              "snippet": "lead to unnecessary controls and costs and could discourage innovation and technological 160 advances without providing added benefit to the public health. As a result, we want to clarify 161 that the Agency intends to interpret the scope of part 11 narrowly. 162 Under the narrow interpretation of t",
+              "score": 0.650688
+            },
+            {
+              "chunk_id": "dd847184-a3e7-42ea-b3a7-48a89c9c92d7",
+              "document_id": "951f0481-d887-4230-bb44-ed3afb21d581",
+              "title": "Part 11, Electronic Records; Electronic Signatures - Scope and Application",
+              "page": 10,
+              "snippet": "You should provide an investigator with reasonable and useful access to records during 280 an inspection. All records held by you are subject to inspection in accordance with predicate 281 rules (e.g., \u00a7\u00a7 211.180(c), (d), and 108.35(c)(3)(ii)). 282 We recommend that you supply copies of electronic r",
+              "score": 0.642268
+            },
+            {
+              "chunk_id": "83c40732-480a-4f42-8b67-f32b71918139",
+              "document_id": "951f0481-d887-4230-bb44-ed3afb21d581",
+              "title": "Part 11, Electronic Records; Electronic Signatures - Scope and Application",
+              "page": 11,
+              "snippet": "In each case, we recommend that the copying process used produces copies that preserve the 291 content and meaning of the record. If you have the ability to search, sort, or trend part 11 292 records, copies given to the Agency should provide the same capability if it is reasonable and 293 technical",
+              "score": 0.632748
+            }
+          ],
+          "rationale": "The SOP clause states 'The laboratory uses a closed electronic record system.' This does not provide the necessary detail about the specific controls and requirements for a closed system as required by Part 11. The regulation emphasizes the need for controls and restrictions, such as limiting system access to authorized individuals, use of operational system checks, and limiting system access to authorized individuals. The SOP does not address these controls, thus it is partial.",
+          "suggested_fix": "Suggested fix (not legal advice): Add the missing detail from the cited regulation to the relevant SOP clause.",
+          "requirement_strength": null,
+          "requirement_id": null
+        },
+        {
+          "finding_id": "GAP-0003",
+          "direction": "sop_to_regulation",
+          "verdict": "not_covered_by_corpus",
+          "severity": "low",
+          "sop_clause_refs": [
+            "SOP-003"
+          ],
+          "regulation_citations": [],
+          "rationale": "No retrieved regulation chunk met the relevance threshold (0.60); no LLM judgement was made.",
+          "suggested_fix": "Suggested fix (not legal advice): Review whether the applicable regulation is in the ingested corpus; no conclusion is made from this run.",
+          "requirement_strength": null,
+          "requirement_id": null
+        },
+        {
+          "finding_id": "GAP-0004",
+          "direction": "sop_to_regulation",
+          "verdict": "partial",
+          "severity": "medium",
+          "sop_clause_refs": [
+            "SOP-004"
+          ],
+          "regulation_citations": [
+            {
+              "chunk_id": "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "document_id": "951f0481-d887-4230-bb44-ed3afb21d581",
+              "title": "Part 11, Electronic Records; Electronic Signatures - Scope and Application",
+              "page": 7,
+              "snippet": "As described in more detail below, the approach outlined in this guidance is based on three main 116 elements: 117 \u2022 Part 11 will be interpreted narrowly; we are now clarifying that fewer records will be 119 considered subject to part 11. 120 \u2022 For those records that remain subject to part 11, we in",
+              "score": 0.722356
+            },
+            {
+              "chunk_id": "dd847184-a3e7-42ea-b3a7-48a89c9c92d7",
+              "document_id": "951f0481-d887-4230-bb44-ed3afb21d581",
+              "title": "Part 11, Electronic Records; Electronic Signatures - Scope and Application",
+              "page": 10,
+              "snippet": "You should provide an investigator with reasonable and useful access to records during 280 an inspection. All records held by you are subject to inspection in accordance with predicate 281 rules (e.g., \u00a7\u00a7 211.180(c), (d), and 108.35(c)(3)(ii)). 282 We recommend that you supply copies of electronic r",
+              "score": 0.713522
+            },
+            {
+              "chunk_id": "83c40732-480a-4f42-8b67-f32b71918139",
+              "document_id": "951f0481-d887-4230-bb44-ed3afb21d581",
+              "title": "Part 11, Electronic Records; Electronic Signatures - Scope and Application",
+              "page": 11,
+              "snippet": "In each case, we recommend that the copying process used produces copies that preserve the 291 content and meaning of the record. If you have the ability to search, sort, or trend part 11 292 records, copies given to the Agency should provide the same capability if it is reasonable and 293 technical",
+              "score": 0.710202
+            }
+          ],
+          "rationale": "The SOP clause 'Electronic signatures are linked to their records' is partially compliant as it addresses the topic of electronic signatures and records. However, it does not provide the required detail about the specific controls and requirements for electronic signatures as outlined in the regulation. The regulation mentions controls such as limiting system access to authorized individuals, use of operational system checks, and use of operational system checks, which are not addressed in the SOP clause.",
+          "suggested_fix": "Suggested fix (not legal advice): Add the missing detail from the cited regulation to the relevant SOP clause.",
+          "requirement_strength": null,
+          "requirement_id": null
+        },
+        {
+          "finding_id": "GAP-0005",
+          "direction": "sop_to_regulation",
+          "verdict": "partial",
+          "severity": "medium",
+          "sop_clause_refs": [
+            "SOP-005"
+          ],
+          "regulation_citations": [
+            {
+              "chunk_id": "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "document_id": "951f0481-d887-4230-bb44-ed3afb21d581",
+              "title": "Part 11, Electronic Records; Electronic Signatures - Scope and Application",
+              "page": 7,
+              "snippet": "As described in more detail below, the approach outlined in this guidance is based on three main 116 elements: 117 \u2022 Part 11 will be interpreted narrowly; we are now clarifying that fewer records will be 119 considered subject to part 11. 120 \u2022 For those records that remain subject to part 11, we in",
+              "score": 0.616054
+            }
+          ],
+          "rationale": "The regulation does not explicitly state that personnel must complete training before using the system. The regulation focuses on enforcement discretion for part 11 requirements, including validation, audit trails, record retention, and copying. The SOP clause only mentions training, which is not a requirement in the regulation provided.",
+          "suggested_fix": "Suggested fix (not legal advice): Add the missing detail from the cited regulation to the relevant SOP clause.",
+          "requirement_strength": null,
+          "requirement_id": null
+        },
+        {
+          "finding_id": "GAP-0006",
+          "direction": "regulation_to_sop",
+          "verdict": "missing",
+          "severity": "medium",
+          "sop_clause_refs": [],
+          "regulation_citations": [
+            {
+              "chunk_id": "dd847184-a3e7-42ea-b3a7-48a89c9c92d7",
+              "document_id": "951f0481-d887-4230-bb44-ed3afb21d581",
+              "title": "Part 11, Electronic Records; Electronic Signatures - Scope and Application",
+              "page": 10,
+              "snippet": "You should provide an investigator with reasonable and useful access to records during 280 an inspection.",
+              "score": 0.639829
+            }
+          ],
+          "rationale": "None of the provided SOP clauses address the requirement to provide an investigator with reasonable and useful access to records during an inspection.",
+          "suggested_fix": "Suggested fix (not legal advice): Add an SOP clause that addresses the cited requirement.",
+          "requirement_strength": "advisory",
+          "requirement_id": "REQ-001"
+        },
+        {
+          "finding_id": "GAP-0007",
+          "direction": "regulation_to_sop",
+          "verdict": "missing",
+          "severity": "medium",
+          "sop_clause_refs": [],
+          "regulation_citations": [
+            {
+              "chunk_id": "83c40732-480a-4f42-8b67-f32b71918139",
+              "document_id": "951f0481-d887-4230-bb44-ed3afb21d581",
+              "title": "Part 11, Electronic Records; Electronic Signatures - Scope and Application",
+              "page": 11,
+              "snippet": "If you have the ability to search, sort, or trend part 11 292 records, copies given to the Agency should provide the same capability if it is reasonable and 293 technically feasible.",
+              "score": 0.632748
+            }
+          ],
+          "rationale": "None of the provided SOP clauses address the requirement related to part 11 292 records and their copies providing the same capability for searching, sorting, or trending as part of the closed electronic record system described in SOP-002.",
+          "suggested_fix": "Suggested fix (not legal advice): Add an SOP clause that addresses the cited requirement.",
+          "requirement_strength": "advisory",
+          "requirement_id": "REQ-002"
+        },
+        {
+          "finding_id": "GAP-0008",
+          "direction": "regulation_to_sop",
+          "verdict": "missing",
+          "severity": "medium",
+          "sop_clause_refs": [],
+          "regulation_citations": [
+            {
+              "chunk_id": "83c40732-480a-4f42-8b67-f32b71918139",
+              "document_id": "951f0481-d887-4230-bb44-ed3afb21d581",
+              "title": "Part 11, Electronic Records; Electronic Signatures - Scope and Application",
+              "page": 11,
+              "snippet": "You should allow inspection, review, and copying of records in a human 294 readable form at your site using your hardware and following your established procedures and 295 techniques for accessing records.",
+              "score": 0.632748
+            }
+          ],
+          "rationale": "None of the provided SOP clauses address the requirement to allow inspection, review, and copying of records in a human-readable form at the site using established procedures and techniques.",
+          "suggested_fix": "Suggested fix (not legal advice): Add an SOP clause that addresses the cited requirement.",
+          "requirement_strength": "advisory",
+          "requirement_id": "REQ-003"
+        }
+      ]
+    },
+    "error": null,
+    "created_at": "2026-10-25T19:20:03.895086Z",
+    "started_at": "2026-10-25T19:20:03.904377Z",
+    "finished_at": "2026-10-25T19:21:05.735339Z"
+  },
+  "report_interpretation": "Run outcome only; findings require human source review. Capped coverage and judge failures must not be counted as passes.",
+  "manual_review_notes": [
+    "The model reported four partial findings, three missing requirements and one clause outside the loaded corpus. These are not human-verified defects or quality scores.",
+    "The run was scoped to the matching 2003 FDA guidance metadata. It checked only three extracted requirements and reported the requirements cap.",
+    "Some partial rationales concern generic purpose/training clauses. They require source review; successful completion and citation membership do not establish regulatory correctness."
+  ]
+}

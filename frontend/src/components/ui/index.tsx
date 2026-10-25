@@ -25,7 +25,7 @@ export function Banner({ tone = 'info', title, children, role }: { tone?: 'info'
 export function Disclosure({ title, children }: { title: string; children: ReactNode }) { return <details className={styles.disclosure}><summary>{title}<ChevronDown size={16} aria-hidden="true" /></summary><div>{children}</div></details>; }
 export function Spinner() { return <LoaderCircle size={18} className={styles.spinner} aria-hidden="true" />; }
 export function ElapsedTimer({ startedAt }: { startedAt: number | null }) {
-  const [seconds, setSeconds] = useState(0);
+  const [seconds, setSeconds] = useState(() => startedAt === null ? 0 : Math.max(0, Math.floor((Date.now() - startedAt) / 1000)));
   useEffect(() => {
     if (startedAt === null) return;
     const timer = setInterval(() => setSeconds(Math.max(0, Math.floor((Date.now() - startedAt) / 1000))), 1000);
