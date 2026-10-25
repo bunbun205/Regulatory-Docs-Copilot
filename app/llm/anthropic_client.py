@@ -26,18 +26,20 @@ def anthropic_messages(
             system_parts.append(message.content)
             continue
         if message.role == "tool":
-            converted.append(
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "tool_result",
-                            "tool_use_id": message.tool_call_id or "",
-                            "content": message.content,
-                        }
-                    ],
-                }
-            )
+            block = {
+                "type": "tool_result",
+                "tool_use_id": message.tool_call_id or "",
+                "content": message.content,
+            }
+            if converted and converted[-1].get("role") == "user":
+                previous_content = converted[-1].get("content")
+                if isinstance(previous_content, list) and any(
+                    isinstance(item, dict) and item.get("type") == "tool_result"
+                    for item in previous_content
+                ):
+                    previous_content.append(block)
+                    continue
+            converted.append({"role": "user", "content": [block]})
             continue
         if message.role == "assistant" and message.tool_calls:
             content: list[dict[str, Any]] = []

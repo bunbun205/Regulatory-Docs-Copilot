@@ -4,7 +4,7 @@ import httpx
 import pytest
 
 from app.core.config import Settings
-from app.llm.anthropic_client import AnthropicClient
+from app.llm.anthropic_client import AnthropicClient, anthropic_messages
 from app.llm.azure_openai_client import AzureOpenAIClient
 from app.llm.base import LLMError, LLMMessage, ToolCall, ToolDefinition
 from app.llm.factory import build_llm_client
@@ -129,6 +129,28 @@ async def test_anthropic_client_parses_text_and_tool_use() -> None:
     assert result.text == "Anthropic answer."
     assert result.tool_calls[0].arguments == {"query": "labels"}
     assert result.usage.input_tokens == 20
+
+
+def test_anthropic_groups_multiple_tool_results_in_one_user_message() -> None:
+    _, converted = anthropic_messages(
+        [
+            LLMMessage(role="user", content="Find two things."),
+            LLMMessage(
+                role="assistant",
+                tool_calls=(
+                    ToolCall(id="one", name="search_documents", arguments={"query": "a"}),
+                    ToolCall(id="two", name="query_metadata", arguments={}),
+                ),
+            ),
+            LLMMessage(role="tool", tool_call_id="one", name="search_documents", content="a"),
+            LLMMessage(role="tool", tool_call_id="two", name="query_metadata", content="b"),
+        ]
+    )
+
+    assert [message["role"] for message in converted] == ["user", "assistant", "user"]
+    tool_results = converted[-1]["content"]
+    assert isinstance(tool_results, list)
+    assert [block["tool_use_id"] for block in tool_results] == ["one", "two"]
 
 
 async def test_azure_openai_client_uses_deployment_url() -> None:

@@ -144,3 +144,35 @@ class AskResponse(BaseModel):
     top_score: float | None
     usage: AskUsage
     latency_ms: AskLatency
+
+
+class AgentRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    query: str = Field(min_length=1, max_length=2000)
+    filters: SearchFiltersRequest | None = None
+    backend: Literal["pgvector", "qdrant"] | None = None
+
+
+class AgentTraceStepResponse(BaseModel):
+    step: int
+    tool: str
+    arguments: dict[str, Any]
+    result_summary: str
+    latency_ms: float
+    error: str | None
+
+
+class AgentResponse(BaseModel):
+    query: str
+    backend: Literal["pgvector", "qdrant"]
+    answer: str
+    citations: list[AskCitation]
+    grounded: bool
+    grounding_reason: str | None
+    trace: list[AgentTraceStepResponse]
+    step_count: int
+    partial: bool
+    partial_reason: str | None
+    usage: AskUsage
+    latency_ms: float
