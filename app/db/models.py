@@ -42,7 +42,14 @@ class Document(Base):
     """Metadata for one ingested source document."""
 
     __tablename__ = "documents"
-    __table_args__ = (CheckConstraint("year BETWEEN 1900 AND 2100", name="year_range"),)
+    __table_args__ = (
+        CheckConstraint("year BETWEEN 1900 AND 2100", name="year_range"),
+        UniqueConstraint(
+            "source_agency",
+            "filename",
+            name="uq_documents_agency_filename",
+        ),
+    )
 
     id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
     filename: Mapped[str] = mapped_column(String(512), nullable=False)

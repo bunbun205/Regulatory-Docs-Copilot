@@ -1,13 +1,13 @@
 from collections.abc import Sequence
 from uuid import UUID
 
-from sqlalchemy import delete, func, select
+from sqlalchemy import delete, func, select, text
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from sqlalchemy.sql.elements import ColumnElement
 
 from app.db.models import EMBEDDING_DIMENSION, Chunk, Document
-from app.store.base import SearchFilters, SearchHit, VectorRecord
+from app.store.base import MAX_TOP_K, SearchFilters, SearchHit, VectorRecord
 
 
 class PgVectorStore:
@@ -121,16 +121,40 @@ class PgVectorStore:
     ) -> list[SearchHit]:
         self._validate_query(vector, top_k)
         filters = filters or SearchFilters()
+        conditions = self._conditions(filters)
         distance = Chunk.embedding.cosine_distance(list(vector)).label("distance")
         statement = (
             select(Chunk, Document, distance)
             .join(Document, Document.id == Chunk.document_id)
-            .where(*self._conditions(filters))
+            .where(*conditions)
             .order_by(distance)
             .limit(top_k)
         )
         async with self.sessionmaker() as session:
+            if filters.has_filters:
+                # HNSW applies SQL filters after the approximate scan, so a
+                # selective filter can otherwise return fewer rows than exist.
+                await session.execute(text("SET LOCAL hnsw.iterative_scan = 'relaxed_order'"))
             rows = (await session.execute(statement)).all()
+            if filters.has_filters and len(rows) < top_k:
+                matching_count = int(
+                    await session.scalar(
+                        select(func.count())
+                        .select_from(Chunk)
+                        .join(Document, Document.id == Chunk.document_id)
+                        .where(*conditions)
+                    )
+                    or 0
+                )
+                if matching_count > len(rows):
+                    # Last-resort correctness fallback for cases where the
+                    # iterative scan still misses matching rows. Force a
+                    # sequential scan even if the server/session disabled it.
+                    await session.execute(text("SET LOCAL enable_seqscan = on"))
+                    await session.execute(text("SET LOCAL enable_indexscan = off"))
+                    await session.execute(text("SET LOCAL enable_indexonlyscan = off"))
+                    await session.execute(text("SET LOCAL enable_bitmapscan = off"))
+                    rows = (await session.execute(statement)).all()
         return [
             SearchHit(
                 chunk_id=chunk.id,
@@ -149,6 +173,16 @@ class PgVectorStore:
             )
             for chunk, document, row_distance in rows
         ]
+
+    async def document_ids(self) -> list[UUID]:
+        async with self.sessionmaker() as session:
+            return list(
+                (
+                    await session.scalars(
+                        select(Document.id).order_by(Document.created_at, Document.id)
+                    )
+                ).all()
+            )
 
     async def records_for_document(self, document_id: UUID) -> list[VectorRecord]:
         async with self.sessionmaker() as session:
@@ -221,5 +255,5 @@ class PgVectorStore:
             raise ValueError(
                 f"Query vector has {len(vector)} dimensions; expected {self.dimension}."
             )
-        if top_k <= 0:
-            raise ValueError("top_k must be positive")
+        if not 1 <= top_k <= MAX_TOP_K:
+            raise ValueError(f"top_k must be between 1 and {MAX_TOP_K}")

@@ -58,6 +58,21 @@ Working notes and decision records for `labdocs`.
   jobs are safe. A document and all of its chunks are committed in one
   transaction. Re-running the same manifest therefore creates zero documents and
   zero chunks and performs no embedding calls.
+- 2026-10-25 — **Document identity and update semantics (condition 4).** A
+  document's stable identity is `(source_agency, filename)`, enforced by
+  `uq_documents_agency_filename` in migration `0004`. Classification order is:
+  an existing global content hash is a **duplicate**; the same identity with a
+  different content hash is an **update**; everything else is **new**.
+  Metadata-only changes (title, version, year) do not trigger a content update;
+  they are reported as duplicates and the existing metadata is kept. For an
+  update, the pipeline locks the document row, updates metadata, deletes all old
+  chunks and inserts the new chunks in one Postgres transaction. After commit it
+  deletes the document's points from Qdrant and inserts the new points. A
+  shorter replacement document was tested and leaves no old chunks. If the
+  external replacement fails, Postgres keeps the new content and the job fails
+  safely; re-ingesting the same new content is a duplicate and repairs Qdrant.
+  A duplicate re-ingest also replaces external points rather than merely
+  upserting, so stale points for that document are removed.
 - 2026-10-23 — **Recursive chunking.** Splitting proceeds paragraph → sentence →
   word → character, targeting ~500 tokens with ~80 tokens of overlap. PDF pages
   are preserved as `page`; Markdown headings become `section_heading`; plain text
@@ -107,15 +122,21 @@ Working notes and decision records for `labdocs`.
   (`ix_chunks_embedding_hnsw`, migration `0003`). `QdrantStore` creates a cosine
   collection with 384 dimensions, stores chunk text and document metadata in
   point payloads, and applies the same filters with Qdrant conditions. Both
-  return `SearchHit` objects with cosine similarity scores.
+  return `SearchHit` objects with cosine similarity scores. `PgVectorStore`
+  computes `1 - cosine_distance`; Qdrant uses `Distance.COSINE`. Embeddings are
+  L2-normalized, so both scores are on the same `[-1, 1]` scale and higher is
+  better. The score-parity test compares the two stores on the same records and
+  query. `top_k` is capped at 50 by `MAX_TOP_K` in both stores and the API
+  schema.
 - 2026-10-23 — **Ingestion fan-out and repair.** The pipeline writes document
   metadata and chunks atomically in Postgres, with chunks going through
   `PgVectorStore.upsert_chunks` inside that transaction. If
   `LABDOCS_VECTOR_BACKEND` is `qdrant` or `both`, Qdrant is updated after the
   Postgres commit. A duplicate content hash normally skips extraction/embedding,
-  but still re-upserts the existing chunks into configured external stores, so
-  re-ingesting repairs a missing Qdrant index. There is no outbox: a Qdrant
-  failure leaves the Postgres document in place and the job reports the failure;
+  but still replaces the existing chunks in configured external stores, so
+  re-ingesting repairs a missing or stale Qdrant index. Updates replace points
+  after the Postgres transaction commits. There is no outbox: a Qdrant failure
+  leaves the Postgres document in place and the job reports the failure;
   re-running the same input is the recovery path. This is deliberate for
   milestone 3 and avoids claiming exactly-once cross-store writes.
 - 2026-10-23 — **Search API.** `POST /v1/search` accepts `query`, `top_k`,
@@ -133,30 +154,74 @@ Working notes and decision records for `labdocs`.
   must never be used for evaluation numbers or README claims. `data/corpus/` and
   `data/uploads/` are gitignored.
 
+### Milestone 3 conditions (2026-10-25)
+
+- **Filtered HNSW under-return (condition 3).** pgvector 0.8.7 applies SQL
+  filters after the HNSW candidate scan, so a selective filter can return fewer
+  rows than exist. The pre-fix reproduction used 500 synthetic documents with 5
+  chunks each (2,500 chunks), a filter matching five chunks, `top_k=50` and
+  `enable_seqscan=off`; it returned 0. Filtered searches now set
+  `hnsw.iterative_scan = 'relaxed_order'`. If the approximate result still has
+  fewer rows than `top_k` and the exact matching count is larger, the store
+  retries with a forced sequential scan (`enable_seqscan=on`,
+  `enable_indexscan=off`, `enable_indexonlyscan=off`,
+  `enable_bitmapscan=off`). The same reproduction now returns 5/5. The fallback
+  prioritizes correctness for rare filters and only runs on observed
+  under-return.
+- **Reindex CLI (condition 5).** `python -m app.cli reindex --backend qdrant`
+  rebuilds the configured Qdrant collection from the canonical Postgres chunks.
+  It deletes and recreates the collection, then upserts every document's
+  records. It is a rebuild, not an atomic cross-store transaction; a failure
+  during the rebuild leaves a partial collection and should be retried.
+- **Startup checks (condition 5).** Startup rejects a configured
+  `LABDOCS_EMBEDDING_DIMENSION` that differs from the database vector
+  dimension, an embedder whose dimension differs, a Qdrant collection whose
+  dimension differs, and a Qdrant collection whose distance is not cosine. The
+  Qdrant collection is created or validated during startup when that backend is
+  configured. Tests exercise the store checks and the real application
+  lifespan.
+- **Validation (condition 5).** `top_k` is bounded to 1–50 in the API and both
+  stores. Unknown fields in the search request and nested filters return HTTP
+  422 (`extra="forbid"`), rather than being silently ignored.
+- **Failure injection and lifespan wiring (condition 5).** A Qdrant wrapper
+  fails the first fan-out write; the Postgres document remains committed, the
+  job fails with a safe error, and a duplicate re-ingest repairs Qdrant. A
+  real-lifespan test starts the application with Postgres, Qdrant and a fake
+  embedder, uploads through the API and searches through the Qdrant backend.
+
 ## Verification
 
-- 2026-10-23 — Full `pytest`, Ruff, format check and mypy suite passed locally
-  against compose Postgres and Qdrant: **71 passed**, no skips. The vector-store
-  contract suite runs the same eight tests against both `PgVectorStore` and
-  `QdrantStore`. API tests cover pgvector search, filters, top-k, validation,
-  auth, Qdrant backend override and duplicate re-ingest repair. `alembic check`
-  is clean and the migration test verifies the HNSW index definition
-  (`USING hnsw` with `vector_cosine_ops`). CI runs Postgres and Qdrant services
-  and executes the same suite.
+- 2026-10-25 — Full `pytest`, Ruff, format check, mypy, `alembic check` and
+  `docker compose config -q` passed locally against compose Postgres and
+  Qdrant: **82 passed**, no skips. The vector-store contract suite runs the same
+  tests against both `PgVectorStore` and `QdrantStore`. API tests cover
+  pgvector search, filters, top-k validation, unknown filter fields, auth,
+  Qdrant backend override and duplicate re-ingest repair. The migration test
+  verifies the HNSW index definition (`USING hnsw` with
+  `vector_cosine_ops`) and the document identity constraint. CI runs Postgres
+  and Qdrant services and executes the same suite.
 - 2026-10-23 — The sample fixture was ingested twice through the CLI with the
   real `bge-small-en-v1.5` model and `VECTOR_BACKEND=both` in a temporary
   database. First run: 3 documents / 9 chunks / 1 duplicate / 3 rejected.
   Second run: 0 new documents / 4 duplicates / 3 rejected. Qdrant held 9 points
   after both runs. The temporary database and collection were removed.
-- 2026-10-23 — The real corpus was supplied at `data/corpus/` with its
-  `manifest.csv`; it remains gitignored. A smoke ingest of the six resolvable
-  rows produced 191 chunks, and a second run produced zero new documents and six
-  duplicates with the counts unchanged. Two OSHA rows were rejected as
-  `file not found` because the manifest filenames omit the space present on disk
-  (`Communication._` vs `Communication. _`, and `laboratories._` vs
-  `laboratories. _`). The user-supplied corpus and manifest were left untouched;
-  the rejection is reported through the real ingestion report rather than
-  crashing the job.
+- 2026-10-25 — The real corpus at `data/corpus/` (gitignored) was fully
+  ingested into a separate validation database and Qdrant collection using a
+  temporary corrected manifest. First run: **8 documents / 249 chunks**;
+  second run: **0 new / 8 duplicates / 249 Qdrant points**. The original
+  manifest still rejects two OSHA rows as `file not found` because its
+  filenames omit the space present on disk (`Communication._` vs
+  `Communication. _`, and `laboratories._` vs `laboratories. _`); the
+  user-supplied corpus and manifest were left untouched. See
+  [`docs/milestone-3-verification.md`](milestone-3-verification.md) for the
+  ten-query comparison, score parity, HNSW reproduction, reindex and fan-out
+  verification.
+- 2026-10-25 — Ten hand-written queries were run against both stores with
+  identical filters and `top_k=5`. All ten had **5/5 top-5 overlap** and no
+  ordering disagreement. Across the 50 shared top-5 chunks, the maximum score
+  difference was `1.0e-6` (mean `1.6e-7`). Reindexing Qdrant from Postgres
+  reproduced the same top-5 sets. Full top-three results are in the verification
+  record.
 
 ## Known limitations
 
@@ -166,20 +231,31 @@ Working notes and decision records for `labdocs`.
   duplicate re-ingest path repairs the missing points. Pgvector and Qdrant can
   therefore be temporarily inconsistent.
 - The HNSW indexes use default build parameters. There is no recall/latency
-  tuning or benchmark yet; evaluation belongs to milestone 9.
+  tuning or benchmark yet; evaluation belongs to milestone 9. Filtered
+  pgvector searches may take the exact-scan fallback for very selective
+  filters, trading latency for correctness.
 - Search is dense-vector retrieval only. There is no hybrid/BM25 component,
   reranker or score threshold yet.
+- `reindex --backend qdrant` deletes and recreates the collection rather than
+  swapping a temporary collection atomically. A failed rebuild can leave a
+  partial Qdrant collection; retry the command.
+- If Qdrant is configured, startup now requires it to be reachable and to have
+  a compatible collection. A Qdrant outage therefore prevents application
+  startup rather than surfacing only through `/readyz`.
 - `/readyz` checks the database and the configured Qdrant backend. It does not
   force-load the lazy sentence-transformer model, so the first query can still
   pay model-loading latency.
-- `PgVectorStore.upsert` updates records but does not remove stale chunks when a
-  future reindex supplies fewer chunks for an existing document; a full reindex
-  must delete the document first or reconcile chunk indexes.
+- The low-level `PgVectorStore.upsert` updates records but does not remove stale
+  chunks when supplied fewer chunks for an existing document. The ingestion
+  update path and `reindex` handle replacement explicitly; callers using the raw
+  store upsert must reconcile chunk indexes themselves.
 - Upload ingestion uses in-process background tasks; no durable queue, retry or
   crash recovery yet.
 - Uploaded source files are retained without a cleanup policy yet.
 - There is no per-document rollback UI or retry endpoint; re-running the manifest
   is the recovery path and is idempotent.
-- The document identity is content, not filename: re-uploading identical bytes
-  with new metadata is reported as a duplicate and the existing metadata is kept.
-  A changed file with the same filename becomes a separate document.
+- Document identity is `(source_agency, filename)`, while content identity is
+  the global raw-byte SHA-256. Re-uploading identical bytes with new metadata is
+  a duplicate and keeps the existing metadata. Renaming a file or changing its
+  source agency creates a new document rather than updating the old one. A
+  changed file with the same agency and filename updates the existing document.

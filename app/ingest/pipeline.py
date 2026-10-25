@@ -9,11 +9,12 @@ from pathlib import Path
 from typing import Any
 
 import structlog
-from sqlalchemy import select, update
+from sqlalchemy import delete, select, update
 from sqlalchemy.dialects.postgresql import insert as pg_insert
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from app.db.models import Document, IngestionJob
+from app.db.models import Chunk, Document, IngestionJob
 from app.ingest.chunk import ChunkDraft, make_chunks
 from app.ingest.embedding import Embedder, normalize_rows
 from app.ingest.extract import ExtractedDocument, ExtractionError, extract_document
@@ -64,6 +65,7 @@ class DocumentMetadata:
 @dataclass(frozen=True)
 class _DocumentOutcome:
     duplicate: bool
+    updated: bool
     document_id: uuid.UUID | None
     chunk_count: int
     token_counts: tuple[int, ...]
@@ -132,6 +134,7 @@ class IngestionPipeline:
         )
 
         documents: list[dict[str, Any]] = []
+        updates: list[dict[str, Any]] = []
         duplicates: list[dict[str, Any]] = []
         failures: list[dict[str, Any]] = []
         token_counts: list[int] = []
@@ -172,19 +175,22 @@ class IngestionPipeline:
                     }
                 )
             else:
-                documents.append(
-                    {
-                        "document_id": str(outcome.document_id),
-                        "filename": row.filename,
-                        "chunks": outcome.chunk_count,
-                        "page_count": outcome.page_count,
-                    }
-                )
+                entry = {
+                    "document_id": str(outcome.document_id),
+                    "filename": row.filename,
+                    "chunks": outcome.chunk_count,
+                    "page_count": outcome.page_count,
+                }
+                if outcome.updated:
+                    updates.append(entry)
+                else:
+                    documents.append(entry)
                 token_counts.extend(outcome.token_counts)
 
         report = build_report(
             documents_total=len(manifest.rows),
             documents=documents,
+            updates=updates,
             duplicates=duplicates,
             failures=failures,
             rejected_rows=[
@@ -203,6 +209,7 @@ class IngestionPipeline:
             "ingestion.completed",
             job_id=str(job_id),
             documents=len(documents),
+            updates=len(updates),
             duplicates=len(duplicates),
             failures=len(failures),
             rejected=len(manifest.rejected_rows),
@@ -240,6 +247,7 @@ class IngestionPipeline:
             raise
 
         documents: list[dict[str, Any]] = []
+        updates: list[dict[str, Any]] = []
         duplicates: list[dict[str, Any]] = []
         token_counts: list[int] = []
         if outcome.duplicate:
@@ -252,19 +260,22 @@ class IngestionPipeline:
                 }
             )
         else:
-            documents.append(
-                {
-                    "document_id": str(outcome.document_id),
-                    "filename": metadata.filename,
-                    "chunks": outcome.chunk_count,
-                    "page_count": outcome.page_count,
-                }
-            )
+            entry = {
+                "document_id": str(outcome.document_id),
+                "filename": metadata.filename,
+                "chunks": outcome.chunk_count,
+                "page_count": outcome.page_count,
+            }
+            if outcome.updated:
+                updates.append(entry)
+            else:
+                documents.append(entry)
             token_counts.extend(outcome.token_counts)
 
         report = build_report(
             documents_total=1,
             documents=documents,
+            updates=updates,
             duplicates=duplicates,
             failures=[],
             rejected_rows=[],
@@ -276,6 +287,7 @@ class IngestionPipeline:
             "ingestion.upload_completed",
             job_id=str(job_id),
             duplicate=outcome.duplicate,
+            updated=outcome.updated,
             chunks=int(report["chunks"]),
         )
         return report
@@ -305,12 +317,14 @@ class IngestionPipeline:
             await self._sync_external_stores(existing_id)
             return _DocumentOutcome(
                 duplicate=True,
+                updated=False,
                 document_id=existing_id,
                 chunk_count=0,
                 token_counts=(),
                 page_count=None,
             )
 
+        existing_id = await self._find_document_id_by_identity(metadata)
         try:
             extracted, drafts = await asyncio.to_thread(self._extract_and_chunk, path)
         except ExtractionError:
@@ -338,7 +352,7 @@ class IngestionPipeline:
         if vectors.shape != (len(drafts), self.embedder.dimension):
             raise IngestionError("Embedding dimension mismatch.")
 
-        document_id = uuid.uuid4()
+        document_id = existing_id or uuid.uuid4()
         records = [
             VectorRecord(
                 chunk_id=uuid.uuid4(),
@@ -362,11 +376,123 @@ class IngestionPipeline:
             for index, draft in enumerate(drafts)
         ]
 
+        if existing_id is not None:
+            updated = await self._update_existing_document(
+                document_id=existing_id,
+                metadata=metadata,
+                content_hash=content_hash,
+                byte_size=byte_size,
+                page_count=extracted.page_count,
+                records=records,
+            )
+            if not updated:
+                await self._sync_external_stores(existing_id)
+                return _DocumentOutcome(
+                    duplicate=True,
+                    updated=False,
+                    document_id=existing_id,
+                    chunk_count=0,
+                    token_counts=(),
+                    page_count=None,
+                )
+            await self._replace_external_stores(records)
+            return _DocumentOutcome(
+                duplicate=False,
+                updated=True,
+                document_id=existing_id,
+                chunk_count=len(drafts),
+                token_counts=tuple(draft.token_count for draft in drafts),
+                page_count=extracted.page_count,
+            )
+
+        try:
+            async with self.sessionmaker() as session:
+                insert_document = (
+                    pg_insert(Document)
+                    .values(
+                        id=document_id,
+                        filename=metadata.filename,
+                        title=metadata.title,
+                        source_agency=metadata.source_agency,
+                        doc_type=metadata.doc_type,
+                        year=metadata.year,
+                        version=metadata.version,
+                        content_sha256=content_hash,
+                        byte_size=byte_size,
+                        page_count=extracted.page_count,
+                    )
+                    .on_conflict_do_nothing(index_elements=[Document.content_sha256])
+                    .returning(Document.id)
+                )
+                inserted_id = await session.scalar(insert_document)
+                if inserted_id is None:
+                    existing_id = await session.scalar(
+                        select(Document.id).where(Document.content_sha256 == content_hash)
+                    )
+                    await session.rollback()
+                    if existing_id is not None:
+                        await self._sync_external_stores(existing_id)
+                    return _DocumentOutcome(
+                        duplicate=True,
+                        updated=False,
+                        document_id=existing_id,
+                        chunk_count=0,
+                        token_counts=(),
+                        page_count=None,
+                    )
+
+                await self.pg_store.upsert_chunks(session, records)
+                await session.commit()
+        except IntegrityError as exc:
+            logger.warning(
+                "ingestion.identity_conflict",
+                filename=metadata.filename,
+                source_agency=metadata.source_agency,
+            )
+            raise IngestionError("Document changed during ingestion; retry ingestion.") from exc
+
+        await self._write_external_stores(records)
+        return _DocumentOutcome(
+            duplicate=False,
+            updated=False,
+            document_id=document_id,
+            chunk_count=len(drafts),
+            token_counts=tuple(draft.token_count for draft in drafts),
+            page_count=extracted.page_count,
+        )
+
+    async def _update_existing_document(
+        self,
+        *,
+        document_id: uuid.UUID,
+        metadata: DocumentMetadata,
+        content_hash: str,
+        byte_size: int,
+        page_count: int | None,
+        records: Sequence[VectorRecord],
+    ) -> bool:
+        """Replace an existing document's chunks in one transaction."""
         async with self.sessionmaker() as session:
-            insert_document = (
-                pg_insert(Document)
+            current_hash = await session.scalar(
+                select(Document.content_sha256).where(Document.id == document_id).with_for_update()
+            )
+            if current_hash is None:
+                raise IngestionError("Document changed during ingestion; retry ingestion.")
+            if current_hash == content_hash:
+                return False
+            conflicting_id = await session.scalar(
+                select(Document.id).where(
+                    Document.content_sha256 == content_hash,
+                    Document.id != document_id,
+                )
+            )
+            if conflicting_id is not None:
+                raise IngestionError("Document content matches another document; retry ingestion.")
+
+            await session.execute(
+                update(Document)
+                .where(Document.id == document_id)
                 .values(
-                    id=document_id,
                     filename=metadata.filename,
                     title=metadata.title,
                     source_agency=metadata.source_agency,
@@ -375,38 +501,13 @@ class IngestionPipeline:
                     version=metadata.version,
                     content_sha256=content_hash,
                     byte_size=byte_size,
-                    page_count=extracted.page_count,
+                    page_count=page_count,
                 )
-                .on_conflict_do_nothing(index_elements=[Document.content_sha256])
-                .returning(Document.id)
             )
-            inserted_id = await session.scalar(insert_document)
-            if inserted_id is None:
-                existing_id = await session.scalar(
-                    select(Document.id).where(Document.content_sha256 == content_hash)
-                )
-                await session.rollback()
-                if existing_id is not None:
-                    await self._sync_external_stores(existing_id)
-                return _DocumentOutcome(
-                    duplicate=True,
-                    document_id=existing_id,
-                    chunk_count=0,
-                    token_counts=(),
-                    page_count=None,
-                )
-
+            await session.execute(delete(Chunk).where(Chunk.document_id == document_id))
             await self.pg_store.upsert_chunks(session, records)
             await session.commit()
-
-        await self._write_external_stores(records)
-        return _DocumentOutcome(
-            duplicate=False,
-            document_id=document_id,
-            chunk_count=len(drafts),
-            token_counts=tuple(draft.token_count for draft in drafts),
-            page_count=extracted.page_count,
-        )
+        return True
 
     async def _sync_external_stores(self, document_id: uuid.UUID) -> None:
         if not self.vector_stores:
@@ -414,7 +515,7 @@ class IngestionPipeline:
         records = await self.pg_store.records_for_document(document_id)
         if not records:
             raise IngestionError("Document has no chunks to index.")
-        await self._write_external_stores(records)
+        await self._replace_external_stores(records)
 
     async def _write_external_stores(self, records: Sequence[VectorRecord]) -> None:
         if not self.vector_stores or not records:
@@ -431,6 +532,22 @@ class IngestionPipeline:
                 )
                 raise IngestionError(f"Vector store write failed ({store.name}).") from exc
 
+    async def _replace_external_stores(self, records: Sequence[VectorRecord]) -> None:
+        if not self.vector_stores or not records:
+            return
+        for store in self.vector_stores:
+            try:
+                await store.delete_document(records[0].document_id)
+                await store.upsert(records)
+            except Exception as exc:
+                logger.error(
+                    "ingestion.vector_store_replace_failed",
+                    store=store.name,
+                    document_id=str(records[0].document_id),
+                    error_type=type(exc).__name__,
+                )
+                raise IngestionError(f"Vector store replace failed ({store.name}).") from exc
+
     def _extract_and_chunk(self, path: Path) -> tuple[ExtractedDocument, list[ChunkDraft]]:
         extracted = extract_document(path)
         drafts = make_chunks(
@@ -444,6 +561,18 @@ class IngestionPipeline:
         async with self.sessionmaker() as session:
             return await session.scalar(
                 select(Document.id).where(Document.content_sha256 == content_hash)
+            )
+
+    async def _find_document_id_by_identity(
+        self,
+        metadata: DocumentMetadata,
+    ) -> uuid.UUID | None:
+        async with self.sessionmaker() as session:
+            return await session.scalar(
+                select(Document.id).where(
+                    Document.source_agency == metadata.source_agency,
+                    Document.filename == metadata.filename,
+                )
             )
 
     async def _mark_running(self, job_id: uuid.UUID) -> None:

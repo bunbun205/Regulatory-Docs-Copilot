@@ -16,7 +16,7 @@ from qdrant_client.models import (
 )
 
 from app.db.models import EMBEDDING_DIMENSION
-from app.store.base import SearchFilters, SearchHit, VectorRecord
+from app.store.base import MAX_TOP_K, SearchFilters, SearchHit, VectorRecord
 
 
 class QdrantStore:
@@ -72,12 +72,28 @@ class QdrantStore:
                     f"Qdrant collection {self.collection!r} has dimension {size}; "
                     f"expected {self.dimension}."
                 )
+            distance = getattr(vectors, "distance", None)
+            if distance != Distance.COSINE:
+                raise RuntimeError(
+                    f"Qdrant collection {self.collection!r} uses distance {distance}; "
+                    "expected cosine."
+                )
             self._collection_ready = True
+
+    async def ensure_ready(self) -> None:
+        """Create or validate the collection at startup."""
+        await self._ensure_collection()
 
     async def upsert(self, records: Sequence[VectorRecord]) -> None:
         if not records:
             return
         await self._ensure_collection()
+        for record in records:
+            if len(record.embedding) != self.dimension:
+                raise ValueError(
+                    f"Record {record.chunk_id} has {len(record.embedding)} dimensions; "
+                    f"expected {self.dimension}."
+                )
         points = [
             PointStruct(
                 id=str(record.chunk_id),
@@ -187,6 +203,12 @@ class QdrantStore:
     async def close(self) -> None:
         await self._client.close()
 
+    async def reset_collection(self) -> None:
+        """Remove the collection if present, for an explicit full rebuild."""
+        if await self._client.collection_exists(self.collection):
+            await self._client.delete_collection(self.collection)
+        self._collection_ready = False
+
     async def delete_collection(self) -> None:
         """Remove the collection. Used by tests and explicit reindex tooling."""
         await self._client.delete_collection(self.collection)
@@ -226,5 +248,5 @@ class QdrantStore:
             raise ValueError(
                 f"Query vector has {len(vector)} dimensions; expected {self.dimension}."
             )
-        if top_k <= 0:
-            raise ValueError("top_k must be positive")
+        if not 1 <= top_k <= MAX_TOP_K:
+            raise ValueError(f"top_k must be between 1 and {MAX_TOP_K}")

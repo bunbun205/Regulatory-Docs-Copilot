@@ -17,6 +17,7 @@ from app.ingest.pipeline import (
     IngestionPipeline,
     create_ingestion_job,
 )
+from app.store.pgvector_store import PgVectorStore
 from app.store.qdrant_store import QdrantStore
 
 
@@ -77,6 +78,15 @@ async def _ingest(manifest: Path, documents_dir: Path) -> int:
                 api_key=settings.QDRANT_API_KEY,
                 timeout=settings.QDRANT_TIMEOUT_SECONDS,
             )
+            try:
+                await qdrant_store.ensure_ready()
+            except Exception as exc:
+                print(
+                    "Error: the configured Qdrant collection is unavailable or "
+                    f"incompatible ({type(exc).__name__}).",
+                    file=sys.stderr,
+                )
+                return 1
         job_id = await create_ingestion_job(database.sessionmaker)
         pipeline = IngestionPipeline(
             database.sessionmaker,
@@ -109,6 +119,71 @@ async def _ingest(manifest: Path, documents_dir: Path) -> int:
         await database.dispose()
 
 
+async def _reindex_qdrant(
+    pg_store: PgVectorStore,
+    qdrant_store: QdrantStore,
+) -> dict[str, object]:
+    """Rebuild one Qdrant collection from the canonical Postgres chunks."""
+    document_ids = await pg_store.document_ids()
+    await qdrant_store.reset_collection()
+    await qdrant_store.ensure_ready()
+
+    indexed_documents = 0
+    indexed_chunks = 0
+    for document_id in document_ids:
+        records = await pg_store.records_for_document(document_id)
+        if not records:
+            continue
+        await qdrant_store.upsert(records)
+        indexed_documents += 1
+        indexed_chunks += len(records)
+    return {
+        "backend": "qdrant",
+        "collection": qdrant_store.collection,
+        "documents": indexed_documents,
+        "chunks": indexed_chunks,
+    }
+
+
+async def _reindex(backend: str) -> int:
+    if backend != "qdrant":
+        print(f"Error: unsupported reindex backend {backend!r}.", file=sys.stderr)
+        return 2
+    if settings.EMBEDDING_DIMENSION != EMBEDDING_DIMENSION:
+        print(
+            "Error: LABDOCS_EMBEDDING_DIMENSION must match the database "
+            f"vector dimension ({EMBEDDING_DIMENSION}).",
+            file=sys.stderr,
+        )
+        return 1
+
+    database = Database(settings.DATABASE_URL)
+    qdrant_store = QdrantStore(
+        settings.QDRANT_URL,
+        settings.QDRANT_COLLECTION,
+        dimension=settings.EMBEDDING_DIMENSION,
+        api_key=settings.QDRANT_API_KEY,
+        timeout=settings.QDRANT_TIMEOUT_SECONDS,
+    )
+    try:
+        pg_store = PgVectorStore(
+            database.sessionmaker,
+            dimension=settings.EMBEDDING_DIMENSION,
+        )
+        summary = await _reindex_qdrant(pg_store, qdrant_store)
+        print(json.dumps(summary, indent=2, sort_keys=True))
+        return 0
+    except Exception as exc:
+        print(
+            f"Error: reindex failed ({type(exc).__name__}).",
+            file=sys.stderr,
+        )
+        return 1
+    finally:
+        await qdrant_store.close()
+        await database.dispose()
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m app.cli")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -137,12 +212,25 @@ def main(argv: list[str] | None = None) -> int:
         help="Directory containing the document files (defaults to the manifest directory).",
     )
 
+    reindex = subparsers.add_parser(
+        "reindex",
+        help="Rebuild a vector backend from the canonical Postgres chunks.",
+    )
+    reindex.add_argument(
+        "--backend",
+        required=True,
+        choices=["qdrant"],
+        help="Backend to rebuild.",
+    )
+
     args = parser.parse_args(argv)
     if args.command == "create-key":
         return asyncio.run(_create_key(args.name, Scope(args.scope)))
     if args.command == "ingest":
         documents_dir = args.documents_dir or args.manifest.parent
         return asyncio.run(_ingest(args.manifest, documents_dir))
+    if args.command == "reindex":
+        return asyncio.run(_reindex(args.backend))
     parser.print_help()
     return 2
 

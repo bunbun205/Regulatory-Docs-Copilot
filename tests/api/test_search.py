@@ -154,6 +154,20 @@ async def test_search_empty_index_and_validation(
     )
     assert bad_range.status_code == 422
 
+    unknown_filter = await client.post(
+        "/v1/search",
+        headers={"X-API-Key": key},
+        json={"query": "anything", "filters": {"agency": "FDA"}},
+    )
+    assert unknown_filter.status_code == 422
+
+    too_many = await client.post(
+        "/v1/search",
+        headers={"X-API-Key": key},
+        json={"query": "anything", "top_k": 51},
+    )
+    assert too_many.status_code == 422
+
     bad_backend = await client.post(
         "/v1/search",
         headers={"X-API-Key": key},

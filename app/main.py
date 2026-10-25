@@ -29,16 +29,21 @@ async def lifespan(application: FastAPI) -> AsyncIterator[None]:
             "LABDOCS_EMBEDDING_DIMENSION must match the database vector dimension "
             f"({EMBEDDING_DIMENSION}). Create a migration before changing it."
         )
+    embedder = SentenceTransformerEmbedder(
+        settings.EMBEDDING_MODEL,
+        dimension=settings.EMBEDDING_DIMENSION,
+        batch_size=settings.EMBEDDING_BATCH_SIZE,
+    )
+    if embedder.dimension != EMBEDDING_DIMENSION:
+        raise RuntimeError(
+            f"Embedder dimension must match the database vector dimension ({EMBEDDING_DIMENSION})."
+        )
     database = Database(settings.DATABASE_URL)
     settings.UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
     application.state.database = database
     application.state.sessionmaker = database.sessionmaker
     application.state.upload_dir = settings.UPLOAD_DIR
-    application.state.embedder = SentenceTransformerEmbedder(
-        settings.EMBEDDING_MODEL,
-        dimension=settings.EMBEDDING_DIMENSION,
-        batch_size=settings.EMBEDDING_BATCH_SIZE,
-    )
+    application.state.embedder = embedder
     application.state.ingestion_config = IngestionConfig(
         chunk_max_tokens=settings.CHUNK_MAX_TOKENS,
         chunk_overlap_tokens=settings.CHUNK_OVERLAP_TOKENS,
@@ -60,6 +65,12 @@ async def lifespan(application: FastAPI) -> AsyncIterator[None]:
             timeout=settings.QDRANT_TIMEOUT_SECONDS,
         )
         vector_stores["qdrant"] = qdrant_store
+        try:
+            await qdrant_store.ensure_ready()
+        except Exception:
+            await qdrant_store.close()
+            await database.dispose()
+            raise
     application.state.vector_stores = vector_stores
     application.state.default_vector_backend = (
         "qdrant" if settings.VECTOR_BACKEND == "qdrant" else "pgvector"

@@ -1,5 +1,5 @@
 from pathlib import Path
-from uuid import UUID
+from uuid import UUID, uuid4
 
 import numpy as np
 import pytest
@@ -8,11 +8,13 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from app.db.models import Chunk, Document, IngestionJob
 from app.ingest.pipeline import (
+    DocumentMetadata,
     IngestionConfig,
     IngestionJobError,
     IngestionPipeline,
     create_ingestion_job,
 )
+from app.store.qdrant_store import QdrantStore
 from tests.helpers import FakeEmbedder
 
 
@@ -186,3 +188,231 @@ async def test_manifest_schema_error_marks_job_failed(
         assert job.error is not None
         assert "version" in job.error
         assert job.finished_at is not None
+
+
+async def test_changed_document_replaces_chunks_and_metadata_only_is_duplicate(
+    sessionmaker: async_sessionmaker[AsyncSession],
+    fake_embedder: FakeEmbedder,
+    tmp_path: Path,
+) -> None:
+    config = IngestionConfig(
+        chunk_max_tokens=10,
+        chunk_overlap_tokens=2,
+        embedding_batch_size=8,
+    )
+    pipeline = IngestionPipeline(sessionmaker, fake_embedder, config)
+    path = tmp_path / "policy.txt"
+    path.write_text("alpha " * 80, encoding="utf-8")
+    first_metadata = DocumentMetadata(
+        filename="policy.txt",
+        title="Original title",
+        source_agency="Synthetic Agency",
+        doc_type="guidance",
+        year=2020,
+        version="v1",
+    )
+
+    first_job = await create_ingestion_job(sessionmaker)
+    first_report = await pipeline.run_upload_job(first_job, path, first_metadata)
+    assert first_report["documents_ingested"] == 1
+    assert first_report["documents_updated"] == 0
+    assert first_report["chunks"] > 1
+    document_id = UUID(first_report["documents"][0]["document_id"])
+
+    async with sessionmaker() as session:
+        document = await session.get(Document, document_id)
+        assert document is not None
+        original_hash = document.content_sha256
+        first_chunks = (
+            await session.scalars(
+                select(Chunk).where(Chunk.document_id == document_id).order_by(Chunk.chunk_index)
+            )
+        ).all()
+    first_chunk_ids = {chunk.id for chunk in first_chunks}
+    assert len(first_chunks) == first_report["chunks"]
+
+    # A metadata-only change is a duplicate: content identity wins.
+    metadata_only = DocumentMetadata(
+        filename="policy.txt",
+        title="Metadata-only title",
+        source_agency="Synthetic Agency",
+        doc_type="guidance",
+        year=2024,
+        version="v2",
+    )
+    second_job = await create_ingestion_job(sessionmaker)
+    second_report = await pipeline.run_upload_job(second_job, path, metadata_only)
+    assert second_report["documents_ingested"] == 0
+    assert second_report["documents_updated"] == 0
+    assert second_report["documents_duplicate"] == 1
+
+    async with sessionmaker() as session:
+        document = await session.get(Document, document_id)
+        assert document is not None
+        assert document.title == "Original title"
+        assert document.version == "v1"
+        assert document.year == 2020
+        assert document.content_sha256 == original_hash
+        chunks = (
+            await session.scalars(
+                select(Chunk).where(Chunk.document_id == document_id).order_by(Chunk.chunk_index)
+            )
+        ).all()
+    assert {chunk.id for chunk in chunks} == first_chunk_ids
+
+    # Same document identity plus changed content is an update, even when the
+    # replacement document is shorter and produces fewer chunks.
+    path.write_text("beta " * 5, encoding="utf-8")
+    updated_metadata = DocumentMetadata(
+        filename="policy.txt",
+        title="Updated title",
+        source_agency="Synthetic Agency",
+        doc_type="guidance",
+        year=2025,
+        version="v3",
+    )
+    third_job = await create_ingestion_job(sessionmaker)
+    third_report = await pipeline.run_upload_job(third_job, path, updated_metadata)
+    assert third_report["documents_ingested"] == 0
+    assert third_report["documents_updated"] == 1
+    assert third_report["documents_duplicate"] == 0
+    assert third_report["chunks"] == 1
+    assert third_report["chunks"] < first_report["chunks"]
+    assert third_report["updates"][0]["document_id"] == str(document_id)
+
+    async with sessionmaker() as session:
+        document = await session.get(Document, document_id)
+        assert document is not None
+        assert document.title == "Updated title"
+        assert document.version == "v3"
+        assert document.year == 2025
+        assert document.content_sha256 != original_hash
+        chunks = (
+            await session.scalars(
+                select(Chunk).where(Chunk.document_id == document_id).order_by(Chunk.chunk_index)
+            )
+        ).all()
+    assert len(chunks) == third_report["chunks"]
+    assert {chunk.id for chunk in chunks}.isdisjoint(first_chunk_ids)
+    assert all("beta" in chunk.text for chunk in chunks)
+
+
+async def test_changed_document_replaces_qdrant_points(
+    sessionmaker: async_sessionmaker[AsyncSession],
+    fake_embedder: FakeEmbedder,
+    qdrant_store: QdrantStore,
+    tmp_path: Path,
+) -> None:
+    config = IngestionConfig(
+        chunk_max_tokens=10,
+        chunk_overlap_tokens=2,
+        embedding_batch_size=8,
+    )
+    pipeline = IngestionPipeline(
+        sessionmaker,
+        fake_embedder,
+        config,
+        (qdrant_store,),
+    )
+    path = tmp_path / "qdrant-update.txt"
+    path.write_text("alpha " * 80, encoding="utf-8")
+    metadata = DocumentMetadata(
+        filename="qdrant-update.txt",
+        title="Qdrant update",
+        source_agency="Synthetic Agency",
+        doc_type="guidance",
+        year=2024,
+        version="v1",
+    )
+
+    first_job = await create_ingestion_job(sessionmaker)
+    first_report = await pipeline.run_upload_job(first_job, path, metadata)
+    assert first_report["chunks"] > 1
+    assert await qdrant_store.count() == first_report["chunks"]
+    document_id = UUID(first_report["documents"][0]["document_id"])
+
+    path.write_text("beta " * 5, encoding="utf-8")
+    second_job = await create_ingestion_job(sessionmaker)
+    second_report = await pipeline.run_upload_job(second_job, path, metadata)
+    assert second_report["documents_updated"] == 1
+    assert second_report["chunks"] == 1
+    assert await qdrant_store.count() == 1
+
+    query_vector = fake_embedder.embed(["beta beta beta beta beta"])[0]
+    hits = await qdrant_store.search([float(value) for value in query_vector], top_k=10)
+    assert len(hits) == 1
+    assert hits[0].document_id == document_id
+    assert "beta" in hits[0].text
+
+
+class _FlakyQdrantStore:
+    """Qdrant wrapper that fails the first fan-out write."""
+
+    name = "qdrant"
+
+    def __init__(self, store: QdrantStore) -> None:
+        self.store = store
+        self.fail_next_upsert = True
+
+    async def upsert(self, records: object) -> None:
+        if self.fail_next_upsert:
+            self.fail_next_upsert = False
+            raise RuntimeError("injected qdrant failure with secret details")
+        await self.store.upsert(records)  # type: ignore[arg-type]
+
+    async def delete_document(self, document_id: UUID) -> int:
+        return await self.store.delete_document(document_id)
+
+    async def count(self) -> int:
+        return await self.store.count()
+
+
+async def test_qdrant_fanout_failure_is_safe_and_duplicate_reingest_repairs(
+    sessionmaker: async_sessionmaker[AsyncSession],
+    fake_embedder: FakeEmbedder,
+    ingestion_config: IngestionConfig,
+    qdrant_store: QdrantStore,
+    tmp_path: Path,
+) -> None:
+    flaky_store = _FlakyQdrantStore(qdrant_store)
+    pipeline = IngestionPipeline(
+        sessionmaker,
+        fake_embedder,
+        ingestion_config,
+        (flaky_store,),
+    )
+    path = tmp_path / "flaky.txt"
+    path.write_text(f"fanout failure content {uuid4()}", encoding="utf-8")
+    metadata = DocumentMetadata(
+        filename="flaky.txt",
+        title="Fan-out failure",
+        source_agency="Synthetic Agency",
+        doc_type="guidance",
+        year=2024,
+        version="v1",
+    )
+
+    failed_job = await create_ingestion_job(sessionmaker)
+    with pytest.raises(IngestionJobError, match="Vector store write failed"):
+        await pipeline.run_upload_job(failed_job, path, metadata)
+
+    async with sessionmaker() as session:
+        job = await session.get(IngestionJob, failed_job)
+        assert job is not None
+        assert job.status == "failed"
+        assert job.error is not None
+        assert "injected" not in job.error
+        assert "secret" not in job.error
+        document_count = await session.scalar(select(func.count()).select_from(Document))
+        chunk_count = int(await session.scalar(select(func.count()).select_from(Chunk)) or 0)
+    assert document_count == 1
+    assert chunk_count > 0
+    assert await qdrant_store.count() == 0
+
+    # Re-ingesting the same content repairs the external index without
+    # creating a duplicate Postgres document.
+    repaired_job = await create_ingestion_job(sessionmaker)
+    repaired_report = await pipeline.run_upload_job(repaired_job, path, metadata)
+    assert repaired_report["documents_duplicate"] == 1
+    assert repaired_report["documents_updated"] == 0
+    assert await qdrant_store.count() == chunk_count

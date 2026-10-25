@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from typing import Protocol
 from uuid import UUID
 
+MAX_TOP_K = 50
+
 
 @dataclass(frozen=True)
 class SearchFilters:
@@ -24,6 +26,18 @@ class SearchFilters:
             and self.year_min > self.year_max
         ):
             raise ValueError("year_min must be less than or equal to year_max")
+
+    @property
+    def has_filters(self) -> bool:
+        return any(
+            value is not None
+            for value in (
+                self.doc_type,
+                self.source_agency,
+                self.year_min,
+                self.year_max,
+            )
+        )
 
 
 @dataclass(frozen=True)
