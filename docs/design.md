@@ -4,6 +4,44 @@ Working notes and decision records for `labdocs`.
 
 ## Decisions
 
+### Frontend foundation (F1)
+
+- The unchanged pre-redesign frontend landed in PR #9; the approved F0 audit and
+  strict flags landed separately in PR #10. [F1 review](frontend-f1-review.md)
+  records the foundation, checks, screenshots and remaining milestone work.
+- Use React Router lazy routes, a settings context, generated endpoint types,
+  one `openapi-fetch` result/error layer and small abort-aware async/poll hooks.
+  Readiness parses generic response dictionaries and retains failure checks.
+- Keys use sessionStorage; non-secret preferences use localStorage. Base URLs
+  reject credentials/query strings/fragments and the entered key. Error-copy
+  output is redacted and contains only status, code, message and request ID.
+  Bootstrap/validation results cannot invalidate a newer key.
+- The existing TypeScript 6 pin conflicted with `openapi-typescript` 7.13's
+  declared `^5.x` peer range. TypeScript is pinned **exactly to 5.9.3** in
+  package.json and package-lock.json, with strict enabled for source/tests/config.
+  Only the approved router, icons and test dependencies were added.
+- The stale-key race has a regression test in `SettingsView.test.tsx` named
+  `ignores a late 401 from a previous key after a new key validates`: an old
+  bootstrap 401 resolves after new-key success and must not clear the new identity.
+- F1 adds the isolated `frontend/e2e/` app-factory entrypoint and screenshot
+  gate at 1280/390/360px. It guards a dedicated `_test` database/collection;
+  no production flag, provider/retrieval/grounding change or external model call.
+  The full scripted tool/judge journey remains F6.
+- The initial `/ask` JS budget is 110,000 gzip bytes, measured from the production
+  manifest's unique entry/route imports. Every milestone reports that figure.
+  Oxlint now rejects every warning with `--deny-warnings`; no exceptions remain.
+  The unused catch and mount-effect warnings were removed by the shared-client/
+  polling migration. The remaining Date warning was fixed with a lazy state
+  initializer during F1 review. `.oxlintrc.json` was not weakened.
+- CI has a Web job now: strict no-emit checks, warning-fatal lint, Vitest, live
+  app-factory schema export/freshness comparison and production build/budget.
+  Playwright in CI remains F6. The 157→155 backend count is the exclusion of the
+  two already-untracked platform tests, not deleted coverage; the exact node-ID
+  comparison is in the F1 review and evidence.
+- Legacy views now share the request/error/auth infrastructure and responsive
+  containment. Their detailed feature redesigns remain F2–F5. No optional
+  model/provider chip is invented; only Details may explain an absent value.
+
 ### Frontend upgrade audit (F0, 2026-10-25)
 
 - [FRONTEND_SEED.md](../FRONTEND_SEED.md) overrides SEED on frontend design,
