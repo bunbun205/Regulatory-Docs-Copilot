@@ -1,0 +1,157 @@
+{
+  "provider": "fake",
+  "description": "Actual app-factory job with real Postgres/Qdrant and scripted test-only judge; synthetic fixture, not a quality benchmark.",
+  "sop": "# Browser walkthrough 390\n\nStaff must record instrument checks in a training log before using the equipment.\n\nThis clause describes a synthetic astronomy workflow for 390.",
+  "browser_elapsed_ms": 4983,
+  "job": {
+    "id": "86363495-7cd7-4e50-b67c-0203828cd387",
+    "status": "completed",
+    "progress": {
+      "phase": "completed",
+      "clauses_total": 2,
+      "clauses_done": 2,
+      "requirements_total": 1,
+      "requirements_done": 1
+    },
+    "report": {
+      "job_id": "86363495-7cd7-4e50-b67c-0203828cd387",
+      "generated_at": "2026-10-25T22:29:49.910100Z",
+      "banner": "Decision support only, not legal advice. This report is limited to the ingested corpus and does not establish legal compliance.",
+      "metadata": {
+        "caps": {
+          "max_tokens": 200000,
+          "max_clauses": 80,
+          "max_requirements": 120,
+          "requirements_capped": false
+        },
+        "model": "fake:frontend-fixture",
+        "backend": "pgvector",
+        "filters": {
+          "doc_type": null,
+          "year_max": null,
+          "year_min": null,
+          "source_agency": null
+        },
+        "duration_ms": 3048.93,
+        "token_usage": {
+          "input_tokens": 48,
+          "total_tokens": 64,
+          "output_tokens": 16
+        },
+        "clauses_total": 2,
+        "judge_failures": 0,
+        "retrieval_top_k": 5,
+        "sop_match_top_k": 3,
+        "judge_cache_hits": 0,
+        "judge_concurrency": 4,
+        "requirements_total": 1,
+        "relevance_threshold": 0.6,
+        "global_top_documents": 2,
+        "requirement_document_ids": []
+      },
+      "caps_hit": [],
+      "counts_by_verdict": {
+        "missing": 0,
+        "partial": 0,
+        "conflict": 0,
+        "addressed": 1,
+        "compliant": 1,
+        "judge_failed": 0,
+        "partially_addressed": 0,
+        "not_covered_by_corpus": 1
+      },
+      "counts_by_severity": {
+        "low": 3,
+        "high": 0,
+        "medium": 0
+      },
+      "counts_by_direction": {
+        "regulation_to_sop": 1,
+        "sop_to_regulation": 2
+      },
+      "sop_clauses": [
+        {
+          "clause_id": "SOP-001",
+          "section": "Browser walkthrough 390",
+          "text": "Staff must record instrument checks in a training log before using the equipment.",
+          "char_start": 27,
+          "char_end": 108
+        },
+        {
+          "clause_id": "SOP-002",
+          "section": "Browser walkthrough 390",
+          "text": "This clause describes a synthetic astronomy workflow for 390.",
+          "char_start": 110,
+          "char_end": 171
+        }
+      ],
+      "findings": [
+        {
+          "finding_id": "GAP-0001",
+          "direction": "sop_to_regulation",
+          "verdict": "compliant",
+          "severity": "low",
+          "sop_clause_refs": [
+            "SOP-001"
+          ],
+          "regulation_citations": [
+            {
+              "chunk_id": "10000000-0000-4000-8000-000000000004",
+              "document_id": "10000000-0000-4000-8000-000000000005",
+              "title": "Instrument checks — synthetic browser fixture",
+              "page": 1,
+              "snippet": "Staff must record instrument checks in a training log before using the equipment.",
+              "score": 1
+            }
+          ],
+          "rationale": "Synthetic browser fixture: the provided training-log text matches the seeded requirement.",
+          "suggested_fix": "Suggested fix (not legal advice): No change suggested.",
+          "requirement_strength": null,
+          "requirement_id": null
+        },
+        {
+          "finding_id": "GAP-0002",
+          "direction": "sop_to_regulation",
+          "verdict": "not_covered_by_corpus",
+          "severity": "low",
+          "sop_clause_refs": [
+            "SOP-002"
+          ],
+          "regulation_citations": [],
+          "rationale": "No retrieved regulation chunk met the relevance threshold (0.60); no LLM judgement was made.",
+          "suggested_fix": "Suggested fix (not legal advice): Review whether the applicable regulation is in the ingested corpus; no conclusion is made from this run.",
+          "requirement_strength": null,
+          "requirement_id": null
+        },
+        {
+          "finding_id": "GAP-0003",
+          "direction": "regulation_to_sop",
+          "verdict": "addressed",
+          "severity": "low",
+          "sop_clause_refs": [
+            "SOP-001",
+            "SOP-002"
+          ],
+          "regulation_citations": [
+            {
+              "chunk_id": "10000000-0000-4000-8000-000000000004",
+              "document_id": "10000000-0000-4000-8000-000000000005",
+              "title": "Instrument checks — synthetic browser fixture",
+              "page": 1,
+              "snippet": "Staff must record instrument checks in a training log before using the equipment.",
+              "score": 1
+            }
+          ],
+          "rationale": "Synthetic browser fixture: the provided training-log text matches the seeded requirement.",
+          "suggested_fix": "Suggested fix (not legal advice): No change suggested.",
+          "requirement_strength": "mandatory",
+          "requirement_id": "REQ-001"
+        }
+      ]
+    },
+    "error": null,
+    "created_at": "2026-10-25T22:29:46.850932Z",
+    "started_at": "2026-10-25T22:29:46.859442Z",
+    "finished_at": "2026-10-25T22:29:49.911134Z"
+  }
+}

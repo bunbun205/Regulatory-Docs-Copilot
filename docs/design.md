@@ -4,6 +4,32 @@ Working notes and decision records for `labdocs`.
 
 ## Decisions
 
+### Frontend hardening (F6)
+
+- The full fake-provider browser suite now runs in CI against the isolated test
+  app factory, Postgres and Qdrant. It includes one combined keyboard journey
+  from key validation to upload/Search/Ask/citation/Agent/Gap/filter/export, plus
+  actual PDF and TXT document/SOP uploads with resumed polling and exports.
+- Accessibility checks inspect Chromium's AX tree and assert names/live regions,
+  keyboard reachability/focus return, visible text and control/placeholder/boundary
+  contrast, and reduced motion. The measured dark placeholder contrast of 3.41:1
+  was fixed using the existing muted-text token. Reduced motion now disables
+  animations/transitions completely. Native closed disclosures are excluded from
+  visible-text checks. This is not a claim of a human screen-reader session or
+  WCAG certification; a real assistive-technology user review remains valuable.
+- The separate performance entrypoint seeds 5000 synthetic documents/10000 varied
+  deterministic vectors plus the normal fixture, validates actual store counts,
+  and measures real pagination/count caching/filtering/search on both backends.
+  A separate 1000-finding UI fixture measures report rendering/filtering/print
+  preparation. Initial rendering takes about 4.4–4.5 seconds locally; no new UI
+  framework/virtualization architecture is introduced. Timings are observations,
+  not quality metrics or production capacity promises.
+- Final screenshots and raw runs live under screenshots/f6 and verification/
+  frontend-f6. The frontend README explains the reproducible checks; production
+  packaging/root README remain SEED milestone 10. The existing platform/Docker
+  work is excluded from this frontend milestone. Human-verified evaluation labels
+  and human-authored SOPs remain a separate milestone-9 input, never inferred.
+
 ### Documents review (F5)
 
 - The existing document list owns metadata/year filters, limit/offset and total.

@@ -98,7 +98,20 @@ class BrowserLLM(FakeLLM):
                 return await FakeLLM([response]).chat(
                     messages, temperature=temperature, max_tokens=max_tokens
                 )
-            return await super().chat(messages, temperature=temperature, max_tokens=max_tokens)
+            quoted = "\n".join(message.content for message in messages if message.role == "user")
+            ids = re.findall(r"chunk_id=([0-9a-f-]{36})", quoted)
+            response = FakeResponse(
+                text=json.dumps(
+                    {
+                        "answer": "Record instrument checks before using equipment. [1]",
+                        "citations": list(dict.fromkeys(ids))[:1],
+                    }
+                ),
+                usage=TokenUsage(input_tokens=24, output_tokens=8),
+            )
+            return await FakeLLM([response]).chat(
+                messages, temperature=temperature, max_tokens=max_tokens
+            )
         completed = [message for message in messages if message.role == "tool"]
         if not completed:
             response = FakeResponse(
@@ -182,6 +195,61 @@ async def seed(application) -> None:
             await store.delete_collection()
             await store.ensure_ready()
         await store.upsert([record])
+    if os.environ.get("FRONTEND_E2E_LARGE_CORPUS") == "1":
+        # Test-entrypoint-only dataset. Never touches the native corpus or a
+        # production provider. Batch both stores to exercise real list/count SQL.
+        for start in range(0, 5000, 100):
+            batch = []
+            for index in range(start, start + 100):
+                for chunk in range(2):
+                    batch.append(
+                        VectorRecord(
+                            chunk_id=UUID(int=10_000_000 + index * 2 + chunk),
+                            document_id=UUID(int=20_000_000 + index),
+                            chunk_index=chunk,
+                            text=f"Synthetic performance document {index}, chunk {chunk}.",
+                            token_count=12,
+                            page=chunk + 1,
+                            section_heading="Synthetic performance fixture",
+                            embedding=tuple(
+                                float(value)
+                                for value in embedder.embed(
+                                    [f"Synthetic performance document {index}, chunk {chunk}."]
+                                )[0]
+                            ),
+                            filename=f"performance-{index:05}.txt",
+                            title=f"Synthetic performance document {index:05}",
+                            source_agency="Performance target"
+                            if index % 100 == 0
+                            else "Performance corpus",
+                            doc_type="guidance",
+                            year=2020 + index % 6,
+                            version="Synthetic performance v1",
+                            content_sha256=hashlib.sha256(
+                                f"performance-{index}".encode()
+                            ).hexdigest(),
+                            byte_size=100,
+                            page_count=2,
+                        )
+                    )
+            for store in application.state.vector_stores.values():
+                await store.upsert(batch)
+    if os.environ.get("FRONTEND_E2E_LARGE_CORPUS") == "1":
+        from pathlib import Path
+
+        counts = {
+            name: await store.count() for name, store in application.state.vector_stores.items()
+        }
+        if any(count != 10001 for count in counts.values()):
+            raise RuntimeError("The isolated performance corpus did not finish seeding.")
+        manifest = Path("../docs/verification/frontend-f6/performance-corpus.json")
+        manifest.parent.mkdir(parents=True, exist_ok=True)
+        manifest.write_text(
+            json.dumps(
+                {"synthetic": True, "documents": 5001, "actual_store_counts": counts}, indent=2
+            )
+            + "\n"
+        )
     now = datetime(2026, 10, 25, 12, 0, tzinfo=UTC)
     async with application.state.sessionmaker() as session:
         session.add_all(

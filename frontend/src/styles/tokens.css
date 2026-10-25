@@ -34,6 +34,7 @@
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; }
 button, input, select, textarea { font-family: inherit; }
+input::placeholder, textarea::placeholder { color: var(--text-muted); opacity: 1; }
 button, a, input, select, textarea, summary { -webkit-tap-highlight-color: transparent; }
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 a { color: var(--accent); text-underline-offset: 3px; }
@@ -41,4 +42,4 @@ svg { flex-shrink: 0; }
 h1, h2, h3, p { overflow-wrap: break-word; }
 pre { font-family: var(--mono); }
 ::selection { background: var(--accent-soft); color: var(--text); }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }

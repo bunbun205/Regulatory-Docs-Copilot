@@ -1,0 +1,8 @@
+{
+  "synthetic": true,
+  "documents": 5001,
+  "actual_store_counts": {
+    "pgvector": 10001,
+    "qdrant": 10001
+  }
+}
