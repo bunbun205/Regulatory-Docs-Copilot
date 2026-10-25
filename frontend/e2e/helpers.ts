@@ -3,7 +3,7 @@ import type { Page } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-const directory = resolve(`../docs/screenshots/${process.env.FRONTEND_SCREENSHOT_MILESTONE || 'f4'}`);
+const directory = resolve(`../docs/screenshots/${process.env.FRONTEND_SCREENSHOT_MILESTONE || 'f5'}`);
 // Fixed credentials exist only in the isolated e2e entrypoint, never in the main database.
 export const writer = 'frontend-e2e-write';
 export const reader = 'frontend-e2e-read';
@@ -24,3 +24,5 @@ export async function capture(page: Page, name: string) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `${name}: horizontal page overflow`).toBe(true);
 }
 export async function connected(page: Page) { await expect(page.getByRole('link', { name: /Settings: API online, frontend-review/ })).toBeVisible(); }
+
+export const evidenceDirectory = resolve(`../docs/verification/frontend-${process.env.FRONTEND_SCREENSHOT_MILESTONE || 'f5'}`);

@@ -4,6 +4,40 @@ Working notes and decision records for `labdocs`.
 
 ## Decisions
 
+### Documents review (F5)
+
+- The existing document list owns metadata/year filters, limit/offset and total.
+  Title search and sorting are explicitly labelled as applying to the loaded
+  page because the API has no global title-search/sort parameters. Applying or
+  removing metadata filter chips resets the offset. Page size is bounded at 50.
+- Visible rows obtain chunk counts through the existing detail endpoint, with
+  at most three requests in flight and a per-view cache capped at 200 documents.
+  Page/filter changes abort obsolete requests. Refresh and terminal ingestion
+  invalidate counts. A count failure preserves document metadata, shows a dash
+  rather than a false zero, and offers retry. Large-corpus performance stays F6;
+  the chunk column can be dropped if those measurements show unacceptable cost.
+- Upload is a shared focus-trapped drawer visible only after write scope is
+  confirmed. Picker and drop use the same file validation; metadata follows the
+  existing API's lengths/year bounds and trims required strings. The 25 MiB
+  precheck is explicitly a default, with authoritative 413/422 errors visible.
+  No new endpoint, dependency, capability field or server cancellation is added.
+- Accepted uploads keep their job status in the library while the drawer closes;
+  focus moves to the job heading rather than the temporarily disabled opener.
+  Serialized polling uses the shared two-second hook, retains the last confirmed
+  status on errors, and stops at completed/failed. Terminal jobs refresh library
+  metadata and counts. Status does not imply that every document/row succeeded.
+- Ingestion reports narrow only keys supplied by the existing report builder:
+  document/chunk/duplicate/metadata-update counts, failure/rejection reasons and
+  changed fields. Missing or malformed counts are omitted, never invented; the
+  full supplied JSON remains text in Details. Report/error text is untrusted.
+  The copyable Qdrant reindex command appears only for the pipeline's explicit
+  Postgres-committed/Qdrant-out-of-date message, even when the report is absent.
+- Documents owns its styles; the final temporary legacy view wrapper and its
+  containment CSS are removed. Warning-fatal lint remains unchanged.
+- F6 follow-ups from the [F4 final acceptance](frontend-f4-acceptance.md) remain
+  explicit: PDF/TXT browser journeys, full keyboard/screen-reader/contrast review,
+  large-corpus performance and the combined fake-provider journey in CI.
+
 ### Gap Check review (F4)
 
 - Input uses the existing multipart endpoint for exactly one paste or file.

@@ -1,0 +1,125 @@
+{
+  "milestone": "F5",
+  "branch": "feat/frontend-f5-documents",
+  "unit": {
+    "passed": 113,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser_full_suite": {
+    "startTime": "2026-10-25T20:25:34.228Z",
+    "duration": 157999.763,
+    "expected": 44,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "browser_final_documents": {
+    "startTime": "2026-10-25T20:35:30.302Z",
+    "duration": 47205.905,
+    "expected": 12,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "widths": [
+    1280,
+    390,
+    360
+  ],
+  "horizontal_page_overflow": false,
+  "table_overflow": "Intentional contained horizontal scroll on small screens; table itself keyboard-focusable.",
+  "strict_typecheck": "pass",
+  "lint": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "generated_type_freshness": "pass against clean app factory and running browser backend",
+  "production_build": "pass",
+  "bundle": {
+    "route": "/ask",
+    "chunks": [
+      {
+        "file": "assets/index-DxagpoVP.js",
+        "gzip_bytes": 94545
+      },
+      {
+        "file": "assets/AskView-ZAPG67gk.js",
+        "gzip_bytes": 1942
+      },
+      {
+        "file": "assets/Sources-dZW3MLWM.js",
+        "gzip_bytes": 3794
+      },
+      {
+        "file": "assets/RequestStatus-ByrtqIPq.js",
+        "gzip_bytes": 1264
+      },
+      {
+        "file": "assets/useAsync-BSV9cuAG.js",
+        "gzip_bytes": 653
+      }
+    ],
+    "total_gzip_bytes": 102198,
+    "budget_gzip_bytes": 110000
+  },
+  "backend_changes": false,
+  "dependency_changes": false,
+  "f4_main_ci": {
+    "commit": "b721b703638359304cd6b49f2209fef194b01d4b",
+    "run": "https://github.com/bunbun205/Regulatory-Docs-Copilot/actions/runs/40229663356",
+    "conclusion": "success"
+  },
+  "review_stop": "F5 stays draft and unmerged until user review.",
+  "deferred_to_f6": [
+    "PDF/TXT end-to-end browser journeys",
+    "Full journey and Playwright CI using fake provider",
+    "Keyboard/screen reader/contrast/reduced-motion audit",
+    "Large-corpus and long-report performance"
+  ],
+  "final_screenshots": 234,
+  "native_library": {
+    "description": "Read-only browser check of the existing eight-document native corpus through Vite 3100/API 8001. Normal qwen2.5:3b profile; no LLM call or corpus mutation. Small-corpus timing only; large-corpus testing remains F6.",
+    "results": [
+      {
+        "width": 1280,
+        "documents_total": 8,
+        "loaded": 8,
+        "all_counts_visible_ms": 456,
+        "detail_requests": 8,
+        "peak_detail_requests": 3,
+        "request_timings_ms": [
+          22,
+          21,
+          22,
+          83,
+          92,
+          92,
+          9,
+          19
+        ],
+        "horizontal_overflow": false
+      },
+      {
+        "width": 390,
+        "documents_total": 8,
+        "loaded": 8,
+        "all_counts_visible_ms": 351,
+        "detail_requests": 8,
+        "peak_detail_requests": 3,
+        "request_timings_ms": [
+          15,
+          15,
+          15,
+          15,
+          14,
+          14,
+          12,
+          12
+        ],
+        "horizontal_overflow": false
+      }
+    ]
+  },
+  "visual_review": "Opened desktop/mobile table, scrolled columns, upload form/actions, actual ingestion report, duplicate report, partial/sync report, polling error, read-only/dark and native corpus. Fixed mobile row height, dropped picker selection and submit focus lifecycle."
+}
