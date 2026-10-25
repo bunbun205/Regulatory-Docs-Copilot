@@ -32,7 +32,15 @@ async def test_migrations_upgrade_and_downgrade(
 
     await asyncio.to_thread(command.upgrade, config, "head")
     tables = await _table_names(engine)
-    assert {"api_keys", "documents", "chunks", "ingestion_jobs", "alembic_version"} <= tables
+    assert {
+        "api_keys",
+        "documents",
+        "chunks",
+        "ingestion_jobs",
+        "gapcheck_jobs",
+        "gapcheck_judgement_cache",
+        "alembic_version",
+    } <= tables
 
     async with engine.connect() as connection:
         embedding_type = await connection.scalar(
@@ -57,6 +65,40 @@ async def test_migrations_upgrade_and_downgrade(
         )
     assert identity_constraint == "uq_documents_agency_filename"
 
+    async with engine.connect() as connection:
+        gapcheck_index = await connection.scalar(
+            text("SELECT indexdef FROM pg_indexes WHERE indexname = 'ix_gapcheck_jobs_key_status'")
+        )
+    assert gapcheck_index is not None
+    assert "api_key_id" in gapcheck_index
+    assert "status" in gapcheck_index
+
+    async with engine.connect() as connection:
+        active_index = await connection.scalar(
+            text("SELECT indexdef FROM pg_indexes WHERE indexname = 'uq_gapcheck_jobs_active_key'")
+        )
+    assert active_index is not None
+    assert "UNIQUE" in active_index
+    assert "status" in active_index
+
+    async with engine.connect() as connection:
+        gapcheck_fk = await connection.scalar(
+            text(
+                "SELECT confdeltype FROM pg_constraint "
+                "WHERE conname = 'fk_gapcheck_jobs_api_key_id_api_keys'"
+            )
+        )
+    assert gapcheck_fk in {b"c", "c"}
+
     await asyncio.to_thread(command.downgrade, config, "base")
     tables = await _table_names(engine)
-    assert tables.isdisjoint({"api_keys", "documents", "chunks", "ingestion_jobs"})
+    assert tables.isdisjoint(
+        {
+            "api_keys",
+            "documents",
+            "chunks",
+            "ingestion_jobs",
+            "gapcheck_jobs",
+            "gapcheck_judgement_cache",
+        }
+    )

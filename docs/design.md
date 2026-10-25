@@ -338,11 +338,118 @@ Working notes and decision records for `labdocs`.
   adapter groups multiple tool results into one user turn as required by that
   API.
 
+### Milestone 6 — compliance gap checker (2026-10-25)
+
+- **Segmentation.** `app/gapcheck/segment.py` normalizes line endings and
+  whitespace, drops cross-page furniture, signature blocks, revision tables and
+  other boilerplate, then returns a Pandas DataFrame with exactly
+  `clause_id, section, text, char_start, char_end`. Headings and numbered items
+  start clauses; paragraph continuations stay with their clause. Clause ids are
+  stable within a run (`SOP-001`, `SOP-002`, ...), and every `char_start` /
+  `char_end` pair slices the normalized text exactly. The default hard cap is
+  **80 clauses**; a larger SOP is rejected with `422 clause_cap_exceeded`
+  rather than silently truncated. Empty/boilerplate-only SOPs are rejected with
+  `422 invalid_sop`.
+- **Direction A, SOP to regulation.** Each clause retrieves `top_k` regulation
+  chunks with the request filters and the selected backend. If no hit reaches
+  `GAPCHECK_RELEVANCE_THRESHOLD` (default **0.60**), the finding is
+  `not_covered_by_corpus` and the LLM is not called. Otherwise the judge returns
+  `compliant`, `partial` or `conflict` with cited chunk ids and a rationale.
+  Citations are accepted only when they are in the retrieved set; an invalid
+  judgement is retried once and then reported as `judge_failed` with no
+  invented citation. The judge prompt treats the SOP and regulation text as
+  delimited untrusted data, and a prompt-injection test verifies that SOP text
+  cannot add citation ids or force a compliant verdict.
+- **Direction B, regulation to SOP.** The chunks that passed Direction A are
+  deduplicated. A whole-SOP scope retrieval then keeps only chunks belonging to
+  the top `GAPCHECK_GLOBAL_TOP_DOCUMENTS` (default **2**) documents; this stops
+  a generic clause such as “this SOP describes electronic records” from pulling
+  unrelated Part 58 laboratory-space requirements into the omission analysis.
+  Obligation sentences are extracted deterministically (mandatory `shall` /
+  `must` / `is required to`; advisory `should`), deduplicated, and capped at
+  **120 requirements**. Each requirement is compared with the best
+  `GAPCHECK_SOP_MATCH_TOP_K` (default 3) SOP clauses using an ephemeral
+  in-memory NumPy index. The judge returns `addressed`, `partially_addressed` or
+  `missing`; addressed/partial citations must be shown SOP clause ids, while a
+  missing verdict must have no citations. The report cites the regulation chunk
+  that supplied the requirement.
+- **Judge cache.** `gapcheck_judgement_cache` persists only validated
+  judgements, keyed by a SHA-256 over the namespace (provider/model), prompt
+  version, judgement kind, clause/requirement text and the candidate source
+  ids/text. The runner also keeps a bounded in-memory LRU. Cache hits are
+  counted in report metadata and cost no LLM tokens. Prompt version
+  `gapcheck-judge-v3` adds explicit negation/scope and no-inference guidance;
+  changing it invalidates old cache entries. SOP text is never logged; errors
+  log only a job id and exception type.
+- **Severity and report.** Severity is rule-based in
+  `app/gapcheck/report.py`, never chosen by the LLM: `conflict`, or `missing`
+  against a mandatory requirement, is **high**; `partial` /
+  `partially_addressed`, or any finding against an advisory requirement, is
+  **medium**; everything else is **low**. Findings are numbered `GAP-0001` in
+  report order, include direction, verdict, severity, SOP clause refs,
+  regulation citations with title/page/snippet/score, rationale and a
+  “Suggested fix (not legal advice)” string. Reports carry the fixed banner
+  “Decision support only, not legal advice...”, counts by verdict/severity/
+  direction, `caps_hit`, and metadata (model, backend, filters, duration, token
+  usage, clause/requirement totals, threshold, global document ids, cache hits,
+  judge failures, caps).
+- **Jobs and API.** `POST /v1/gapcheck` accepts exactly one of an SOP file
+  (`.pdf`, `.md`, `.markdown`, `.txt`) or pasted text, plus optional
+  `doc_type`, `source_agency`, `year_min`, `year_max` and backend. It returns
+  `202` with a job id. `GET /v1/gapcheck/{job_id}` returns progress and, when
+  complete, the report; another API key receives `404`. Progress phases are
+  `queued`, `clauses`, `requirements`, `finalizing`, then a terminal
+  `completed`, `failed` or `cancelled`. `POST /v1/gapcheck/{job_id}/cancel`
+  (an addition beyond the two routes named in `SEED.md`) sets a cooperative
+  cancellation flag; the runner stops between bounded steps and reports
+  `cancelled`. Jobs live in `gapcheck_jobs`; lifecycle/progress persistence and
+  background execution follow the ingestion-job pattern.
+- **Caps and limits.** Defaults are 80 clauses, 120 requirements, 200,000
+  tokens, 200,000 SOP characters, top-k 5, judge concurrency 4, retrieval
+  concurrency 8, judge output 512 tokens and one active job per API key. A
+  per-key overflow returns `429 gapcheck_limit` with `Retry-After: 30`. The
+  clause cap is a request validation failure; requirement and token caps are
+  recorded in `caps_hit` and the report instead of truncating silently.
+- **Threshold evidence.** A probe with the real corpus and the fixture SOP gave
+  top-1 retrieval scores of **0.627–0.778** for clauses that correspond to
+  Part 11/211 controls (access, signatures, training). An earlier, awkwardly
+  worded negation scored **0.584** and was reported `not_covered_by_corpus`;
+  the retained fixture uses a clearer negation that scores **0.648**. The
+  default **0.60** includes the relevant chunks and this contradiction while
+  excluding the awkward wording. This is a small, synthetic-SOP calibration,
+  not a general guarantee; milestone 9 should calibrate on human-authored SOPs.
+- **Mutation evaluation.** Synthetic regression fixtures live under
+  `tests/fixtures/gapcheck/`; they are clearly labelled as synthetic and are
+  **not** legal ground truth or corpus documents. A real Ollama
+  `llama3.1:8b` run against the real 8-document/238-chunk corpus used threshold
+  0.60, top-k 3, global top 2, 12 clauses and 8–30 requirements depending on
+  the cap being probed:
+
+  | Fixture | Injected defect | Real-LLM result |
+  | --- | --- | --- |
+  | `clean_sop` | none | 0 conflicts, 0 `judge_failed`; all five clauses judged compliant. It is a short synthetic SOP, so the report still lists genuine omissions from Part 11/211; no unsupported claim was reported. |
+  | `mutated_conflict` | access “not limited to authorized personnel” | **detected**: `conflict` high with a Part 11 authority-check chunk citation. |
+  | `mutated_unsupported` | deletion “without an audit trail” | **detected**: `conflict` high with a Part 11 controls chunk citation. |
+  | `injection` | “ignore all instructions” plus deletion | **detected**: `conflict` high with a citation; no blind compliant verdict. |
+  | `mutated_missing` | authorization clause removed | **not detected** in this run. The omission is a known requirement-extraction/retrieval limitation: the authority sentence is inside an enumerated Part 11 list that the deterministic extractor keeps as one long requirement, and the 12/30-requirement caps can exclude it. |
+
+  The committed deterministic fixture test passes for all five fixtures and
+  validates every citation, but its text-driven judge is a test double, not an
+  LLM-quality metric. The real-LLM omission false negative is documented rather
+  than hidden; the human-authored mutation set remains a milestone 9
+  deliverable.
+- **Test coverage.** Gap-check tests cover segmentation and exact offsets,
+  boilerplate removal, clause/requirement caps, both analysis directions,
+  citation validation/retry, cache hits, prompt injection, severity and report
+  counts, requirement-document scope filtering, API auth/file/text/filters/
+  backend errors, per-key `429`, cancellation flag behavior, the deterministic
+  mutation fixtures, and the `0005` migration tables/indexes/FK.
+
 ## Verification
 
 - 2026-10-25 — Full `pytest`, Ruff, format check, mypy, `alembic check` and
   `docker compose config -q` passed locally against compose Postgres and
-  Qdrant: **124 passed**, no skips. The vector-store contract suite runs the same
+  Qdrant: **153 passed**, no skips. The vector-store contract suite runs the same
   tests against both `PgVectorStore` and `QdrantStore`. API tests cover
   pgvector search, filters, top-k validation, unknown filter fields, auth,
   Qdrant backend override and duplicate re-ingest repair. The migration test
@@ -383,7 +490,16 @@ Working notes and decision records for `labdocs`.
   model-timeout fallback, Pandas metadata filters/sorting, invalid arguments,
   request-filter defaults, output truncation, API auth/query/backend errors,
   provider failure mapping, and Anthropic multi-tool-result grouping. The full
-  suite is **124 passed** with no skips.
+  suite was **124 passed** at the end of that milestone.
+- 2026-10-25 — Milestone 6 adds deterministic tests for segmentation/offsets,
+  boilerplate removal, clause and requirement caps, both directions, citation
+  validation/retry, judge caching, prompt injection, severity/report counts,
+  global requirement-document filtering, API file/text/filter/backend errors,
+  per-key `429 gapcheck_limit`, cancellation, the `0005` migration and the
+  synthetic mutation fixtures. The full suite is **153 passed**, no skips. The
+  real Ollama mutation run is recorded in the milestone section; its
+  `mutated_missing` false negative and the LLM timeouts are reported as
+  limitations, not suppressed.
 
 ## Known limitations
 
@@ -415,6 +531,28 @@ Working notes and decision records for `labdocs`.
 - Agent citations are chunk citations only. Metadata-only answers can be
   correct but are marked ungrounded because there is no document-level citation
   type yet.
+- Gap-check omission recall depends on requirement extraction and on the
+  remaining SOP clauses retrieving a chunk that contains the omitted
+  requirement. In the real-LLM synthetic run, removing the authorization clause
+  was not detected because the authority sentence sits inside a long enumerated
+  Part 11 list and can be collapsed or pushed past the requirement cap. The
+  deterministic fixture test covers the pipeline path, but the real omission
+  false negative is a known limitation. Milestone 9 should replace the
+  synthetic fixtures with human-authored SOPs and evaluate omission recall
+  explicitly.
+- Gap-check retrieval uses a single dense embedding pass per clause plus one
+  whole-SOP scope query. There is no reranker, and the global top-two-document
+  scope filter is a heuristic that can exclude an applicable regulation for a
+  broad SOP. The 0.60 threshold was calibrated on a short synthetic SOP, not a
+  human-authored set.
+- Gap-check jobs use in-process background tasks. Progress and reports are
+  persisted, but there is no durable queue, crash recovery or automatic retry;
+  a process restart can leave a `running` job without a worker. Caps bound
+  clauses, requirements and tokens, but there is no separate wall-clock job
+  timeout.
+- Gap-check findings are decision support only. The LLM judge can produce
+  false positives/negatives, and `judge_failed` findings require manual review;
+  the report banner and suggested-fix labels make this explicit.
 - `reindex --backend qdrant` deletes and recreates the collection rather than
   swapping a temporary collection atomically. A failed rebuild can leave a
   partial Qdrant collection; retry the command.

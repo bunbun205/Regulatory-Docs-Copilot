@@ -176,3 +176,92 @@ class AgentResponse(BaseModel):
     partial_reason: str | None
     usage: AskUsage
     latency_ms: float
+
+
+class GapCheckProgress(BaseModel):
+    phase: Literal[
+        "queued",
+        "clauses",
+        "requirements",
+        "finalizing",
+        "completed",
+        "failed",
+        "cancelled",
+    ] = "queued"
+    clauses_total: int = 0
+    clauses_done: int = 0
+    requirements_total: int = 0
+    requirements_done: int = 0
+
+
+class GapCheckCitation(BaseModel):
+    chunk_id: UUID
+    document_id: UUID
+    title: str
+    page: int | None
+    snippet: str
+    score: float | None
+
+
+class GapCheckSopClause(BaseModel):
+    clause_id: str
+    section: str
+    text: str
+    char_start: int
+    char_end: int
+
+
+class GapCheckFinding(BaseModel):
+    finding_id: str
+    direction: Literal["sop_to_regulation", "regulation_to_sop"]
+    verdict: Literal[
+        "compliant",
+        "partial",
+        "conflict",
+        "not_covered_by_corpus",
+        "judge_failed",
+        "addressed",
+        "partially_addressed",
+        "missing",
+    ]
+    severity: Literal["high", "medium", "low"]
+    sop_clause_refs: list[str]
+    regulation_citations: list[GapCheckCitation]
+    rationale: str
+    suggested_fix: str
+    requirement_strength: Literal["mandatory", "advisory"] | None
+    requirement_id: str | None
+
+
+class GapCheckReport(BaseModel):
+    job_id: UUID
+    generated_at: datetime
+    banner: str
+    metadata: dict[str, Any]
+    caps_hit: list[str]
+    counts_by_verdict: dict[str, int]
+    counts_by_severity: dict[str, int]
+    counts_by_direction: dict[str, int]
+    sop_clauses: list[GapCheckSopClause]
+    findings: list[GapCheckFinding]
+
+
+class GapCheckSubmitResponse(BaseModel):
+    job_id: UUID
+    status: Literal["queued"] = "queued"
+
+
+class GapCheckCancelResponse(BaseModel):
+    job_id: UUID
+    cancel_requested: bool
+
+
+class GapCheckJobResponse(BaseModel):
+    id: UUID
+    status: Literal["queued", "running", "completed", "failed", "cancelled"]
+    progress: GapCheckProgress
+    report: GapCheckReport | None
+    error: str | None
+    created_at: datetime
+    started_at: datetime | None
+    finished_at: datetime | None
