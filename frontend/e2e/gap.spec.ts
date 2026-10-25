@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { execFileSync } from 'node:child_process';
 import type { components } from '../src/types/api.js';
 import { capture, connected, setup, writer } from './helpers.js';
 import { source } from './fixtures.js';
@@ -44,8 +45,9 @@ for (const width of [1280, 390, 360]) {
     await page.getByLabel('Search findings', { exact: true }).fill('No fixture phrase matches this'); await expect(page.getByText('No findings match these filters', { exact: true })).toBeVisible(); await capture(page, `gap-report-filter-empty-light-${width}`);
     await page.getByRole('button', { name: 'Clear filters', exact: true }).click(); await page.getByLabel('Verdict', { exact: true }).selectOption('judge_failed'); await expect(page).toHaveURL(/\?verdict=judge_failed$/); await page.getByText('Compare evidence for GAP-0005', { exact: true }).click(); await capture(page, `gap-report-manual-review-light-${width}`);
     if (width === 1280) {
-      await page.getByRole('button', { name: 'Clear filters', exact: true }).click(); await page.emulateMedia({ media: 'print' }); await page.evaluate(() => window.dispatchEvent(new Event('beforeprint'))); await capture(page, 'gap-report-print-1280');
-      await page.pdf({ path: resolve(evidence, 'synthetic-report-print.pdf'), format: 'A4', printBackground: true }); await page.evaluate(() => window.dispatchEvent(new Event('afterprint'))); await page.emulateMedia({ media: 'screen' }); await expect(page.getByText('Compare evidence for GAP-0003', { exact: true }).locator('..')).not.toHaveAttribute('open');
+      await page.getByRole('button', { name: 'Clear filters', exact: true }).click(); await expect(page.getByRole('article')).toHaveCount(8); await page.emulateMedia({ media: 'print' }); await page.evaluate(() => window.dispatchEvent(new Event('beforeprint'))); await capture(page, 'gap-report-print-1280');
+      await page.pdf({ path: resolve(evidence, 'synthetic-report-print.pdf'), format: 'A4', printBackground: true });
+      execFileSync('../.venv/bin/python', ['-c', 'import sys; from pypdf import PdfReader; text = "\\n".join(page.extract_text() for page in PdfReader(sys.argv[1]).pages); assert text.count("Rationale") == 8; assert text.count("Suggestion, not legal advice") == 8', resolve(evidence, 'synthetic-report-print.pdf')]); await page.evaluate(() => window.dispatchEvent(new Event('afterprint'))); await page.emulateMedia({ media: 'screen' }); await expect(page.getByText('Compare evidence for GAP-0003', { exact: true }).locator('..')).not.toHaveAttribute('open');
     }
   });
   test(`Gap phases, polling error and terminal failures fit ${width}px`, async ({ page }) => {

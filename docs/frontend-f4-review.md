@@ -34,7 +34,7 @@ Unfinished local backend/platform/Docker work remains excluded.
 **92 Vitest/RTL tests and 32 Playwright tests passed**, zero failures/skips.
 The three export/print browser cases also passed a focused repeat after the
 final duplicate-beforeprint restoration guard. Strict no-emit TypeScript, warning-fatal Oxlint (zero warnings), live-schema type
-freshness and the production build pass. Initial `/ask` JS is **102,082 bytes gzip
+freshness and the production build pass. Initial `/ask` JS is **102,080 bytes gzip
 (102.1 kB)** against the 110,000-byte budget. Backend checks remain the unchanged
 155-test committed suite; the preserved two platform tests are explained in F1.
 
@@ -93,7 +93,11 @@ cut off before the listed requirements. [Recorded Ask and assessment](verificati
 Browser testing caught rapid Clear filters → verdict selection restoring a stale
 severity. A current-parameters ref fixes it, with unit and browser regressions.
 Visual review also corrected the completed-reading phase copy, resumed elapsed
-initialization and duplicate red cancellation message. The existing API needs
+initialization and duplicate red cancellation message. A final PDF check caught
+comparisons mounted during an asynchronous filter change staying closed. Print
+events now accumulate newly opened details without losing restoration state;
+the browser spec asserts that the exported PDF contains all eight rationales
+and suggestions. The existing API needs
 (full-chunk lookup, progress-time caps, capabilities and typed metadata) remain;
 no additional backend change is required for this milestone.
 

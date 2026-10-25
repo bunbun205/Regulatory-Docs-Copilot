@@ -15,8 +15,8 @@
     "flaky": 0
   },
   "browser_final_print_regression": {
-    "startTime": "2026-10-25T19:27:21.396Z",
-    "duration": 11458.425,
+    "startTime": "2026-10-25T19:42:05.037Z",
+    "duration": 10363.837000000001,
     "expected": 3,
     "skipped": 0,
     "unexpected": 0,
@@ -39,27 +39,27 @@
     "route": "/ask",
     "chunks": [
       {
-        "file": "assets/index-C-9c1uuy.js",
-        "gzip_bytes": 94541
+        "file": "assets/index-InUZdoY8.js",
+        "gzip_bytes": 94536
       },
       {
-        "file": "assets/AskView-BTHwMqUS.js",
-        "gzip_bytes": 1948
+        "file": "assets/AskView-BHg1aV8-.js",
+        "gzip_bytes": 1947
       },
       {
-        "file": "assets/Sources-CLNx9ZZq.js",
-        "gzip_bytes": 4538
+        "file": "assets/Sources-y7nIZHyu.js",
+        "gzip_bytes": 4540
       },
       {
-        "file": "assets/useAsync-CqlwcnHK.js",
-        "gzip_bytes": 653
+        "file": "assets/useAsync-C6I-UHMw.js",
+        "gzip_bytes": 654
       },
       {
-        "file": "assets/RequestStatus-AlkWEpJc.js",
-        "gzip_bytes": 402
+        "file": "assets/RequestStatus-4vAF00uM.js",
+        "gzip_bytes": 403
       }
     ],
-    "total_gzip_bytes": 102082,
+    "total_gzip_bytes": 102080,
     "budget_gzip_bytes": 110000
   },
   "final_screenshots": 162,
@@ -78,5 +78,10 @@
     "F5 Documents",
     "F6 complete browser journey/CI and broader accessibility/performance",
     "PDF/TXT browser upload journeys"
-  ]
+  ],
+  "print_pdf_content": {
+    "rationales": 8,
+    "suggestions": 8,
+    "checked_by": "pypdf assertion in the committed browser spec"
+  }
 }

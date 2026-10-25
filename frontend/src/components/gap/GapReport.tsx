@@ -27,9 +27,9 @@ export default function GapReport({ report }: { report: Report }) {
   const filters = findingFilters(params); const metadata = reportMetadata(report.metadata);
   const [exportError, setExportError] = useState(''); const root = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    let changed: HTMLDetailsElement[] = []; let printing = false;
-    const before = () => { if (printing) return; printing = true; changed = Array.from(root.current?.querySelectorAll<HTMLDetailsElement>('details:not([open])') ?? []); for (const element of changed) element.open = true; };
-    const after = () => { for (const element of changed) element.open = false; changed = []; printing = false; };
+    const changed = new Set<HTMLDetailsElement>();
+    const before = () => { for (const element of Array.from(root.current?.querySelectorAll<HTMLDetailsElement>('details:not([open])') ?? [])) { changed.add(element); element.open = true; } };
+    const after = () => { for (const element of changed) element.open = false; changed.clear(); };
     window.addEventListener('beforeprint', before); window.addEventListener('afterprint', after);
     return () => { after(); window.removeEventListener('beforeprint', before); window.removeEventListener('afterprint', after); };
   }, []);

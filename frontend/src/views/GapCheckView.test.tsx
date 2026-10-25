@@ -66,7 +66,11 @@ describe('Gap report review', () => {
   it('shows empty reports, reported caps and missing metadata honestly', () => {
     mockResearch(async () => Response.json({})); mountResearch(<GapReport report={{ ...gapReport, findings: [], metadata: {}, caps_hit: ['requirements'] }} />); expect(screen.getByText('No findings returned')).toBeTruthy(); expect(screen.getByText('This run reached a limit')).toBeTruthy(); expect(screen.queryByText('fake:unit-fixture')).toBeNull(); expect(screen.getAllByText('Unavailable').length).toBeGreaterThan(0);
   });
-  it('opens report details for printing and restores their prior state afterward', async () => {
-    mockResearch(async () => Response.json({})); const { container } = mountResearch(<GapReport report={gapReport} />); const closed = Array.from(container.querySelectorAll('details')); expect(closed.every(element => !element.open)).toBe(true); await act(async () => { window.dispatchEvent(new Event('beforeprint')); window.dispatchEvent(new Event('beforeprint')); }); expect(closed.every(element => element.open)).toBe(true); await act(async () => window.dispatchEvent(new Event('afterprint'))); await waitFor(() => expect(closed.every(element => !element.open)).toBe(true));
+  it('opens current and newly mounted comparisons across print events, then restores them', async () => {
+    mockResearch(async () => Response.json({})); const { container } = mountResearch(<GapReport report={gapReport} />, '/gap-check/job-a?verdict=judge_failed');
+    await act(async () => window.dispatchEvent(new Event('beforeprint')));
+    await userEvent.click(screen.getByRole('button', { name: 'Clear filters' })); expect(screen.getAllByRole('article')).toHaveLength(3);
+    await act(async () => window.dispatchEvent(new Event('beforeprint'))); const details = Array.from(container.querySelectorAll('details')); expect(details.every(element => element.open)).toBe(true);
+    await act(async () => window.dispatchEvent(new Event('afterprint'))); await waitFor(() => expect(details.every(element => !element.open)).toBe(true));
   });
 });
