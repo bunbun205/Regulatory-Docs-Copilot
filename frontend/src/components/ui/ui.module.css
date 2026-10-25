@@ -28,7 +28,7 @@
 .disclosure { border-top: 1px solid var(--border); margin-top: 16px; font-size: 12px; }
 .disclosure summary { cursor: pointer; display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; font-weight: 600; list-style: none; }
 .disclosure summary::-webkit-details-marker { display: none; }
-.disclosure[open] summary svg { transform: rotate(180deg); }
+.disclosure[open] > summary > svg { transform: rotate(180deg); }
 .disclosure pre { max-width: 100%; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; padding: 12px; background: var(--surface); border-radius: 6px; }
 .spinner { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }

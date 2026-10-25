@@ -9,6 +9,7 @@ import hashlib
 import json
 import os
 import re
+from collections.abc import Sequence
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 from tempfile import TemporaryDirectory
@@ -40,7 +41,8 @@ from app.core.security import hash_api_key
 from app.db.base import Base
 from app.db.models import ApiKey, GapCheckJob
 from app.gapcheck.report import build_report
-from app.llm.fake import FakeLLM
+from app.llm.base import LLMMessage, LLMResult, TokenUsage, ToolCall, ToolDefinition
+from app.llm.fake import FakeLLM, FakeResponse
 from app.main import create_app
 from app.store.base import VectorRecord
 from tests.helpers import FakeEmbedder
@@ -51,6 +53,47 @@ WRITER_ID = UUID("10000000-0000-4000-8000-000000000001")
 JOB_ID = UUID("10000000-0000-4000-8000-000000000003")
 CHUNK_ID = UUID("10000000-0000-4000-8000-000000000004")
 SOURCE = "Staff must record instrument checks in a training log before using the equipment."
+
+
+class BrowserLLM(FakeLLM):
+    """Per-request scripts live only in this isolated browser entrypoint."""
+
+    async def chat(
+        self,
+        messages: Sequence[LLMMessage],
+        *,
+        tools: Sequence[ToolDefinition] = (),
+        temperature: float = 0.0,
+        max_tokens: int = 1024,
+    ) -> LLMResult:
+        if not tools:
+            return await super().chat(messages, temperature=temperature, max_tokens=max_tokens)
+        completed = [message for message in messages if message.role == "tool"]
+        if not completed:
+            response = FakeResponse(
+                tool_calls=(ToolCall("browser-metadata", "query_metadata", {"limit": 5}),)
+            )
+        elif not any(message.name == "search_documents" for message in completed):
+            response = FakeResponse(
+                tool_calls=(
+                    ToolCall("browser-search", "search_documents", {"query": SOURCE, "top_k": 2}),
+                )
+            )
+        else:
+            payload = json.loads(completed[-1].content)
+            ids = [row["chunk_id"] for row in payload.get("results", [])]
+            response = FakeResponse(
+                text=json.dumps(
+                    {
+                        "answer": "Record instrument checks before using equipment. [1]",
+                        "citations": ids,
+                    }
+                ),
+                usage=TokenUsage(input_tokens=24, output_tokens=8),
+            )
+        return await FakeLLM([response]).chat(
+            messages, tools=tools, temperature=temperature, max_tokens=max_tokens
+        )
 
 
 async def prepare_database() -> None:
@@ -75,8 +118,8 @@ async def seed(application) -> None:
     embedder = FakeEmbedder()
     application.state.embedder = embedder
     await application.state.llm_client.close()
-    # F1 exercises auth/navigation/errors. Later milestones extend scripted tool/judge flows here.
-    application.state.llm_client = FakeLLM(
+    # Browser scripts never enter the production provider factory.
+    application.state.llm_client = BrowserLLM(
         default_text=json.dumps(
             {
                 "answer": "Record instrument checks before using equipment. [1]",
