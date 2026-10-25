@@ -3,10 +3,10 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import type { components } from '../src/types/api.js';
-import { capture, connected, setup, writer } from './helpers.js';
+import { capture, connected, setup, writer, evidenceDirectory } from './helpers.js';
 import { source } from './fixtures.js';
 
-const evidence = resolve('../docs/verification/frontend-f4');
+const evidence = evidenceDirectory;
 const reportJob = '10000000-0000-4000-8000-000000000006';
 const fixtureJob = '10000000-0000-4000-8000-000000000007';
 type Job = components['schemas']['GapCheckJobResponse'];

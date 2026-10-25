@@ -1,0 +1,54 @@
+{
+  "description": "Actual upload through Vite proxy and app factory with isolated Postgres/Qdrant and deterministic embedder.",
+  "browser_elapsed_ms": 2531,
+  "job": {
+    "id": "39cd34dc-86d9-4e60-83b1-095eea806324",
+    "status": "completed",
+    "created_at": "2026-10-25T20:36:09.446675Z",
+    "started_at": "2026-10-25T20:36:09.453288Z",
+    "finished_at": "2026-10-25T20:36:09.468591Z",
+    "report": {
+      "chunks": 0,
+      "updates": [],
+      "failures": [],
+      "documents": [],
+      "duplicates": [
+        {
+          "filename": "f5-browser-360.md",
+          "document_id": "b4715a10-d8d8-4474-97d3-762314dcc089",
+          "metadata_updated": [
+            "title",
+            "version"
+          ]
+        }
+      ],
+      "duration_ms": 14.74,
+      "chunk_length": {
+        "max": null,
+        "min": null,
+        "p50": null,
+        "p90": null,
+        "mean": null,
+        "count": 0
+      },
+      "rejected_rows": [],
+      "documents_total": 1,
+      "documents_failed": 0,
+      "metadata_updates": [
+        {
+          "filename": "f5-browser-360.md",
+          "document_id": "b4715a10-d8d8-4474-97d3-762314dcc089",
+          "changed_fields": [
+            "title",
+            "version"
+          ]
+        }
+      ],
+      "documents_updated": 0,
+      "documents_ingested": 0,
+      "documents_duplicate": 1,
+      "documents_metadata_updated": 1
+    },
+    "error": null
+  }
+}

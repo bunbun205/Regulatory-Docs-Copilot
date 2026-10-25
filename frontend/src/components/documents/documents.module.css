@@ -1,0 +1,48 @@
+.stack { display: grid; gap: 24px; min-width: 0; }
+.heading { font-size: 20px; line-height: 1.4; margin: 0 0 6px; font-weight: 600; }
+.hint { color: var(--text-muted); font-size: 12px; line-height: 1.7; margin: 0; }
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.search { flex: 1 1 240px; }
+.sort { flex: 0 1 220px; }
+.filters { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; margin: 16px 0; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); border-radius: 5px; background: var(--accent-soft); color: var(--accent); font: inherit; font-size: 12px; padding: 6px 10px; max-width: 100%; overflow-wrap: anywhere; cursor: pointer; }
+.tableScroll { max-width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+.table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 13px; }
+.scrollHint { display: none; }
+.table caption { text-align: left; padding: 10px 12px; }
+.table th { text-align: left; background: var(--surface-hover); font-size: 11px; font-weight: 600; color: var(--text-muted); }
+.table th, .table td { padding: 16px 12px; border-bottom: 1px solid var(--border); vertical-align: top; overflow-wrap: anywhere; }
+.table tr:last-child td { border-bottom: 0; }
+.table td:first-child { min-width: 210px; width: 38%; }
+.table td:nth-child(2) { min-width: 100px; }
+.table td:nth-child(3) { min-width: 100px; }
+.table th:nth-child(4), .table td:nth-child(4) { min-width: 64px; white-space: nowrap; }
+.table td:nth-child(5) { min-width: 120px; }
+.table th:nth-child(6), .table td:nth-child(6) { min-width: 72px; white-space: nowrap; }
+.table td:last-child { text-align: right; }
+.title { display: block; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.filename { font-size: 11px; color: var(--text-muted); }
+.pager { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-top: 20px; }
+.pageSize { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 12px; }
+.pageSize select { width: auto; }
+.drawer { display: grid; gap: 20px; min-width: 0; }
+.drop { display: grid; gap: 10px; border: 1px dashed var(--border-strong); border-radius: 8px; padding: 20px; background: var(--surface-hover); overflow-wrap: anywhere; }
+.drop input { max-width: 100%; color: var(--text); font: inherit; font-size: 13px; }
+.drop svg { color: var(--accent); }
+.grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+.full { grid-column: 1/-1; }
+.stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
+.stat { border: 1px solid var(--border); border-radius: 6px; padding: 12px; }
+.stat strong { display: block; font-size: 24px; font-weight: 600; }
+.stat span { font-size: 12px; color: var(--text-muted); }
+.list { display: grid; gap: 10px; padding-left: 20px; font-size: 13px; }
+.list li, .text { overflow-wrap: anywhere; white-space: pre-wrap; }
+.text { font-size: 13px; line-height: 1.8; margin: 0; }
+.code { background: var(--surface-hover); border: 1px solid var(--border); border-radius: 6px; padding: 12px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; }
+.details { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 8px 16px; font-size: 12px; }
+.details dt { color: var(--text-muted); }
+.details dd { margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 700px) { .scrollHint { display: block; margin: 0 0 12px; } .filters, .grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .tableScroll { margin-top: 4px; } }
+@media (max-width: 479px) { .filters, .grid { grid-template-columns: minmax(0,1fr); } .sort { flex: 1 1 100%; } .stats { grid-template-columns: repeat(2,minmax(0,1fr)); } .pager { align-items: start; } .drop { padding: 16px; } }

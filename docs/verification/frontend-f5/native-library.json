@@ -1,0 +1,43 @@
+{
+  "description": "Read-only browser check of the existing eight-document native corpus through Vite 3100/API 8001. Normal qwen2.5:3b profile; no LLM call or corpus mutation. Small-corpus timing only; large-corpus testing remains F6.",
+  "results": [
+    {
+      "width": 1280,
+      "documents_total": 8,
+      "loaded": 8,
+      "all_counts_visible_ms": 456,
+      "detail_requests": 8,
+      "peak_detail_requests": 3,
+      "request_timings_ms": [
+        22,
+        21,
+        22,
+        83,
+        92,
+        92,
+        9,
+        19
+      ],
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "documents_total": 8,
+      "loaded": 8,
+      "all_counts_visible_ms": 351,
+      "detail_requests": 8,
+      "peak_detail_requests": 3,
+      "request_timings_ms": [
+        15,
+        15,
+        15,
+        15,
+        14,
+        14,
+        12,
+        12
+      ],
+      "horizontal_overflow": false
+    }
+  ]
+}
