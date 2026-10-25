@@ -3,7 +3,7 @@ import type { Page } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-const directory = resolve(`../docs/screenshots/${process.env.FRONTEND_SCREENSHOT_MILESTONE || 'f2'}`);
+const directory = resolve(`../docs/screenshots/${process.env.FRONTEND_SCREENSHOT_MILESTONE || 'f3'}`);
 // Fixed credentials exist only in the isolated e2e entrypoint, never in the main database.
 export const writer = 'frontend-e2e-write';
 export const reader = 'frontend-e2e-read';

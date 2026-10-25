@@ -1,0 +1,59 @@
+{
+  "milestone": "F3",
+  "unit": {
+    "passed": 71,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "startTime": "2026-10-25T18:05:58.297Z",
+    "duration": 55248.429,
+    "expected": 23,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "widths": [
+    1280,
+    390,
+    360
+  ],
+  "horizontal_overflow": false,
+  "lint": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "strict_typecheck": "pass",
+  "generated_type_freshness": "pass against running clean-backend schema",
+  "bundle": {
+    "route": "/ask",
+    "chunks": [
+      {
+        "file": "assets/index-YHdSrynr.js",
+        "gzip_bytes": 94282
+      },
+      {
+        "file": "assets/AskView-DXsW4Y7k.js",
+        "gzip_bytes": 1944
+      },
+      {
+        "file": "assets/Sources-YY0ngZwP.js",
+        "gzip_bytes": 4547
+      },
+      {
+        "file": "assets/useAsync-VR74vXjq.js",
+        "gzip_bytes": 652
+      },
+      {
+        "file": "assets/RequestStatus-DEVVEKx0.js",
+        "gzip_bytes": 401
+      }
+    ],
+    "total_gzip_bytes": 101826,
+    "budget_gzip_bytes": 110000
+  },
+  "screenshots": 100,
+  "visual_review": "Opened desktop/mobile trace, partial/error/truncated, timeout/empty, excerpt, pending/stopped and shared error screenshots.",
+  "production_backend_changes": false,
+  "surprises_requiring_review": false
+}

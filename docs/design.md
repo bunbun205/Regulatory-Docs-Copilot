@@ -4,6 +4,22 @@ Working notes and decision records for `labdocs`.
 
 ## Decisions
 
+### Agent review (F3)
+
+- Partial status appears before the answer, with plain explanations for time
+  and step limits. The citation status is always above answer text, even when
+  the answer is empty. Unknown reasons remain text in Details.
+- Agent reuses Ask's safe citation buttons and labelled excerpt drawer. Trace
+  arguments use pretty-printed JSON text; summaries and tool errors remain text.
+  Truncation is labelled only for the existing explicit summary marker, pending
+  the separate typed-truncation API need. Zero completed tools are stated.
+- The isolated e2e FakeLLM subclass scripts metadata then document-search calls
+  through the real agent loop, and cites only IDs read from actual tool output.
+  The subclass lives under frontend/e2e; production factories/providers are
+  untouched. Partial/error/truncation/timeout captures are named browser fixtures.
+- Nested disclosures rotate only their own summary arrow; opening the trace
+  no longer makes closed argument disclosures appear open.
+
 ### Ask and Search (F2)
 
 - Ask and Agent share citation parsing and a source drawer. Only valid `[n]`
