@@ -1,0 +1,41 @@
+.stack { display: grid; gap: 24px; min-width: 0; }
+.form { display: grid; gap: 20px; }
+.question { display: block; min-height: 138px; max-height: 440px; overflow-y: auto; resize: vertical; width: 100%; padding: 14px 16px; border: 1px solid var(--border-strong); border-radius: 6px; background: var(--surface-raised); color: var(--text); font: inherit; font-size: 16px; line-height: 1.7; }
+.actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.hint { margin: 0; color: var(--text-muted); font-size: 12px; }
+.controls { border: 0; padding: 0; margin: 0; min-width: 0; }
+.controlRow { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
+.filter { position: relative; }
+.popover { position: absolute; z-index: 5; top: calc(100% + 8px); left: 0; width: min(520px, calc(100vw - 82px)); padding: 20px; border: 1px solid var(--border-strong); border-radius: 10px; background: var(--surface-raised); box-shadow: var(--shadow-overlay); }
+.grid { display: grid; align-items: start; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.metadata { display: flex; gap: 8px 16px; flex-wrap: wrap; font-size: 12px; color: var(--text-muted); margin: 8px 0 16px; overflow-wrap: anywhere; }
+.status { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 16px; }
+.checked { display: inline-flex; gap: 6px; align-items: center; padding: 5px 8px; border: 0; border-radius: 6px; background: var(--success-soft); color: var(--success); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.explanation { margin: 8px 0 16px; padding: 12px; border-left: 2px solid var(--accent); background: var(--surface); font-size: 12px; }
+.heading { font-size: 20px; font-weight: 600; margin: 0 0 16px; line-height: 1.4; }
+.subheading { font-size: 14px; font-weight: 600; margin: 0 0 8px; }
+.answer { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 16px; line-height: 1.85; margin: 0 0 24px; }
+.chip { display: inline-flex; vertical-align: baseline; align-items: center; justify-content: center; min-height: 28px; min-width: 28px; padding: 2px 7px; margin: 0 3px; border: 1px solid var(--border-strong); border-radius: 6px; background: var(--accent-soft); color: var(--accent); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.sources { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.sourceButton { display: flex; gap: 10px; align-items: flex-start; text-align: left; width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; color: var(--text); background: var(--surface); font: inherit; font-size: 14px; cursor: pointer; }
+.sourceButton:hover { border-color: var(--accent); }
+.sourceButton small { display: block; font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.score { display: grid; gap: 5px; max-width: 260px; margin: 12px 0 16px; }
+.scoreLabel { display: flex; justify-content: space-between; gap: 16px; font-size: 12px; color: var(--text-muted); }
+.scoreTrack { height: 5px; background: var(--surface-hover); border-radius: 4px; overflow: hidden; }
+.scoreFill { display: block; height: 100%; background: var(--accent); }
+.excerpt { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; line-height: 1.8; border-left: 2px solid var(--border-strong); margin: 0; padding-left: 16px; }
+.drawerTitle { font-size: 20px; line-height: 1.5; margin: 0; overflow-wrap: anywhere; }
+.details { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 20px; margin: 0; font-size: 12px; }
+.details dt { color: var(--text-muted); }
+.details dd { margin: 0; overflow-wrap: anywhere; }
+.compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.column { min-width: 0; display: grid; align-content: start; gap: 16px; }
+.column > h2 { font-size: 16px; margin: 0; }
+.resultHeader { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.resultHeader h2 { font-size: 20px; margin: 0; }
+.check { display: flex; gap: 8px; align-items: center; font-size: 14px; }
+.history { border-bottom: 1px solid var(--border); padding: 16px 0; }
+.history p { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; }
+.error { font-size: 14px; color: var(--danger); margin: 8px 0 0; }
+@media (max-width: 699px) { .compare { grid-template-columns: minmax(0, 1fr); } .grid { grid-template-columns: minmax(0, 1fr); } .popover { width: calc(100vw - 66px); padding: 16px; } .question { font-size: 16px; } .details { gap: 8px 12px; } }

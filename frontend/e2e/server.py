@@ -79,7 +79,7 @@ async def seed(application) -> None:
     application.state.llm_client = FakeLLM(
         default_text=json.dumps(
             {
-                "answer": "Record instrument checks before using equipment.",
+                "answer": "Record instrument checks before using equipment. [1]",
                 "citations": [str(CHUNK_ID)],
             }
         )

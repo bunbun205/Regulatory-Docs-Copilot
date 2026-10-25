@@ -1,0 +1,52 @@
+{
+  "check": "Manual local-model browser Ask; not a CI or model-quality benchmark",
+  "model_profile": "qwen2.5:3b",
+  "backend": "pgvector",
+  "top_k": 2,
+  "elapsed_seconds": 12.832,
+  "status": 200,
+  "request_id": "f1984a3a883c428598774c897a75fe77",
+  "response": {
+    "query": "What must a Chemical Hygiene Plan include under OSHA\u2019s laboratory standard, 29 CFR 1910.1450?",
+    "backend": "pgvector",
+    "answer": "The Chemical Hygiene Plan must include standard operating procedures, criteria for control measures, provisions for proper equipment functioning, employee information and training, and specific requirements for hazardous substances.",
+    "citations": [
+      {
+        "chunk_id": "42144d7e-452f-47d8-906f-9b6dd73a8e8f",
+        "document_id": "f965e01d-df57-4baf-87ab-f8903b0a41dd",
+        "title": "29 CFR 1910.1450: Occupational Exposure to Hazardous Chemicals in Laboratories",
+        "page": 4,
+        "snippet": "1910.1450(e)(2) The Chemical Hygiene Plan shall be readily available to employees, employee representatives and, upon request, to the Assistant Secretary. 1910.1450(e)(3) The Chemical Hygiene Plan shall include each of the following elements and shall indicate specific measures that the employer wil",
+        "score": 0.8509984612464905
+      },
+      {
+        "chunk_id": "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+        "document_id": "f965e01d-df57-4baf-87ab-f8903b0a41dd",
+        "title": "29 CFR 1910.1450: Occupational Exposure to Hazardous Chemicals in Laboratories",
+        "page": 5,
+        "snippet": "Provisions for additional employee protection for work with particularly hazardous substances. These include \"select carcinogens,\" reproductive toxins and substances which have a high degree of acute toxicity. Specific consideration shall be given to the following provisions which shall be included ",
+        "score": 0.8086679691870245
+      }
+    ],
+    "grounded": true,
+    "grounding_reason": null,
+    "insufficient_evidence": false,
+    "top_score": 0.8509984612464905,
+    "usage": {
+      "input_tokens": 1322,
+      "output_tokens": 113,
+      "total_tokens": 1435
+    },
+    "latency_ms": {
+      "retrieve_ms": 3617.84,
+      "generate_ms": 9146.1
+    }
+  },
+  "manual_excerpt_review": {
+    "relevant_to_answer": true,
+    "scope": "Direct reading of the returned 300-character excerpts, not citation-ID validation or a verified quality score.",
+    "page_4": "Relevant to the Chemical Hygiene Plan: introduces the required-elements list, but the excerpt stops before listing the SOP/control/equipment/training elements asserted in the answer. Those assertions cannot be confirmed from this excerpt alone.",
+    "page_5": "Relevant and supports the answer\u2019s reference to extra protection for particularly hazardous substances.",
+    "conclusion": "Both excerpts concern the answer\u2019s subject. Visible support is partial; grounded=true establishes membership, not correctness or completeness. The answer supplied no inline markers, so the UI correctly used its numbered source list."
+  }
+}

@@ -1,0 +1,4 @@
+import type { components } from '../src/types/api.js';
+export const source = 'Staff must record instrument checks in a training log before using the equipment.';
+export const citation: components['schemas']['AskCitation'] = { chunk_id: '10000000-0000-4000-8000-000000000004', document_id: '10000000-0000-4000-8000-000000000005', title: 'Instrument checks — synthetic browser fixture', page: 1, snippet: source, score: 0.82 };
+export const askFixture: components['schemas']['AskResponse'] = { query: source, backend: 'pgvector', answer: 'Record instrument checks before using equipment. [1]', citations: [citation], grounded: true, grounding_reason: null, insufficient_evidence: false, top_score: 0.82, usage: { input_tokens: 24, output_tokens: 8, total_tokens: 32 }, latency_ms: { retrieve_ms: 12, generate_ms: 30 } };
