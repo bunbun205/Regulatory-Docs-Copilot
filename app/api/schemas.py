@@ -102,3 +102,45 @@ class SearchResponse(BaseModel):
     top_k: int
     results: list[SearchResult]
     latency_ms: float
+
+
+class AskRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    query: str = Field(min_length=1, max_length=2000)
+    top_k: int | None = Field(default=None, ge=1, le=MAX_TOP_K)
+    filters: SearchFiltersRequest | None = None
+    backend: Literal["pgvector", "qdrant"] | None = None
+
+
+class AskCitation(BaseModel):
+    chunk_id: UUID
+    document_id: UUID
+    title: str
+    page: int | None
+    snippet: str
+    score: float
+
+
+class AskUsage(BaseModel):
+    input_tokens: int
+    output_tokens: int
+    total_tokens: int
+
+
+class AskLatency(BaseModel):
+    retrieve_ms: float
+    generate_ms: float
+
+
+class AskResponse(BaseModel):
+    query: str
+    backend: Literal["pgvector", "qdrant"]
+    answer: str
+    citations: list[AskCitation]
+    grounded: bool
+    grounding_reason: str | None
+    insufficient_evidence: bool
+    top_score: float | None
+    usage: AskUsage
+    latency_ms: AskLatency
