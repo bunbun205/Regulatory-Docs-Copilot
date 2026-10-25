@@ -158,4 +158,6 @@ async def test_empty_store_and_query_validation(store: VectorStore) -> None:
     with pytest.raises(ValueError):
         await store.search(_unit_vector(0), top_k=0)
     with pytest.raises(ValueError):
+        await store.search(_unit_vector(0), top_k=51)
+    with pytest.raises(ValueError):
         SearchFilters(year_min=2020, year_max=2010)

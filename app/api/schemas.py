@@ -4,6 +4,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from app.store.base import MAX_TOP_K
+
 
 class WhoAmIResponse(BaseModel):
     name: str = Field(description="Human-readable API key name.")
@@ -51,6 +53,8 @@ class IngestionJobResponse(BaseModel):
 
 
 class SearchFiltersRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     doc_type: str | None = Field(default=None, min_length=1, max_length=100)
     source_agency: str | None = Field(default=None, min_length=1, max_length=200)
     year_min: int | None = Field(default=None, ge=1900, le=2100)
@@ -68,8 +72,10 @@ class SearchFiltersRequest(BaseModel):
 
 
 class SearchRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     query: str = Field(min_length=1, max_length=2000)
-    top_k: int = Field(default=8, ge=1, le=50)
+    top_k: int = Field(default=8, ge=1, le=MAX_TOP_K)
     filters: SearchFiltersRequest | None = None
     backend: Literal["pgvector", "qdrant"] | None = None
 

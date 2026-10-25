@@ -51,6 +51,12 @@ async def test_migrations_upgrade_and_downgrade(
     assert "USING hnsw" in index_definition
     assert "vector_cosine_ops" in index_definition
 
+    async with engine.connect() as connection:
+        identity_constraint = await connection.scalar(
+            text("SELECT conname FROM pg_constraint WHERE conname = 'uq_documents_agency_filename'")
+        )
+    assert identity_constraint == "uq_documents_agency_filename"
+
     await asyncio.to_thread(command.downgrade, config, "base")
     tables = await _table_names(engine)
     assert tables.isdisjoint({"api_keys", "documents", "chunks", "ingestion_jobs"})
