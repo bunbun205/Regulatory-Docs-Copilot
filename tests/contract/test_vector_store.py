@@ -133,6 +133,34 @@ async def test_filters_are_applied_on_both_backends(store: VectorStore) -> None:
     assert [hit.filename for hit in combined] == ["c.pdf"]
 
 
+async def test_update_document_metadata_does_not_change_chunks_or_scores(
+    store: VectorStore,
+) -> None:
+    record = _record("a", vector_index=0, title="Original", doc_type="guidance", year=2020)
+    await store.upsert([record])
+
+    await store.update_document_metadata(
+        record.document_id,
+        filename=record.filename,
+        title="Updated",
+        source_agency=record.source_agency,
+        doc_type="regulation",
+        year=2025,
+        version="v2",
+    )
+
+    assert await store.count() == 1
+    hits = await store.search(_unit_vector(0), top_k=1)
+    assert len(hits) == 1
+    assert hits[0].chunk_id == record.chunk_id
+    assert hits[0].text == record.text
+    assert hits[0].title == "Updated"
+    assert hits[0].doc_type == "regulation"
+    assert hits[0].year == 2025
+    assert hits[0].version == "v2"
+    assert hits[0].score == pytest.approx(1.0, abs=1e-5)
+
+
 async def test_delete_document_removes_only_that_document(
     store: VectorStore,
 ) -> None:

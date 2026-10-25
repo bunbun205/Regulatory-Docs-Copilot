@@ -16,7 +16,7 @@ from app.db.session import Database
 from app.ingest.embedding import SentenceTransformerEmbedder
 from app.ingest.pipeline import IngestionConfig
 from app.store.base import VectorStore
-from app.store.pgvector_store import PgVectorStore
+from app.store.pgvector_store import PgVectorStore, ensure_iterative_scan_supported
 from app.store.qdrant_store import QdrantStore
 
 configure_logging(settings.LOG_LEVEL)
@@ -39,6 +39,11 @@ async def lifespan(application: FastAPI) -> AsyncIterator[None]:
             f"Embedder dimension must match the database vector dimension ({EMBEDDING_DIMENSION})."
         )
     database = Database(settings.DATABASE_URL)
+    try:
+        await ensure_iterative_scan_supported(database.sessionmaker)
+    except Exception:
+        await database.dispose()
+        raise
     settings.UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
     application.state.database = database
     application.state.sessionmaker = database.sessionmaker

@@ -98,6 +98,19 @@ class VectorStore(Protocol):
     ) -> list[SearchHit]:
         """Return the nearest chunks, highest cosine similarity first."""
 
+    async def update_document_metadata(
+        self,
+        document_id: UUID,
+        *,
+        filename: str,
+        title: str,
+        source_agency: str,
+        doc_type: str,
+        year: int,
+        version: str,
+    ) -> None:
+        """Update document metadata without touching chunk text or vectors."""
+
     async def delete_document(self, document_id: UUID) -> int:
         """Delete all chunks for a document and return the number removed."""
 

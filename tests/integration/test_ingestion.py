@@ -231,12 +231,12 @@ async def test_changed_document_replaces_chunks_and_metadata_only_is_duplicate(
     first_chunk_ids = {chunk.id for chunk in first_chunks}
     assert len(first_chunks) == first_report["chunks"]
 
-    # A metadata-only change is a duplicate: content identity wins.
+    # A metadata-only change keeps the content/chunks but updates the metadata.
     metadata_only = DocumentMetadata(
         filename="policy.txt",
         title="Metadata-only title",
         source_agency="Synthetic Agency",
-        doc_type="guidance",
+        doc_type="regulation",
         year=2024,
         version="v2",
     )
@@ -245,13 +245,23 @@ async def test_changed_document_replaces_chunks_and_metadata_only_is_duplicate(
     assert second_report["documents_ingested"] == 0
     assert second_report["documents_updated"] == 0
     assert second_report["documents_duplicate"] == 1
+    assert second_report["documents_metadata_updated"] == 1
+    assert second_report["metadata_updates"] == [
+        {
+            "filename": "policy.txt",
+            "document_id": str(document_id),
+            "changed_fields": ["title", "doc_type", "year", "version"],
+        }
+    ]
+    assert fake_embedder.calls == 1
 
     async with sessionmaker() as session:
         document = await session.get(Document, document_id)
         assert document is not None
-        assert document.title == "Original title"
-        assert document.version == "v1"
-        assert document.year == 2020
+        assert document.title == "Metadata-only title"
+        assert document.version == "v2"
+        assert document.year == 2024
+        assert document.doc_type == "regulation"
         assert document.content_sha256 == original_hash
         chunks = (
             await session.scalars(
@@ -295,6 +305,63 @@ async def test_changed_document_replaces_chunks_and_metadata_only_is_duplicate(
     assert len(chunks) == third_report["chunks"]
     assert {chunk.id for chunk in chunks}.isdisjoint(first_chunk_ids)
     assert all("beta" in chunk.text for chunk in chunks)
+
+
+async def test_manifest_metadata_edit_updates_metadata_without_reembedding(
+    sessionmaker: async_sessionmaker[AsyncSession],
+    fake_embedder: FakeEmbedder,
+    ingestion_config: IngestionConfig,
+    tmp_path: Path,
+) -> None:
+    documents_dir = tmp_path / "documents"
+    documents_dir.mkdir()
+    (documents_dir / "note.txt").write_text("stable content for metadata edit", encoding="utf-8")
+    manifest_path = tmp_path / "manifest.csv"
+    manifest_path.write_text(
+        "filename,title,source_agency,doc_type,year,version\n"
+        "note.txt,Original title,Synthetic Agency,guidance,2020,v1\n",
+        encoding="utf-8",
+    )
+    pipeline = IngestionPipeline(sessionmaker, fake_embedder, ingestion_config)
+
+    first_job = await create_ingestion_job(sessionmaker)
+    first_report = await pipeline.run_manifest_job(first_job, manifest_path, documents_dir)
+    document_id = UUID(first_report["documents"][0]["document_id"])
+    assert fake_embedder.calls == 1
+
+    manifest_path.write_text(
+        "filename,title,source_agency,doc_type,year,version\n"
+        "note.txt,Manifest is source of truth,Synthetic Agency,regulation,2026,v2\n",
+        encoding="utf-8",
+    )
+    second_job = await create_ingestion_job(sessionmaker)
+    second_report = await pipeline.run_manifest_job(second_job, manifest_path, documents_dir)
+
+    assert second_report["documents_duplicate"] == 1
+    assert second_report["documents_metadata_updated"] == 1
+    assert second_report["metadata_updates"] == [
+        {
+            "filename": "note.txt",
+            "document_id": str(document_id),
+            "changed_fields": ["title", "doc_type", "year", "version"],
+        }
+    ]
+    assert fake_embedder.calls == 1
+
+    async with sessionmaker() as session:
+        document = await session.get(Document, document_id)
+        assert document is not None
+        assert document.title == "Manifest is source of truth"
+        assert document.doc_type == "regulation"
+        assert document.year == 2026
+        assert document.version == "v2"
+        chunk_count = int(
+            await session.scalar(
+                select(func.count()).select_from(Chunk).where(Chunk.document_id == document_id)
+            )
+            or 0
+        )
+    assert chunk_count == first_report["chunks"]
 
 
 async def test_changed_document_replaces_qdrant_points(
@@ -345,6 +412,71 @@ async def test_changed_document_replaces_qdrant_points(
     assert "beta" in hits[0].text
 
 
+async def test_metadata_only_update_changes_qdrant_payload_without_reembedding(
+    sessionmaker: async_sessionmaker[AsyncSession],
+    fake_embedder: FakeEmbedder,
+    qdrant_store: QdrantStore,
+    tmp_path: Path,
+) -> None:
+    config = IngestionConfig(
+        chunk_max_tokens=10,
+        chunk_overlap_tokens=2,
+        embedding_batch_size=8,
+    )
+    pipeline = IngestionPipeline(
+        sessionmaker,
+        fake_embedder,
+        config,
+        (qdrant_store,),
+    )
+    path = tmp_path / "metadata.txt"
+    path.write_text("metadata payload text " * 20, encoding="utf-8")
+    original = DocumentMetadata(
+        filename="metadata.txt",
+        title="Original metadata",
+        source_agency="Synthetic Agency",
+        doc_type="guidance",
+        year=2020,
+        version="v1",
+    )
+    first_job = await create_ingestion_job(sessionmaker)
+    first_report = await pipeline.run_upload_job(first_job, path, original)
+    document_id = UUID(first_report["documents"][0]["document_id"])
+    assert await qdrant_store.count() == first_report["chunks"]
+    assert fake_embedder.calls == 1
+
+    changed = DocumentMetadata(
+        filename="metadata.txt",
+        title="Changed metadata",
+        source_agency="Synthetic Agency",
+        doc_type="regulation",
+        year=2025,
+        version="v2",
+    )
+    second_job = await create_ingestion_job(sessionmaker)
+    second_report = await pipeline.run_upload_job(second_job, path, changed)
+
+    assert second_report["documents_metadata_updated"] == 1
+    assert second_report["metadata_updates"][0]["changed_fields"] == [
+        "title",
+        "doc_type",
+        "year",
+        "version",
+    ]
+    assert second_report["chunks"] == 0
+    assert fake_embedder.calls == 1
+    assert await qdrant_store.count() == first_report["chunks"]
+
+    query = fake_embedder.embed(["metadata payload text"])[0]
+    hits = await qdrant_store.search([float(value) for value in query], top_k=50)
+    assert len(hits) == first_report["chunks"]
+    assert {hit.document_id for hit in hits} == {document_id}
+    assert {hit.title for hit in hits} == {"Changed metadata"}
+    assert {hit.doc_type for hit in hits} == {"regulation"}
+    assert {hit.year for hit in hits} == {2025}
+    assert {hit.version for hit in hits} == {"v2"}
+
+
 class _FlakyQdrantStore:
     """Qdrant wrapper that fails the first fan-out write."""
 
@@ -393,7 +525,7 @@ async def test_qdrant_fanout_failure_is_safe_and_duplicate_reingest_repairs(
     )
 
     failed_job = await create_ingestion_job(sessionmaker)
-    with pytest.raises(IngestionJobError, match="Vector store write failed"):
+    with pytest.raises(IngestionJobError, match="Postgres committed"):
         await pipeline.run_upload_job(failed_job, path, metadata)
 
     async with sessionmaker() as session:
@@ -401,6 +533,9 @@ async def test_qdrant_fanout_failure_is_safe_and_duplicate_reingest_repairs(
         assert job is not None
         assert job.status == "failed"
         assert job.error is not None
+        assert "Postgres committed" in job.error
+        assert "out of date" in job.error
+        assert "reindex --backend qdrant" in job.error
         assert "injected" not in job.error
         assert "secret" not in job.error
         document_count = await session.scalar(select(func.count()).select_from(Document))

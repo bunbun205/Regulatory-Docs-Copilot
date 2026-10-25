@@ -2,7 +2,11 @@ from pathlib import Path
 
 import pytest
 
-from app.ingest.extract import ExtractionError, extract_document
+from app.ingest.extract import (
+    ExtractionError,
+    extract_document,
+    strip_cross_page_boilerplate,
+)
 
 
 def test_extract_pdf_preserves_page_numbers(sample_dir: Path) -> None:
@@ -71,3 +75,64 @@ def test_non_utf8_text_file_is_rejected(tmp_path: Path) -> None:
 
     with pytest.raises(ExtractionError, match="UTF-8"):
         extract_document(path)
+
+
+def test_cross_page_boilerplate_is_stripped_but_content_is_kept() -> None:
+    pages = [
+        (
+            "Guidance for Industry\n"
+            "This content is from the eCFR and is authoritative but unofficial.\n"
+            "21 CFR Part 211 (up to date as of 10/21/2026)\n"
+            "10/23/26, 4:40 PM 1910.1200 - Hazard Communication. | "
+            "Occupational Safety and Health Administration\n"
+            "The first substantive paragraph.\n"
+            "Current Good Manufacturing Practice 21 CFR Part 211 (Oct. 21, 2026)\n"
+            "21 CFR Part 211 (Oct. 21, 2026) (enhanced display) page 1 of 3\n"
+            "https://www.osha.gov/laws-regs/standardnumber/1910/1910.1200 1/3"
+        ),
+        (
+            "Contains Nonbinding Recommendations\n"
+            "The second substantive paragraph.\n"
+            "Scroll to Top\n"
+            "Connect With OSHA\n"
+            "Important Website Notices\n"
+            "https://www.osha.gov/laws-regs/standardnumber/1910/1910.1200 2/3\n"
+            "2"
+        ),
+        (
+            "Contains Nonbinding Recommendations\n"
+            "The third substantive paragraph.\n"
+            "Privacy & Security Statement\n"
+            "https://www.osha.gov/laws-regs/standardnumber/1910/1910.1200 3/3\n"
+            "3"
+        ),
+    ]
+
+    cleaned = strip_cross_page_boilerplate(pages)
+
+    assert cleaned == [
+        "Guidance for Industry\nThe first substantive paragraph.",
+        "The second substantive paragraph.",
+        "The third substantive paragraph.",
+    ]
+
+
+def test_repeated_short_lines_are_detected_even_when_page_numbers_vary() -> None:
+    pages = [
+        "Running title page 1 of 3\nAlpha body.",
+        "Running title page 2 of 3\nBeta body.",
+        "Running title page 3 of 3\nGamma body.",
+    ]
+
+    cleaned = strip_cross_page_boilerplate(pages)
+
+    assert cleaned == ["Alpha body.", "Beta body.", "Gamma body."]
+
+
+def test_sample_pdf_still_extracts_substantive_text() -> None:
+    extracted = extract_document(
+        Path(__file__).resolve().parents[2] / "data" / "sample" / "synthetic-lab-policy.pdf"
+    )
+
+    assert "SYNTHETIC LABORATORY SAFETY POLICY" in extracted.blocks[0].text
+    assert "4. Incident Reporting" in extracted.blocks[1].text

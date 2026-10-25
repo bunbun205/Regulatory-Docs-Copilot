@@ -162,6 +162,41 @@ class QdrantStore:
             )
         return hits
 
+    async def update_document_metadata(
+        self,
+        document_id: UUID,
+        *,
+        filename: str,
+        title: str,
+        source_agency: str,
+        doc_type: str,
+        year: int,
+        version: str,
+    ) -> None:
+        """Update payload metadata for every chunk without rewriting vectors."""
+        await self._ensure_collection()
+        selector = Filter(
+            must=[
+                FieldCondition(
+                    key="document_id",
+                    match=MatchValue(value=str(document_id)),
+                )
+            ]
+        )
+        await self._client.set_payload(
+            collection_name=self.collection,
+            payload={
+                "filename": filename,
+                "title": title,
+                "source_agency": source_agency,
+                "doc_type": doc_type,
+                "year": year,
+                "version": version,
+            },
+            points=FilterSelector(filter=selector),
+            wait=True,
+        )
+
     async def delete_document(self, document_id: UUID) -> int:
         await self._ensure_collection()
         selector = Filter(
