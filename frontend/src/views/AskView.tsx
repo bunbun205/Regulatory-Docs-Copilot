@@ -1,70 +1,23 @@
-import { useRef, useState } from "react";
-import { client, getApiKey } from "../api";
-import type { components } from "../types/api";
-
-type ErrorEnvelope = {
-  error?: { message?: string; request_id?: string };
-};
+import { useState } from 'react';
+import { useSettings } from '../app/context';
+import { useAsync } from '../hooks/useAsync';
+import type { components } from '../types/api';
+import { EmptyState } from '../components/ui';
+import RequestStatus from '../components/ui/RequestStatus';
 
 export default function AskView() {
-  const [question, setQuestion] = useState("");
-  const [answerData, setAnswerData] = useState<components["schemas"]["AskResponse"] | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const inFlight = useRef(false);
-
-  const handleAsk = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (inFlight.current || !question.trim()) return;
-    inFlight.current = true;
-    setLoading(true);
-    setError("");
-    setAnswerData(null);
-    try {
-      const { data, error: apiError, response } = await client.POST("/v1/ask", {
-        headers: { "X-API-Key": getApiKey() || "" },
-        body: { query: question.trim() }
-      });
-      if (!response.ok) {
-        const envelope = apiError as ErrorEnvelope | undefined;
-        const message = envelope?.error?.message || `Request failed (HTTP ${response.status}).`;
-        const requestId = envelope?.error?.request_id || response.headers.get("X-Request-ID");
-        setError(requestId ? `${message} Request ID: ${requestId}` : message);
-      } else if (data) {
-        setAnswerData(data);
-      }
-    } catch {
-      setError("Could not reach the API. Check that the local services are running and try again.");
-    } finally {
-      inFlight.current = false;
-      setLoading(false);
-    }
+  const { api, preferences } = useSettings();
+  const [question, setQuestion] = useState('');
+  const action = useAsync<components['schemas']['AskResponse']>();
+  const submit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!question.trim()) return;
+    void action.run(signal => api.request(() => api.client.POST('/v1/ask', { signal, body: { query: question.trim(), top_k: preferences.topK, backend: preferences.backend } })));
   };
-
-  return (
-    <div>
-      <h2>Ask (Grounded RAG)</h2>
-      <form onSubmit={handleAsk}>
-        <label htmlFor="ask-question">Question</label>
-        <textarea id="ask-question" value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="Ask a question..." disabled={loading} />
-        <button type="submit" disabled={loading || !question.trim()}>{loading ? "Asking..." : "Ask"}</button>
-      </form>
-
-      {loading && <div className="loading">Thinking...</div>}
-      {error && <div className="error" role="alert">{error}</div>}
-      {answerData && (
-        <div style={{ marginTop: "1rem" }}>
-          <h3>Answer:</h3>
-          <p>{answerData.answer}</p>
-          <h4>Citations:</h4>
-          {answerData.citations.map((c, i) => (
-            <div key={i} className="citation">
-              <strong>{c.title}</strong> (Page {c.page}) - Score: {c.score}
-              <p>{c.snippet}</p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  return <div>
+    <form onSubmit={submit}><label htmlFor="ask-question">Your question</label><textarea id="ask-question" value={question} onChange={event => setQuestion(event.target.value)} placeholder="What do the loaded regulations say about…" disabled={action.pending} /><button type="submit" disabled={action.pending || action.retryIn > 0 || !question.trim()}>Ask documents</button></form>
+    <RequestStatus action={action} baseUrl={preferences.baseUrl} />
+    {!action.data && !action.pending && !action.error && !action.stopped && <EmptyState title="Start with a question">Ask about a procedure, a requirement or a point that needs a closer look. Review the sources alongside each answer.</EmptyState>}
+    {action.data && <section aria-label="Answer"><h2>Answer</h2><p>{action.data.answer}</p><h3>Sources</h3>{action.data.citations.map(citation => <div key={citation.chunk_id} className="citation"><strong>{citation.title}</strong>{citation.page !== null && <span> · Page {citation.page}</span>}<p>{citation.snippet}</p></div>)}</section>}
+  </div>;
 }

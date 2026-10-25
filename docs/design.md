@@ -4,6 +4,34 @@ Working notes and decision records for `labdocs`.
 
 ## Decisions
 
+### Frontend foundation (F1)
+
+- The unchanged pre-redesign frontend landed in PR #9; the approved F0 audit and
+  strict flags landed separately in PR #10. [F1 review](frontend-f1-review.md)
+  records the foundation, checks, screenshots and remaining milestone work.
+- Use React Router lazy routes, a settings context, generated endpoint types,
+  one `openapi-fetch` result/error layer and small abort-aware async/poll hooks.
+  Readiness parses generic response dictionaries and retains failure checks.
+- Keys use sessionStorage; non-secret preferences use localStorage. Base URLs
+  reject credentials/query strings/fragments and the entered key. Error-copy
+  output is redacted and contains only status, code, message and request ID.
+  Bootstrap/validation results cannot invalidate a newer key.
+- The existing TypeScript 6 pin conflicted with the generator's declared ^5.x
+  peer range. Use TypeScript 5.9, with strict enabled for source/tests/config.
+  Only the approved router, icons and test dependencies were added.
+- F1 adds the isolated `frontend/e2e/` app-factory entrypoint and screenshot
+  gate at 1280/390/360px. It guards a dedicated `_test` database/collection;
+  no production flag, provider/retrieval/grounding change or external model call.
+  The full scripted tool/judge journey remains F6.
+- The initial `/ask` JS budget is 110,000 gzip bytes, measured from the production
+  manifest's unique entry/route imports. Every milestone reports that figure.
+  Oxlint rejects every warning except the one existing Documents Date warning;
+  the migration removed the other two. F5 removes the final exception.
+- Legacy views now share the request/error/auth infrastructure and responsive
+  containment. Their detailed feature redesigns remain F2–F5. No optional
+  model/provider chip is invented; only Details may explain an absent value.
+
+
 ### Frontend upgrade audit (F0, 2026-10-25)
 
 - [FRONTEND_SEED.md](../FRONTEND_SEED.md) overrides SEED on frontend design,

@@ -1,0 +1,23 @@
+{
+  "route": "/ask",
+  "chunks": [
+    {
+      "file": "assets/index-fO4wSgNG.js",
+      "gzip_bytes": 93893
+    },
+    {
+      "file": "assets/AskView-CJL3Xtvk.js",
+      "gzip_bytes": 808
+    },
+    {
+      "file": "assets/useAsync-Bh2-YLXY.js",
+      "gzip_bytes": 656
+    },
+    {
+      "file": "assets/RequestStatus-DNZG6UsL.js",
+      "gzip_bytes": 404
+    }
+  ],
+  "total_gzip_bytes": 95761,
+  "budget_gzip_bytes": 110000
+}

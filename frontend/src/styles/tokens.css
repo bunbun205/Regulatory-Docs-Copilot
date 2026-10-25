@@ -1,0 +1,44 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-synthesis: none; line-height: 1.6; font-weight: 400;
+  --surface: #f6f7f3; --surface-raised: #ffffff; --surface-rail: #f0f2eb;
+  --surface-hover: #e9eee5; --border: #dce2d7; --border-strong: #84927f;
+  --text: #25342c; --text-muted: #606d63; --accent: #30674f;
+  --accent-hover: #24553e; --accent-ink: #ffffff; --accent-soft: #e2eee3;
+  --success: #27623f; --success-soft: #edf6ee;
+  --warning: #795613; --warning-soft: #fbf3df;
+  --danger: #993b2f; --danger-soft: #fff2ee;
+  --info: #355b7c; --info-soft: #edf4fa;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-6: 24px; --space-8: 32px; --space-12: 48px;
+  --radius-sm: 6px; --radius-lg: 10px;
+  --text-xs: 12px; --text-sm: 14px; --text-base: 16px; --text-lg: 20px; --text-xl: 28px;
+  --shadow-overlay: 0 12px 40px rgb(16 35 22 / .18);
+  color-scheme: light; color: var(--text); background: var(--surface);
+}
+:root[data-theme="dark"] {
+  --surface: #111b16; --surface-raised: #19261f; --surface-rail: #152019;
+  --surface-hover: #24352a; --border: #35463b; --border-strong: #617367;
+  --text: #e6eee7; --text-muted: #b0beb2; --accent: #9dd4ae;
+  --accent-hover: #b7e3c3; --accent-ink: #142b1c; --accent-soft: #293f30;
+  --success: #a6d8b4; --success-soft: #233b2b;
+  --warning: #ead18e; --warning-soft: #3a321f;
+  --danger: #ffc0b3; --danger-soft: #412a26;
+  --info: #b4d1ed; --info-soft: #233747;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) { color-scheme: dark; background: #111b16; color: #e6eee7; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, input, select, textarea { font-family: inherit; }
+button, a, input, select, textarea, summary { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+a { color: var(--accent); text-underline-offset: 3px; }
+svg { flex-shrink: 0; }
+h1, h2, h3, p { overflow-wrap: break-word; }
+pre { font-family: var(--mono); }
+::selection { background: var(--accent-soft); color: var(--text); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
