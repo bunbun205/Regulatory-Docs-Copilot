@@ -63,6 +63,19 @@ class Settings(BaseSettings):
     AGENT_MAX_TOOL_OUTPUT_CHARS: int = Field(default=8000, ge=500)
     AGENT_MAX_METADATA_ROWS: int = Field(default=50, ge=1, le=100)
 
+    GAPCHECK_MAX_CLAUSES: int = Field(default=80, ge=1, le=500)
+    GAPCHECK_MAX_REQUIREMENTS: int = Field(default=120, ge=1, le=500)
+    GAPCHECK_MAX_TOKENS: int = Field(default=200_000, ge=1000)
+    GAPCHECK_MAX_SOP_CHARS: int = Field(default=200_000, ge=1000)
+    GAPCHECK_RETRIEVAL_TOP_K: int = Field(default=5, ge=1, le=20)
+    GAPCHECK_RELEVANCE_THRESHOLD: float = Field(default=0.60, ge=0.0, le=1.0)
+    GAPCHECK_GLOBAL_TOP_DOCUMENTS: int = Field(default=2, ge=1, le=10)
+    GAPCHECK_SOP_MATCH_TOP_K: int = Field(default=3, ge=1, le=10)
+    GAPCHECK_JUDGE_CONCURRENCY: int = Field(default=4, ge=1, le=10)
+    GAPCHECK_RETRIEVAL_CONCURRENCY: int = Field(default=8, ge=1, le=20)
+    GAPCHECK_JUDGE_MAX_TOKENS: int = Field(default=512, ge=64, le=4096)
+    GAPCHECK_MAX_CONCURRENT_JOBS_PER_KEY: int = Field(default=1, ge=1, le=10)
+
     @property
     def is_production(self) -> bool:
         return self.ENVIRONMENT == "production"

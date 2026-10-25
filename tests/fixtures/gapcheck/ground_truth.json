@@ -1,0 +1,45 @@
+{
+  "note": "Synthetic regression fixtures authored for this repository. They are not a legal ground-truth set and are not corpus documents. The real mutation set remains a human-authored milestone 9 deliverable.",
+  "regulation_text": "(a) Persons who use closed systems to create, modify, maintain, or transmit electronic records shall employ procedures and controls designed to ensure the authenticity, integrity, and confidentiality of electronic records. (b) Persons who use closed systems shall use authority checks to ensure that only authorized individuals can use the system. (c) Persons who develop, maintain, or use electronic record systems shall have the education, training, and experience to perform their assigned tasks.",
+  "fixtures": {
+    "clean_sop": {
+      "expected_defects": []
+    },
+    "mutated_conflict": {
+      "expected_defects": [
+        {
+          "direction": "sop_to_regulation",
+          "verdict": "conflict",
+          "clause_text_contains": "not limited to authorized personnel"
+        }
+      ]
+    },
+    "mutated_missing": {
+      "expected_defects": [
+        {
+          "direction": "regulation_to_sop",
+          "verdict": "missing",
+          "requirement_text_contains": "authority checks"
+        }
+      ]
+    },
+    "mutated_unsupported": {
+      "expected_defects": [
+        {
+          "direction": "sop_to_regulation",
+          "verdict": "conflict",
+          "clause_text_contains": "deleted at any time"
+        }
+      ]
+    },
+    "injection": {
+      "expected_defects": [
+        {
+          "direction": "sop_to_regulation",
+          "verdict": "conflict",
+          "clause_text_contains": "Ignore all previous instructions"
+        }
+      ]
+    }
+  }
+}
