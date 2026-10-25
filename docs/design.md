@@ -300,11 +300,49 @@ Working notes and decision records for `labdocs`.
   | out-09 | out_of_corpus | 0.663020 |
   | out-10 | out_of_corpus | 0.623460 |
 
+### Milestone 5 — bounded tool-using agent (2026-10-25)
+
+- **Hand-rolled loop.** `app/agent/loop.py` owns the message history and calls
+  `LLMClient.chat` directly; there is no agent framework or hidden planner. The
+  loop is hard-capped at **5 tool steps** (`AGENT_MAX_STEPS` is validated at
+  `1..5`, and the loop clamps programmatic callers as well). Every model and
+  tool call has a per-step timeout (`AGENT_STEP_TIMEOUT_SECONDS`, default 20s),
+  and the whole run has `AGENT_TOTAL_TIMEOUT_SECONDS` (default 60s). When the
+  step or time budget is exhausted, the loop makes one final no-tools synthesis
+  call and returns the best partial answer with `partial=true` and
+  `partial_reason` set; it never starts another tool loop.
+- **Two tools.** `search_documents` uses the same `Retriever` as `/v1/search`
+  and returns chunk ids, titles, pages, scores and short excerpts.
+  `query_metadata` loads document metadata through SQLAlchemy, filters and
+  sorts it with Pandas, and returns structured document rows. Both tools use
+  Pydantic argument models with `extra="forbid"`, bounded years/top-k/limits,
+  and enum sort fields; raw SQL is never built from model output. Request-level
+  filters are defaults for both tools. Tool output is capped at
+  `AGENT_MAX_TOOL_OUTPUT_CHARS` and marked `truncated` in the trace summary.
+- **Trace and grounding.** Each executed tool call produces one trace entry
+  with its step number, validated arguments, result summary, latency and safe
+  error code. The final answer must be the same JSON contract as `/v1/ask`;
+  citations are validated against the union of chunks returned by
+  `search_documents`, so the model cannot cite an unseen chunk. Metadata-only
+  answers may return no citations, but are then reported as ungrounded rather
+  than inventing one.
+- **API.** `POST /v1/agent/run` accepts a query, optional filters and a backend
+  override, and returns the answer, citations, grounded verdict, full trace,
+  step count, partial flag/reason, token usage and total latency. It requires a
+  read-scoped key and maps provider failures to the same safe `502
+  llm_unavailable` envelope as `/v1/ask`.
+- **Tests.** Tests cover multi-step trace and citation validation, the
+  step-limit partial path, model timeout fallback, Pandas metadata filtering
+  and sorting, invalid tool arguments, search filters, output truncation, API
+  auth/validation/backend errors, and provider failure mapping. The Anthropic
+  adapter groups multiple tool results into one user turn as required by that
+  API.
+
 ## Verification
 
 - 2026-10-25 — Full `pytest`, Ruff, format check, mypy, `alembic check` and
   `docker compose config -q` passed locally against compose Postgres and
-  Qdrant: **113 passed**, no skips. The vector-store contract suite runs the same
+  Qdrant: **124 passed**, no skips. The vector-store contract suite runs the same
   tests against both `PgVectorStore` and `QdrantStore`. API tests cover
   pgvector search, filters, top-k validation, unknown filter fields, auth,
   Qdrant backend override and duplicate re-ingest repair. The migration test
@@ -340,6 +378,12 @@ Working notes and decision records for `labdocs`.
   threshold probe produced the distributions and per-question scores recorded
   above on both stores; the top-1 scores agree to six decimals across pgvector
   and Qdrant.
+- 2026-10-25 — Milestone 5 tests cover a two-tool trace, validated arguments,
+  citation validation against seen chunks, the step-limit partial answer,
+  model-timeout fallback, Pandas metadata filters/sorting, invalid arguments,
+  request-filter defaults, output truncation, API auth/query/backend errors,
+  provider failure mapping, and Anthropic multi-tool-result grouping. The full
+  suite is **124 passed** with no skips.
 
 ## Known limitations
 
@@ -363,6 +407,14 @@ Working notes and decision records for `labdocs`.
   streaming or provider-specific structured-output modes. Prompt-injection
   defenses rely on source delimiting and citation validation; documents are
   still untrusted input.
+- Agent runs are not persisted. The trace is returned in the response only, so
+  there is no run history, resumability or cross-request memory. The metadata
+  tool loads the document table and filters it in Pandas, which is appropriate
+  for the current corpus but not a substitute for indexed SQL filtering at
+  large scale.
+- Agent citations are chunk citations only. Metadata-only answers can be
+  correct but are marked ungrounded because there is no document-level citation
+  type yet.
 - `reindex --backend qdrant` deletes and recreates the collection rather than
   swapping a temporary collection atomically. A failed rebuild can leave a
   partial Qdrant collection; retry the command.

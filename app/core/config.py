@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Literal
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -55,6 +56,12 @@ class Settings(BaseSettings):
 
     RAG_TOP_K: int = 8
     ABSTENTION_THRESHOLD: float = 0.75
+
+    AGENT_MAX_STEPS: int = Field(default=5, ge=1, le=5)
+    AGENT_STEP_TIMEOUT_SECONDS: float = Field(default=20.0, gt=0)
+    AGENT_TOTAL_TIMEOUT_SECONDS: float = Field(default=60.0, gt=0)
+    AGENT_MAX_TOOL_OUTPUT_CHARS: int = Field(default=8000, ge=500)
+    AGENT_MAX_METADATA_ROWS: int = Field(default=50, ge=1, le=100)
 
     @property
     def is_production(self) -> bool:
