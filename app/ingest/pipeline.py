@@ -70,6 +70,7 @@ class _DocumentOutcome:
     chunk_count: int
     token_counts: tuple[int, ...]
     page_count: int | None
+    metadata_updated: tuple[str, ...] = ()
 
 
 async def create_ingestion_job(
@@ -136,6 +137,7 @@ class IngestionPipeline:
         documents: list[dict[str, Any]] = []
         updates: list[dict[str, Any]] = []
         duplicates: list[dict[str, Any]] = []
+        metadata_updates: list[dict[str, Any]] = []
         failures: list[dict[str, Any]] = []
         token_counts: list[int] = []
 
@@ -165,6 +167,16 @@ class IngestionPipeline:
                 )
                 raise
 
+            if outcome.metadata_updated:
+                metadata_updates.append(
+                    {
+                        "filename": row.filename,
+                        "document_id": (
+                            str(outcome.document_id) if outcome.document_id is not None else None
+                        ),
+                        "changed_fields": list(outcome.metadata_updated),
+                    }
+                )
             if outcome.duplicate:
                 duplicates.append(
                     {
@@ -172,6 +184,7 @@ class IngestionPipeline:
                         "document_id": (
                             str(outcome.document_id) if outcome.document_id is not None else None
                         ),
+                        "metadata_updated": list(outcome.metadata_updated),
                     }
                 )
             else:
@@ -192,6 +205,7 @@ class IngestionPipeline:
             documents=documents,
             updates=updates,
             duplicates=duplicates,
+            metadata_updates=metadata_updates,
             failures=failures,
             rejected_rows=[
                 {
@@ -249,7 +263,18 @@ class IngestionPipeline:
         documents: list[dict[str, Any]] = []
         updates: list[dict[str, Any]] = []
         duplicates: list[dict[str, Any]] = []
+        metadata_updates: list[dict[str, Any]] = []
         token_counts: list[int] = []
+        if outcome.metadata_updated:
+            metadata_updates.append(
+                {
+                    "filename": metadata.filename,
+                    "document_id": (
+                        str(outcome.document_id) if outcome.document_id is not None else None
+                    ),
+                    "changed_fields": list(outcome.metadata_updated),
+                }
+            )
         if outcome.duplicate:
             duplicates.append(
                 {
@@ -257,6 +282,7 @@ class IngestionPipeline:
                     "document_id": (
                         str(outcome.document_id) if outcome.document_id is not None else None
                     ),
+                    "metadata_updated": list(outcome.metadata_updated),
                 }
             )
         else:
@@ -277,6 +303,7 @@ class IngestionPipeline:
             documents=documents,
             updates=updates,
             duplicates=duplicates,
+            metadata_updates=metadata_updates,
             failures=[],
             rejected_rows=[],
             token_counts=token_counts,
@@ -312,16 +339,26 @@ class IngestionPipeline:
             raise IngestionError("File could not be read.") from exc
 
         content_hash = hashlib.sha256(data).hexdigest()
-        existing_id = await self._find_document_id(content_hash)
-        if existing_id is not None:
-            await self._sync_external_stores(existing_id)
+        existing = await self._find_document_by_hash(content_hash)
+        if existing is not None:
+            metadata_updated: tuple[str, ...] = ()
+            if (
+                existing.source_agency == metadata.source_agency
+                and existing.filename == metadata.filename
+            ):
+                metadata_updated = await self._update_metadata_only(existing.id, metadata)
+                if metadata_updated:
+                    await self._update_external_metadata(existing.id, metadata)
+            if not metadata_updated:
+                await self._sync_external_stores(existing.id)
             return _DocumentOutcome(
                 duplicate=True,
                 updated=False,
-                document_id=existing_id,
+                document_id=existing.id,
                 chunk_count=0,
                 token_counts=(),
                 page_count=None,
+                metadata_updated=metadata_updated,
             )
 
         existing_id = await self._find_document_id_by_identity(metadata)
@@ -517,6 +554,72 @@ class IngestionPipeline:
             raise IngestionError("Document has no chunks to index.")
         await self._replace_external_stores(records)
 
+    async def _update_metadata_only(
+        self,
+        document_id: uuid.UUID,
+        metadata: DocumentMetadata,
+    ) -> tuple[str, ...]:
+        """Update document metadata in Postgres and report changed fields."""
+        async with self.sessionmaker() as session:
+            document = await session.scalar(
+                select(Document).where(Document.id == document_id).with_for_update()
+            )
+            if document is None:
+                raise IngestionError("Document changed during ingestion; retry ingestion.")
+            changed = tuple(
+                field
+                for field in ("title", "doc_type", "year", "version")
+                if getattr(document, field) != getattr(metadata, field)
+            )
+            if not changed:
+                return ()
+            await session.execute(
+                update(Document)
+                .where(Document.id == document_id)
+                .values(
+                    filename=metadata.filename,
+                    title=metadata.title,
+                    source_agency=metadata.source_agency,
+                    doc_type=metadata.doc_type,
+                    year=metadata.year,
+                    version=metadata.version,
+                )
+            )
+            await session.commit()
+        logger.info(
+            "ingestion.metadata_updated",
+            document_id=str(document_id),
+            changed_fields=list(changed),
+        )
+        return changed
+
+    async def _update_external_metadata(
+        self,
+        document_id: uuid.UUID,
+        metadata: DocumentMetadata,
+    ) -> None:
+        if not self.vector_stores:
+            return
+        for store in self.vector_stores:
+            try:
+                await store.update_document_metadata(
+                    document_id,
+                    filename=metadata.filename,
+                    title=metadata.title,
+                    source_agency=metadata.source_agency,
+                    doc_type=metadata.doc_type,
+                    year=metadata.year,
+                    version=metadata.version,
+                )
+            except Exception as exc:
+                logger.error(
+                    "ingestion.vector_store_metadata_failed",
+                    store=store.name,
+                    document_id=str(document_id),
+                    error_type=type(exc).__name__,
+                )
+                raise IngestionError(_external_sync_failure_message(store.name)) from exc
+
     async def _write_external_stores(self, records: Sequence[VectorRecord]) -> None:
         if not self.vector_stores or not records:
             return
@@ -530,7 +633,7 @@ class IngestionPipeline:
                     document_id=str(records[0].document_id),
                     error_type=type(exc).__name__,
                 )
-                raise IngestionError(f"Vector store write failed ({store.name}).") from exc
+                raise IngestionError(_external_sync_failure_message(store.name)) from exc
 
     async def _replace_external_stores(self, records: Sequence[VectorRecord]) -> None:
         if not self.vector_stores or not records:
@@ -546,7 +649,7 @@ class IngestionPipeline:
                     document_id=str(records[0].document_id),
                     error_type=type(exc).__name__,
                 )
-                raise IngestionError(f"Vector store replace failed ({store.name}).") from exc
+                raise IngestionError(_external_sync_failure_message(store.name)) from exc
 
     def _extract_and_chunk(self, path: Path) -> tuple[ExtractedDocument, list[ChunkDraft]]:
         extracted = extract_document(path)
@@ -557,10 +660,10 @@ class IngestionPipeline:
         )
         return extracted, drafts
 
-    async def _find_document_id(self, content_hash: str) -> uuid.UUID | None:
+    async def _find_document_by_hash(self, content_hash: str) -> Document | None:
         async with self.sessionmaker() as session:
             return await session.scalar(
-                select(Document.id).where(Document.content_sha256 == content_hash)
+                select(Document).where(Document.content_sha256 == content_hash)
             )
 
     async def _find_document_id_by_identity(
@@ -663,3 +766,10 @@ def _failure_reason(exc: Exception) -> str:
     if isinstance(exc, OSError):
         return "File could not be read."
     return "Document could not be processed."
+
+
+def _external_sync_failure_message(store_name: str) -> str:
+    return (
+        f"Postgres committed this document, but the {store_name} index is out of date. "
+        f"Run `python -m app.cli reindex --backend {store_name}` to rebuild it."
+    )

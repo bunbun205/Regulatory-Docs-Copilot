@@ -1,13 +1,49 @@
+import re
 from collections.abc import Sequence
 from uuid import UUID
 
-from sqlalchemy import delete, func, select, text
+from sqlalchemy import delete, func, select, text, update
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from sqlalchemy.sql.elements import ColumnElement
 
 from app.db.models import EMBEDDING_DIMENSION, Chunk, Document
 from app.store.base import MAX_TOP_K, SearchFilters, SearchHit, VectorRecord
+
+MIN_ITERATIVE_SCAN_VERSION = (0, 8, 0)
+
+
+def pgvector_supports_iterative_scan(version: str) -> bool:
+    """Return whether a pgvector extension version supports iterative scans."""
+    match = re.match(r"^\s*(\d+)\.(\d+)(?:\.(\d+))?", version)
+    if match is None:
+        return False
+    parsed = tuple(int(part or 0) for part in match.groups())
+    return parsed >= MIN_ITERATIVE_SCAN_VERSION
+
+
+def sort_hits_by_score(hits: Sequence[SearchHit]) -> list[SearchHit]:
+    """Return hits in the public score-descending order."""
+    return sorted(hits, key=lambda hit: hit.score, reverse=True)
+
+
+async def ensure_iterative_scan_supported(
+    sessionmaker: async_sessionmaker[AsyncSession],
+) -> str:
+    """Fail fast when the database's pgvector extension is too old."""
+    async with sessionmaker() as session:
+        version = await session.scalar(
+            text("SELECT extversion FROM pg_extension WHERE extname = 'vector'")
+        )
+    if not isinstance(version, str):
+        raise RuntimeError("The pgvector extension is not installed in the database.")
+    if not pgvector_supports_iterative_scan(version):
+        minimum = ".".join(str(part) for part in MIN_ITERATIVE_SCAN_VERSION)
+        raise RuntimeError(
+            f"pgvector {version} does not support hnsw.iterative_scan; "
+            f"version {minimum} or newer is required."
+        )
+    return version
 
 
 class PgVectorStore:
@@ -155,7 +191,7 @@ class PgVectorStore:
                     await session.execute(text("SET LOCAL enable_indexonlyscan = off"))
                     await session.execute(text("SET LOCAL enable_bitmapscan = off"))
                     rows = (await session.execute(statement)).all()
-        return [
+        hits = [
             SearchHit(
                 chunk_id=chunk.id,
                 document_id=document.id,
@@ -173,6 +209,36 @@ class PgVectorStore:
             )
             for chunk, document, row_distance in rows
         ]
+        # hnsw.iterative_scan = relaxed_order may return candidates in scan
+        # order rather than strict distance order. The API contract is score
+        # descending, so sort once more after the final query/fallback.
+        return sort_hits_by_score(hits)
+
+    async def update_document_metadata(
+        self,
+        document_id: UUID,
+        *,
+        filename: str,
+        title: str,
+        source_agency: str,
+        doc_type: str,
+        year: int,
+        version: str,
+    ) -> None:
+        async with self.sessionmaker() as session:
+            await session.execute(
+                update(Document)
+                .where(Document.id == document_id)
+                .values(
+                    filename=filename,
+                    title=title,
+                    source_agency=source_agency,
+                    doc_type=doc_type,
+                    year=year,
+                    version=version,
+                )
+            )
+            await session.commit()
 
     async def document_ids(self) -> list[UUID]:
         async with self.sessionmaker() as session:

@@ -17,7 +17,7 @@ from app.ingest.pipeline import (
     IngestionPipeline,
     create_ingestion_job,
 )
-from app.store.pgvector_store import PgVectorStore
+from app.store.pgvector_store import PgVectorStore, ensure_iterative_scan_supported
 from app.store.qdrant_store import QdrantStore
 
 
@@ -52,6 +52,15 @@ async def _ingest(manifest: Path, documents_dir: Path) -> int:
     database = Database(settings.DATABASE_URL)
     qdrant_store: QdrantStore | None = None
     try:
+        try:
+            await ensure_iterative_scan_supported(database.sessionmaker)
+        except Exception as exc:
+            print(
+                "Error: the database pgvector extension is missing or does not "
+                f"support iterative scans ({type(exc).__name__}).",
+                file=sys.stderr,
+            )
+            return 1
         if settings.EMBEDDING_DIMENSION != EMBEDDING_DIMENSION:
             print(
                 "Error: LABDOCS_EMBEDDING_DIMENSION must match the database "
@@ -166,6 +175,15 @@ async def _reindex(backend: str) -> int:
         timeout=settings.QDRANT_TIMEOUT_SECONDS,
     )
     try:
+        try:
+            await ensure_iterative_scan_supported(database.sessionmaker)
+        except Exception as exc:
+            print(
+                "Error: the database pgvector extension is missing or does not "
+                f"support iterative scans ({type(exc).__name__}).",
+                file=sys.stderr,
+            )
+            return 1
         pg_store = PgVectorStore(
             database.sessionmaker,
             dimension=settings.EMBEDDING_DIMENSION,

@@ -11,7 +11,8 @@ Working notes and decision records for `labdocs`.
 - 2026-10-23 — FastAPI 0.161.1 ships no `fastapi.mypy` plugin; mypy runs without it rather than pinning an older FastAPI.
 - 2026-10-23 — Git remote configured after the scaffold: `origin` = `git@github.com:bunbun205/Regulatory-Docs-Copilot.git` over SSH. CI runs on GitHub Actions. (Supersedes the earlier "no remote configured" note.)
 - 2026-10-23 — Docker CLI, daemon and Compose are installed and active. Docker group membership was added during milestone 2; existing shells need a new login or `newgrp docker` before they can reach the socket. `docker compose config` is validated in CI.
-- 2026-10-23 — `qdrant/qdrant` pinned to `v1.20.0` (latest stable at the time) instead of `latest`; Postgres remains on `pgvector/pgvector:pg16`. Compose project is named `labdocs` and Postgres credentials are environment-overridable.
+- 2026-10-23 — `qdrant/qdrant` pinned to `v1.20.0` (latest stable at the time) instead of `latest`. Compose project is named `labdocs` and Postgres credentials are environment-overridable.
+- 2026-10-25 — Postgres is pinned to `pgvector/pgvector:0.8.7-pg16` in compose and CI. The floating `pg16` tag was replaced because filtered search depends on `hnsw.iterative_scan`, introduced in pgvector 0.8.0. Startup and the ingest/reindex CLI fail when the database extension is older than 0.8.0.
 - 2026-10-23 — Logging fix: the stdlib format is `%(message)s` so structlog output is pure JSON, and the configured level drives both stdlib and structlog filtering (previously the level was hardcoded to INFO and logs had a text prefix).
 - 2026-10-23 — CI actions bumped to current published versions (`actions/checkout@v7.0.1`, `actions/setup-python@v7.1.0`, `astral-sh/setup-uv@v10.3.2`) to clear Node 20 deprecation warnings. `setup-uv` has no rolling major tag, so exact versions are pinned.
 
@@ -63,16 +64,18 @@ Working notes and decision records for `labdocs`.
   `uq_documents_agency_filename` in migration `0004`. Classification order is:
   an existing global content hash is a **duplicate**; the same identity with a
   different content hash is an **update**; everything else is **new**.
-  Metadata-only changes (title, version, year) do not trigger a content update;
-  they are reported as duplicates and the existing metadata is kept. For an
-  update, the pipeline locks the document row, updates metadata, deletes all old
-  chunks and inserts the new chunks in one Postgres transaction. After commit it
-  deletes the document's points from Qdrant and inserts the new points. A
-  shorter replacement document was tested and leaves no old chunks. If the
-  external replacement fails, Postgres keeps the new content and the job fails
-  safely; re-ingesting the same new content is a duplicate and repairs Qdrant.
-  A duplicate re-ingest also replaces external points rather than merely
-  upserting, so stale points for that document are removed.
+  Metadata-only changes (title, doc_type, year, version) for the same identity
+  are reported as duplicates but update the Postgres metadata and the Qdrant
+  payloads; they do not re-chunk or re-embed. For a content update, the pipeline
+  locks the document row, updates metadata, deletes all old chunks and inserts
+  the new chunks in one Postgres transaction. After commit it deletes the
+  document's points from Qdrant and inserts the new points. A shorter
+  replacement document was tested and leaves no old chunks. If the external
+  replacement fails, Postgres keeps the new content and the job fails safely;
+  re-ingesting the same new content is a duplicate and repairs Qdrant. A
+  duplicate re-ingest also replaces external points rather than merely upserting,
+  so stale points for that document are removed. The follow-up section below
+  records the final metadata-update semantics and report fields.
 - 2026-10-23 — **Recursive chunking.** Splitting proceeds paragraph → sentence →
   word → character, targeting ~500 tokens with ~80 tokens of overlap. PDF pages
   are preserved as `page`; Markdown headings become `section_heading`; plain text
@@ -189,11 +192,53 @@ Working notes and decision records for `labdocs`.
   real-lifespan test starts the application with Postgres, Qdrant and a fake
   embedder, uploads through the API and searches through the Qdrant backend.
 
+### Milestone 3 follow-ups (2026-10-25)
+
+- **Real corpus is the only corpus.** The earlier temporary corrected manifest
+  was discarded after the user fixed `data/corpus/manifest.csv`. The validation
+  database `labdocs_conditions` and collection `labdocs_conditions_chunks` were
+  deleted. The main database and Qdrant collection were cleared and re-ingested
+  from the real manifest: 8 documents / 238 chunks on the first run, 0 new
+  documents / 8 duplicates / 238 points on the second. Boilerplate stripping
+  changed the chunk count from the earlier 249 to 238.
+- **Metadata-only updates.** For a duplicate with the same
+  `(source_agency, filename)` identity, changed `title`, `doc_type`, `year` or
+  `version` values update the `documents` row and the Qdrant payloads through
+  `set_payload`. Chunk rows, chunk IDs, text and vectors are untouched and the
+  embedder is not called. The report includes `documents_metadata_updated` and
+  a `metadata_updates` list with `document_id`, `filename` and
+  `changed_fields`. A content-hash duplicate with a different identity is still
+  a duplicate of the original document; renaming or changing the agency creates
+  a new identity rather than mutating the old one.
+- **Relaxed-order sorting.** `hnsw.iterative_scan = 'relaxed_order'` is used for
+  filtered pgvector searches, then all final hits are re-sorted by score
+  descending. The fallback exact scan uses the same final sort. A unit test
+  exercises the sort helper with deliberately unordered scores.
+- **pgvector version gate.** Compose and CI pin
+  `pgvector/pgvector:0.8.7-pg16`. Startup and the ingest/reindex CLI call
+  `ensure_iterative_scan_supported`, which rejects a missing extension or a
+  version older than 0.8.0 with a clear error instead of silently losing
+  filtered results.
+- **Boilerplate stripping.** PDF extraction removes cross-page print furniture
+  before chunking: browser print date/title headers, standalone URLs and page
+  numbers, eCFR "up to date as of" and running headers/footers, the FDA
+  "Contains Nonbinding Recommendations" header, and the OSHA navigation/footer
+  block. The detector also removes short lines repeated on at least 60% of pages
+  (minimum three), with digit-insensitive comparison so changing page numbers
+  do not defeat it. Tests cover the patterns and preservation of body text.
+  The real-corpus audit is in
+  [`docs/milestone-3-corpus-audit.md`](milestone-3-corpus-audit.md).
+- **Post-commit failure message.** When Qdrant fails after the Postgres commit,
+  the job error explicitly says Postgres committed the document and the Qdrant
+  index is out of date, and recommends
+  `python -m app.cli reindex --backend qdrant`. The safe error does not include
+  the underlying exception text.
+
 ## Verification
 
 - 2026-10-25 — Full `pytest`, Ruff, format check, mypy, `alembic check` and
   `docker compose config -q` passed locally against compose Postgres and
-  Qdrant: **82 passed**, no skips. The vector-store contract suite runs the same
+  Qdrant: **91 passed**, no skips. The vector-store contract suite runs the same
   tests against both `PgVectorStore` and `QdrantStore`. API tests cover
   pgvector search, filters, top-k validation, unknown filter fields, auth,
   Qdrant backend override and duplicate re-ingest repair. The migration test
@@ -206,30 +251,30 @@ Working notes and decision records for `labdocs`.
   Second run: 0 new documents / 4 duplicates / 3 rejected. Qdrant held 9 points
   after both runs. The temporary database and collection were removed.
 - 2026-10-25 — The real corpus at `data/corpus/` (gitignored) was fully
-  ingested into a separate validation database and Qdrant collection using a
-  temporary corrected manifest. First run: **8 documents / 249 chunks**;
-  second run: **0 new / 8 duplicates / 249 Qdrant points**. The original
-  manifest still rejects two OSHA rows as `file not found` because its
-  filenames omit the space present on disk (`Communication._` vs
-  `Communication. _`, and `laboratories._` vs `laboratories. _`); the
-  user-supplied corpus and manifest were left untouched. See
+  ingested into the main database and `labdocs_chunks` using the real
+  `data/corpus/manifest.csv`. First run: **8 documents / 238 chunks**; second
+  run: **0 new / 8 duplicates / 238 Qdrant points**. The validation database and
+  collection were deleted. See
   [`docs/milestone-3-verification.md`](milestone-3-verification.md) for the
   ten-query comparison, score parity, HNSW reproduction, reindex and fan-out
-  verification.
+  verification, and
+  [`docs/milestone-3-corpus-audit.md`](milestone-3-corpus-audit.md) for the
+  per-document chunk audit.
 - 2026-10-25 — Ten hand-written queries were run against both stores with
-  identical filters and `top_k=5`. All ten had **5/5 top-5 overlap** and no
-  ordering disagreement. Across the 50 shared top-5 chunks, the maximum score
-  difference was `1.0e-6` (mean `1.6e-7`). Reindexing Qdrant from Postgres
-  reproduced the same top-5 sets. Full top-three results are in the verification
-  record.
+  identical filters and `top_k=5` after the extraction change. All ten had
+  **5/5 top-5 overlap** and no ordering disagreement. Across the 50 shared
+  top-5 chunks, the maximum score difference was `1.5e-7` (mean `5.2e-8`). The
+  verification record includes each query text and the first 200 characters of
+  every top-three chunk.
 
 ## Known limitations
 
 - Approximate token counts are not the BGE tokenizer's counts.
 - Qdrant fan-out is best-effort after the Postgres commit. There is no outbox or
-  exactly-once cross-store transaction; a Qdrant failure is reported and the
-  duplicate re-ingest path repairs the missing points. Pgvector and Qdrant can
-  therefore be temporarily inconsistent.
+  exactly-once cross-store transaction; a Qdrant failure is reported with an
+  explicit "Postgres committed / Qdrant out of date" message and a `reindex`
+  recommendation, and the duplicate re-ingest path repairs the missing points.
+  Pgvector and Qdrant can therefore be temporarily inconsistent.
 - The HNSW indexes use default build parameters. There is no recall/latency
   tuning or benchmark yet; evaluation belongs to milestone 9. Filtered
   pgvector searches may take the exact-scan fallback for very selective
@@ -255,7 +300,8 @@ Working notes and decision records for `labdocs`.
 - There is no per-document rollback UI or retry endpoint; re-running the manifest
   is the recovery path and is idempotent.
 - Document identity is `(source_agency, filename)`, while content identity is
-  the global raw-byte SHA-256. Re-uploading identical bytes with new metadata is
-  a duplicate and keeps the existing metadata. Renaming a file or changing its
-  source agency creates a new document rather than updating the old one. A
-  changed file with the same agency and filename updates the existing document.
+  the global raw-byte SHA-256. Re-uploading identical bytes with a changed
+  title, doc_type, year or version updates metadata in Postgres and Qdrant
+  without re-chunking. Renaming a file or changing its source agency creates a
+  new document rather than updating the old one. A changed file with the same
+  agency and filename updates the existing document.
