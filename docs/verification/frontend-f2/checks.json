@@ -1,0 +1,64 @@
+{
+  "milestone": "F2",
+  "unit": {
+    "passed": 63,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "startTime": "2026-10-25T17:55:23.536Z",
+    "duration": 48262.441,
+    "expected": 17,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "widths": [
+    1280,
+    390,
+    360
+  ],
+  "horizontal_overflow": false,
+  "lint": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "strict_typecheck": "pass",
+  "generated_types": "pass against running clean-backend schema in browser suite",
+  "bundle": {
+    "route": "/ask",
+    "chunks": [
+      {
+        "file": "assets/index-C9g7iksY.js",
+        "gzip_bytes": 94266
+      },
+      {
+        "file": "assets/AskView-BLJIQi-d.js",
+        "gzip_bytes": 1941
+      },
+      {
+        "file": "assets/Sources-BhKRByNb.js",
+        "gzip_bytes": 4544
+      },
+      {
+        "file": "assets/useAsync-DYj-5yfR.js",
+        "gzip_bytes": 656
+      },
+      {
+        "file": "assets/RequestStatus-CLS2C2fu.js",
+        "gzip_bytes": 403
+      }
+    ],
+    "total_gzip_bytes": 101810,
+    "budget_gzip_bytes": 110000
+  },
+  "screenshots": 80,
+  "visual_review": "Opened and inspected desktop/mobile research controls, answers/history, source drawers, pending/stopped, abstention, ungrounded, errors, comparison and local-model answer.",
+  "manual_ask": "manual-ask.json",
+  "backend_changes": false,
+  "deferred": [
+    "full end-to-end journey and CI Playwright (F6)",
+    "screen-reader walkthrough and large-corpus performance (F6)",
+    "full-chunk lookup requires separate API work"
+  ]
+}

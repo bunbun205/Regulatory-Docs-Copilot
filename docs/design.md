@@ -4,6 +4,28 @@ Working notes and decision records for `labdocs`.
 
 ## Decisions
 
+### Ask and Search (F2)
+
+- Ask and Agent share citation parsing and a source drawer. Only valid `[n]`
+  markers become React buttons; every other byte stays text. When markers are
+  absent, a numbered list supplies sources without inventing claim placement.
+- **Citations checked** means membership in the retrieved set, with an explicit
+  explanation that it does not prove claim support. Abstention hides sources
+  and shows the supplied best score. Cosine relevance is not confidence.
+- The drawer labels supplied text **Excerpt**, enriches metadata through the
+  existing document-detail endpoint, and retains the excerpt if metadata fails.
+  The existing full-chunk/passage-position API need remains unresolved.
+- Ask stores at most ten question/answer/source-text entries in sessionStorage;
+  clear history does not remove the currently displayed answer. No HTML or
+  Markdown interpreter processes model, document or history text.
+- Backend comparison issues independent requests with identical query/filter/
+  source-count parameters. The overlap denominator is the union of unique chunk
+  IDs, so unequal and empty result sets have a defined, labelled meaning.
+  A failure on one side never hides a successful result on the other.
+- The screenshot spec captures every route and new research states at
+  1280/390/360px. It scrolls to the top before full-page capture, and captures
+  drawers at viewport size to preserve their actual fixed overlay position.
+
 ### Frontend foundation (F1)
 
 - The unchanged pre-redesign frontend landed in PR #9; the approved F0 audit and
