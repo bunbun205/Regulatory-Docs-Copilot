@@ -16,7 +16,7 @@ export default function DocumentsView() {
   const [title, setTitle] = useState('');
   const [sourceAgency, setSourceAgency] = useState('');
   const [docType, setDocType] = useState('guidance');
-  const [year, setYear] = useState(new Date().getFullYear());
+  const [year, setYear] = useState(() => new Date().getFullYear());
   const [version, setVersion] = useState('v1');
   const upload = useAsync<components['schemas']['UploadResponse']>();
   const jobId = upload.data?.job_id;

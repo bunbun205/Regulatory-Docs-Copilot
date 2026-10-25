@@ -7,6 +7,57 @@ on:
     branches: [main]
 
 jobs:
+  web:
+    name: Web
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      LABDOCS_OPENAPI_FILE: /tmp/labdocs-openapi.json
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7.0.1
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Set up Python
+        uses: actions/setup-python@v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.3.2
+      - name: Install locked backend dependencies
+        run: uv sync --frozen
+      - name: Export schema from the checked-out app factory
+        run: |
+          uv run python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from app.main import create_app
+          Path(os.environ['LABDOCS_OPENAPI_FILE']).write_text(json.dumps(create_app().openapi()))
+          PY
+      - name: Install locked frontend dependencies
+        working-directory: frontend
+        run: npm ci
+      - name: Strict TypeScript (no emit)
+        working-directory: frontend
+        run: npm run typecheck
+      - name: Lint (warnings fail)
+        working-directory: frontend
+        run: npm run lint
+      - name: Vitest
+        working-directory: frontend
+        run: npm test
+      - name: Generated-type freshness
+        working-directory: frontend
+        run: npm run check:types
+      - name: Production build and initial-route budget
+        working-directory: frontend
+        run: npm run build && npm run check:bundle
+
   lint:
     name: Lint and typecheck
     runs-on: ubuntu-latest

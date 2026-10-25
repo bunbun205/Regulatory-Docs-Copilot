@@ -1,11 +1,12 @@
 # F1 review: foundation
 
-Branch: `feat/frontend-f1-foundation`. Stop here for review before F2.
+Branch: `feat/frontend-f1-foundation`. F1 review amendments are recorded below;
+merge is authorized once the new Web job and existing CI jobs pass.
 
 The unchanged baseline merged in [PR #9](https://github.com/bunbun205/Regulatory-Docs-Copilot/pull/9)
 and the approved F0 audit merged in [PR #10](https://github.com/bunbun205/Regulatory-Docs-Copilot/pull/10),
-each after both existing CI jobs passed. F1 remains unmerged for the requested
-visual and behavior review.
+each after both existing CI jobs passed. The user approved the F1 visual and
+behavior review, subject to the amendments and green CI documented here.
 
 ## What changed
 
@@ -30,7 +31,7 @@ visual and behavior review.
 - Connected every existing view to Settings and shared request handling. The
   small bridge forms remain until F2–F5. All old explicit `any` uses are removed.
   Gap job URLs reload into polling or the existing report, without adding APIs.
-- Added Vitest/RTL, Playwright, generated-types freshness, a no-new-warning lint
+- Added Vitest/RTL, Playwright, generated-types freshness, a warning-fatal lint
   gate and a 110 kB gzip initial-route budget check. All added direct dependencies
   are from the approved list. Unused global/template CSS and the fixed client
   are removed.
@@ -67,7 +68,7 @@ accessibility walkthrough remains F6.
 | Existing backend suite in a clean committed-backend checkout | **155 passed**, no failures/skips |
 | Strict TypeScript | Pass for app, test and tool/config files |
 | Generated types vs running clean API `/openapi.json` | Pass; exact regeneration comparison |
-| Oxlint | No new warnings/errors; one existing Documents Date warning remains until F5 |
+| Oxlint | Zero warnings/errors; `--deny-warnings`, with no warning exceptions |
 | Production build / route budget | Pass; approximately **95.8 kB gzip** initial `/ask` JS vs 110 kB budget |
 | Security checks | Header-only key transport; no key in localStorage/URLs or copied error details; no remote requests in the route walkthrough |
 
@@ -78,20 +79,42 @@ The size script sums unique JS files in the entry plus the default Ask route's
 static import graph using Node gzip. Other routes remain lazy chunks.
 
 The clean checkout deliberately excludes the unfinished platform changes.
-The earlier workspace's 157-test count included two untracked hardening tests;
-F1's clean-backend figure is 155. No new coverage or model-quality claim is made.
+The earlier workspace's 157-test count included exactly these two untracked tests:
+
+- `tests/api/test_hardening.py::test_rate_limiting`
+- `tests/api/test_hardening.py::test_metrics_endpoint`
+
+The JUnit node-ID comparison has 155 common tests, those two only in F0 and none
+only in F1. `git diff main...HEAD -- tests` is empty. No committed test or real
+committed coverage was lost. These tests and their unfinished rate-limit/metrics
+middleware were already untracked at F0 and remain preserved in the workspace;
+adding the tests alone would require out-of-scope platform code to pass. The
+two tests were rerun explicitly during the F1 follow-up. F1's clean-backend
+figure is 155; the working-tree platform checks add two. See
+[exact comparison](verification/frontend-f1/test-count-comparison.json).
 
 ## Surprises and decisions
 
 - The baseline TypeScript 6 dependency was outside `openapi-typescript` 7.13's
-  declared `^5.x` peer range. TypeScript is now pinned to the supported 5.9 line;
+  declared `^5.x` peer range. TypeScript is now pinned exactly to **5.9.3** in
+  package.json and the lockfile;
   no `--force` or legacy-peer workaround is needed.
-- Shared-client/polling migration removed the unused catch and effect warnings
-  from Documents. The lint gate now allows only its one remaining Date warning;
-  it rejects a reintroduction of the other warnings. F5 removes the last exception.
+- `eslint(no-unused-vars)` disappeared because the old `catch (err: any)` was
+  removed when upload moved to `useAsync` plus the shared client.
+- `react(set-state-in-effect)` disappeared because the mount effect calling
+  `fetchDocuments()` (which synchronously called `setLoading`) was replaced by
+  the shared serialized `usePolling` hook. No warning was disabled in Oxlint;
+  `.oxlintrc.json` is unchanged from the baseline.
+- The remaining `react(purity)` warning was the eager `new Date().getFullYear()`
+  argument to `useState`. The follow-up uses the lazy initializer
+  `useState(() => new Date().getFullYear())`. All three are now fixed in code.
+  The temporary warning-budget wrapper is deleted and lint runs
+  `oxlint --deny-warnings`; nothing is hidden by configuration.
 - A late 401 from an old saved key could invalidate a newly validated key.
   Generation/abort checks now protect bootstrap and explicit validation; a
   regression test covers that ordering.
+  Its exact name is `ignores a late 401 from a previous key after a new key validates`
+  in `frontend/src/views/SettingsView.test.tsx`.
 - Readiness error bodies contain useful service checks outside the standard
   error envelope. The shared result keeps those values as `unknown`; Settings
   narrows them and displays the checks alongside the HTTP error.
@@ -121,15 +144,23 @@ and resets its dedicated `_test` database, uses its own `_test` collection and
 temporary uploads, and never adds a production scripting flag. The full
 upload/Ask/source/Agent/Gap/export journey remains F6.
 
+The new CI **Web** job installs the lockfile and runs strict `tsc --noEmit` for
+both projects, warning-fatal Oxlint, Vitest, generated-type freshness and the
+production build/bundle budget. It exports a fresh OpenAPI document from the
+checked-out app factory, without running lifespan or requiring data services,
+and supplies that file through `LABDOCS_OPENAPI_FILE`. It never uses the committed
+frontend schema snapshot as the freshness authority. Playwright CI remains F6.
+
 ## Untested and deferred
 
 - F2 owns advanced Ask/Search controls, source drawers/chips, history, semantic
   citation presentation and backend comparison. F3 owns the richer Agent trace.
 - F4 owns the complete Gap input/progress/report/filter/export/print UI; F5 owns
   Documents pagination/filters, upload drawer and ingestion report.
-- F6 owns the full fake-provider journey, CI web job, all-view accessibility
+- F6 owns the full fake-provider journey/Playwright CI, all-view accessibility
   walkthrough, screen-reader coverage, large-corpus performance and final docs.
 - F1 does not benchmark or validate local-model answer quality. Manual review
   uses the documented Qwen native profile; deterministic checks use the fake API.
 
-Do not merge F1 or start F2 before the user's review reply.
+The user approved F1 after these amendments; merge only with the Web and existing
+CI jobs green, then continue with separate F2 and F3 PRs.

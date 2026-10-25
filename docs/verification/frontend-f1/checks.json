@@ -32,31 +32,32 @@
   "strict_typecheck": "pass",
   "generated_type_freshness": "pass against running clean-backend /openapi.json",
   "lint": {
-    "new_warnings": 0,
-    "existing_warnings": 1,
-    "remaining": "DocumentsView render-time Date; deferred to F5"
+    "warnings": 0,
+    "errors": 0,
+    "command": "oxlint --deny-warnings",
+    "config_weakened": false
   },
   "bundle": {
     "route": "/ask",
     "chunks": [
       {
-        "file": "assets/index-fO4wSgNG.js",
+        "file": "assets/index-CTfMZTcl.js",
         "gzip_bytes": 93893
       },
       {
-        "file": "assets/AskView-CJL3Xtvk.js",
-        "gzip_bytes": 808
+        "file": "assets/AskView-QqYL0zs4.js",
+        "gzip_bytes": 805
       },
       {
-        "file": "assets/useAsync-Bh2-YLXY.js",
-        "gzip_bytes": 656
+        "file": "assets/useAsync-hAg7pPwC.js",
+        "gzip_bytes": 655
       },
       {
-        "file": "assets/RequestStatus-DNZG6UsL.js",
-        "gzip_bytes": 404
+        "file": "assets/RequestStatus--7LSPQPo.js",
+        "gzip_bytes": 403
       }
     ],
-    "total_gzip_bytes": 95761,
+    "total_gzip_bytes": 95756,
     "budget_gzip_bytes": 110000
   },
   "screenshots": [
@@ -343,5 +344,23 @@
       "background": "info-soft",
       "ratio": 7.77
     }
-  ]
+  ],
+  "typescript": "5.9.3 (exact pin)",
+  "backend_test_count_comparison": {
+    "f0_count": 157,
+    "f1_clean_count": 155,
+    "common": 155,
+    "only_f0": [
+      "tests.api.test_hardening::test_metrics_endpoint",
+      "tests.api.test_hardening::test_rate_limiting"
+    ],
+    "only_f1": [],
+    "explanation": "The two F0-only tests and their platform implementation were untracked at F0 and remain preserved outside the frontend PR. No committed test was removed.",
+    "preserved_platform_rerun": {
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "seconds": 0.29
+    }
+  }
 }

@@ -2,22 +2,22 @@
   "route": "/ask",
   "chunks": [
     {
-      "file": "assets/index-fO4wSgNG.js",
+      "file": "assets/index-CTfMZTcl.js",
       "gzip_bytes": 93893
     },
     {
-      "file": "assets/AskView-CJL3Xtvk.js",
-      "gzip_bytes": 808
+      "file": "assets/AskView-QqYL0zs4.js",
+      "gzip_bytes": 805
     },
     {
-      "file": "assets/useAsync-Bh2-YLXY.js",
-      "gzip_bytes": 656
+      "file": "assets/useAsync-hAg7pPwC.js",
+      "gzip_bytes": 655
     },
     {
-      "file": "assets/RequestStatus-DNZG6UsL.js",
-      "gzip_bytes": 404
+      "file": "assets/RequestStatus--7LSPQPo.js",
+      "gzip_bytes": 403
     }
   ],
-  "total_gzip_bytes": 95761,
+  "total_gzip_bytes": 95756,
   "budget_gzip_bytes": 110000
 }
