@@ -138,3 +138,57 @@ jobs:
 
       - name: Run tests
         run: uv run pytest
+
+  browser:
+    name: Browser (fake provider)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: pgvector/pgvector:0.8.7-pg16
+        env:
+          POSTGRES_USER: labdocs
+          POSTGRES_PASSWORD: labdocs
+          POSTGRES_DB: labdocs_frontend_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U labdocs -d labdocs_frontend_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      qdrant:
+        image: qdrant/qdrant:v1.20.0
+        ports: ["6333:6333"]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7.0.1
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Set up Python
+        uses: actions/setup-python@v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.3.2
+      - name: Install locked dependencies
+        run: uv sync --frozen && npm ci --prefix frontend
+      - name: Install Chromium and system libraries
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+      - name: Full browser suite (isolated test app factory and fake provider only)
+        working-directory: frontend
+        run: npm run test:e2e
+      - name: Large-corpus browser regression
+        working-directory: frontend
+        run: npm run test:performance
+      - name: Save browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-browser-evidence
+          path: |
+            frontend/test-results/
+            docs/screenshots/f6/
+            docs/verification/frontend-f6/

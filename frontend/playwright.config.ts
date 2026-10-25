@@ -1,7 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './e2e', testMatch: '**/*.spec.ts', fullyParallel: false, workers: 1,
+  testDir: './e2e', testMatch: '**/*.spec.ts', testIgnore: '**/performance.spec.ts', fullyParallel: false, workers: 1,
   timeout: 45_000, retries: 0,
   reporter: [['list'], ['json', { outputFile: 'test-results/results.json' }]],
   outputDir: 'test-results/artifacts',

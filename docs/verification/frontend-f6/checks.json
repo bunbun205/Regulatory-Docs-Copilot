@@ -1,0 +1,74 @@
+{
+  "milestone": "F6",
+  "unit": {
+    "passed": 113,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser_full_suite": {
+    "startTime": "2026-10-25T22:29:17.011Z",
+    "duration": 214156.074,
+    "expected": 53,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "large_corpus_browser": {
+    "startTime": "2026-10-25T22:33:23.857Z",
+    "duration": 58897.961,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "strict_typecheck": "pass",
+  "lint": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "generated_types": "pass against clean running app factory in full browser suite",
+  "production_build": "pass",
+  "bundle": {
+    "route": "/ask",
+    "chunks": [
+      {
+        "file": "assets/index-djNx_2qU.js",
+        "gzip_bytes": 94544
+      },
+      {
+        "file": "assets/AskView-Dl5vZovN.js",
+        "gzip_bytes": 1941
+      },
+      {
+        "file": "assets/Sources-CehjNaHX.js",
+        "gzip_bytes": 3794
+      },
+      {
+        "file": "assets/RequestStatus-BeaxJEip.js",
+        "gzip_bytes": 1264
+      },
+      {
+        "file": "assets/useAsync-glpuEAVi.js",
+        "gzip_bytes": 654
+      }
+    ],
+    "total_gzip_bytes": 102197,
+    "budget_gzip_bytes": 110000
+  },
+  "widths": [
+    1280,
+    390,
+    360
+  ],
+  "horizontal_page_overflow": false,
+  "screenshots": 304,
+  "accessibility": "Keyboard-only controls (file bytes supplied through browser automation), Chromium AX-tree names/live regions, computed visible text/control/placeholder/boundary contrast, reduced motion. No human screen-reader session or WCAG certification claimed.",
+  "production_backend_changes": false,
+  "dependency_changes": false,
+  "f5_main_ci": "https://github.com/bunbun205/Regulatory-Docs-Copilot/actions/runs/40238985942",
+  "remaining_product_gates": [
+    "SEED7 platform hardening",
+    "SEED9 evaluation harness and human-verified labels/SOPs",
+    "SEED10 packaging/docs and local Compose acceptance; AWS configuration only, no deployment"
+  ]
+}

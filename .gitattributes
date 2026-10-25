@@ -1,0 +1,2 @@
+# PDF fixtures and exports are binary, including uncompressed test PDFs.
+*.pdf binary

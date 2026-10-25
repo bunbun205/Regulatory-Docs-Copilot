@@ -1,32 +1,38 @@
-# React + TypeScript + Vite
+# Frontend development and verification
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Vite/React/strict TypeScript with hand-written CSS Modules and generated OpenAPI
+types. No remote fonts/scripts, UI framework, HTML/Markdown renderer or production
+scripted LLM is used. Model and document strings stay text.
 
-Currently, two official plugins are available:
+Install the locked Node dependencies with `npm ci`. With the native API on 8001,
+run `npm run dev -- --host 127.0.0.1 --port 3100 --strictPort`; Vite proxies `/api`
+to the API. Open Settings, validate a key, then use Documents, Search, Ask, Agent
+and Gap Check. Keys stay in sessionStorage; preferences (never keys) use localStorage.
+See the root SEED/design docs for scope and backend limitations.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The local gates are `npm run typecheck`, `npm run lint`, `npm test`,
+`npm run check:types`, `npm run build`, and `npm run check:bundle`. Type freshness
+uses the running API by default, or `LABDOCS_OPENAPI_FILE` exported from the same
+checked-out app factory. The initial Ask route has a 110,000-byte gzip JS budget.
 
-## React Compiler
+`npm run test:e2e` starts Vite3100 and the separate test-only API8001 entrypoint.
+Both ports must be free. It uses real Postgres/pgvector and Qdrant, guarded database
+`labdocs_frontend_test`, a separate collection and temporary upload directory.
+**Only those isolated test stores are reset.** Fixed test credentials and scripts
+live under `e2e/`, never in the production factory. Install the matching browser
+with `npx playwright install chromium` (CI also installs system dependencies).
+The suite includes the combined keyboard journey, real PDF/TXT document and SOP
+uploads, cancellation/resume/error states, data exports and print content checks.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+`npm run test:performance` runs separately with the same isolated test entrypoint,
+seeding 5,000 synthetic documents/10,000 chunks in both stores plus the one default
+fixture. It measures page/count/filter/cache behaviour and a 1,000-finding report.
+It must not run concurrently with the ordinary suite. Timings are observations,
+not regulatory-quality metrics or production capacity claims.
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Screenshots cover every route and state at 1280/390/360px, asserting no horizontal
+page overflow. Tables scroll inside their own region. Test evidence is written
+under `docs/screenshots/f6` and `docs/verification/frontend-f6`; only final local
+captures are committed. Accessibility checks cover keyboard paths, visible text
+contrast, reduced motion and Chromium accessibility-tree names. They do not claim
+a human assistive-technology session or WCAG certification.

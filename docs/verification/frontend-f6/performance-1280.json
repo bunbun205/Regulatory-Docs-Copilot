@@ -1,0 +1,24 @@
+{
+  "description": "5000 synthetic documents/10000 chunks added to one seeded document/chunk in isolated Postgres and Qdrant; 1000-finding browser response fixture. Timings are observations, not quality scores or production capacity guarantees.",
+  "width": 1280,
+  "corpus_documents": 5001,
+  "corpus_chunks": 10001,
+  "measurements": {
+    "first_page_ms": 565,
+    "fifty_rows_ms": 366,
+    "next_page_ms": 473,
+    "cached_page_ms": 117,
+    "filtered_page_ms": 289,
+    "pgvector_filtered_search_ms": 36,
+    "qdrant_filtered_search_ms": 27,
+    "gap_scope_ms": 617,
+    "report_render_ms": 4502,
+    "report_filter_ms": 557,
+    "selected_print_prepare_ms": 17,
+    "js_heap_used_bytes": 80625672
+  },
+  "peak_detail_requests": 3,
+  "detail_requests": 149,
+  "cached_back_navigation_requests": 0,
+  "horizontal_page_overflow": false
+}
