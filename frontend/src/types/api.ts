@@ -237,7 +237,7 @@ export interface paths {
         };
         /**
          * Readyz
-         * @description Readiness probe: the database and configured vector backend must answer.
+         * @description Check stores and successful embedding-model startup.
          */
         get: operations["readyz_readyz_get"];
         put?: never;

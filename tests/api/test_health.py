@@ -12,7 +12,7 @@ async def test_healthz(client: AsyncClient) -> None:
 async def test_readyz_database_ok(client: AsyncClient) -> None:
     response = await client.get("/readyz")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok", "checks": {"database": "ok"}}
+    assert response.json() == {"status": "ok", "checks": {"database": "ok", "embedder": "ok"}}
 
 
 class _BrokenSession:
@@ -38,7 +38,7 @@ async def test_readyz_qdrant_ok(
     assert response.status_code == 200
     assert response.json() == {
         "status": "ok",
-        "checks": {"database": "ok", "qdrant": "ok"},
+        "checks": {"database": "ok", "qdrant": "ok", "embedder": "ok"},
     }
 
 
@@ -76,3 +76,10 @@ async def test_metrics(client: AsyncClient) -> None:
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("text/plain")
     assert "python_info" in response.text
+
+
+async def test_readyz_requires_loaded_embedder(client: AsyncClient, app: FastAPI) -> None:
+    app.state.embedder_ready = False
+    response = await client.get("/readyz")
+    assert response.status_code == 503
+    assert response.json()["checks"]["embedder"] == "unavailable"

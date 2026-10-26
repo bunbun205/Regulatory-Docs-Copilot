@@ -2,7 +2,7 @@ from uuid import uuid4
 
 import pytest
 
-from app.gapcheck.judge import ClauseJudgement, RequirementJudgement
+from app.gapcheck.judge import ClauseJudgement, GapCheckJudge, RequirementJudgement
 from app.gapcheck.requirements import Requirement
 from app.gapcheck.runner import (
     GapCheckCancelled,
@@ -10,6 +10,7 @@ from app.gapcheck.runner import (
     GapCheckRunner,
 )
 from app.llm.base import TokenUsage
+from app.llm.fake import FakeLLM
 from app.rag.retriever import RetrievalResult
 from app.store.base import SearchFilters, SearchHit
 from tests.helpers import FakeEmbedder
@@ -229,19 +230,11 @@ async def test_runner_stops_on_cancellation() -> None:
 
 
 async def test_runner_marks_judge_failed_when_token_cap_is_reached() -> None:
-    class ExpensiveJudge(StubJudge):
-        async def judge_clause(self, **kwargs):  # type: ignore[no-untyped-def]
-            self.clause_calls += 1
-            return ClauseJudgement(
-                verdict="compliant",
-                citations=(str(kwargs["retrieved_hits"][0].chunk_id),),
-                rationale="Expensive stub.",
-                usage=TokenUsage(input_tokens=100, output_tokens=10),
-            )
+    llm = FakeLLM()
 
     report = await _runner(
         StubRetriever([_hit("Records shall be retained for five years.")]),
-        ExpensiveJudge(),
+        GapCheckJudge(llm),
         config=GapCheckConfig(
             max_clauses=10,
             max_tokens=50,
@@ -253,7 +246,9 @@ async def test_runner_marks_judge_failed_when_token_cap_is_reached() -> None:
 
     verdicts = [finding["verdict"] for finding in report["findings"]]
     assert "tokens" in report["caps_hit"]
-    assert "judge_failed" in verdicts
+    assert set(verdicts) == {"judge_failed"}
+    assert not llm.requests
+    assert report["metadata"]["token_usage"]["total_tokens"] == 0
     assert report["metadata"]["caps"]["max_tokens"] == 50
 
 

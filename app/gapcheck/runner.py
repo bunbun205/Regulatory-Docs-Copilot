@@ -26,6 +26,7 @@ from app.gapcheck.requirements import Requirement, extract_requirements
 from app.gapcheck.segment import segment_sop
 from app.ingest.embedding import Embedder
 from app.llm.base import TokenUsage
+from app.llm.budget import TokenBudget
 from app.rag.retriever import Backend, RetrievalError, Retriever
 from app.store.base import SearchFilters, SearchHit
 
@@ -82,6 +83,8 @@ class GapCheckRunner:
         self._cache_hits = 0
         self._judge_failures = 0
         self._caps_hit: set[str] = set()
+        self._budget = TokenBudget(config.max_tokens)
+        self.judge.budget = self._budget
 
     async def run(
         self,
@@ -258,6 +261,10 @@ class GapCheckRunner:
         )
         duration_ms = round((time.perf_counter() - started) * 1000, 2)
         judge_failed_count = sum(1 for finding in findings if finding["verdict"] == "judge_failed")
+        if self._budget.cap_hit:
+            self._caps_hit.add("tokens")
+        if self._budget.attempts:
+            self._usage = self._budget.usage
         metadata = {
             "model": self.model_label,
             "backend": backend,
@@ -268,6 +275,7 @@ class GapCheckRunner:
                 "output_tokens": self._usage.output_tokens,
                 "total_tokens": self._usage.total_tokens,
             },
+            "token_budget": self._budget.summary(),
             "clauses_total": clauses_total,
             "requirements_total": requirements_total,
             "retrieval_top_k": self.config.retrieval_top_k,
@@ -392,13 +400,14 @@ class GapCheckRunner:
         **kwargs: Any,
     ) -> tuple[ClauseJudgement | None, str]:
         async with semaphore:
-            if self._usage.total_tokens >= self.config.max_tokens:
-                self._caps_hit.add("tokens")
-                return None, "token_cap"
+            await self._check_cancel()
             try:
                 judgement = await self.judge.judge_clause(**kwargs)
             except JudgeFailure as exc:
                 self._judge_failures += 1
+                self._usage = _add_usage(self._usage, exc.usage)
+                if exc.reason == "token_cap":
+                    self._caps_hit.add("tokens")
                 return None, exc.reason
             self._usage = _add_usage(self._usage, judgement.usage)
             if judgement.cached:
@@ -411,13 +420,14 @@ class GapCheckRunner:
         **kwargs: Any,
     ) -> tuple[RequirementJudgement | None, str]:
         async with semaphore:
-            if self._usage.total_tokens >= self.config.max_tokens:
-                self._caps_hit.add("tokens")
-                return None, "token_cap"
+            await self._check_cancel()
             try:
                 judgement = await self.judge.judge_requirement(**kwargs)
             except JudgeFailure as exc:
                 self._judge_failures += 1
+                self._usage = _add_usage(self._usage, exc.usage)
+                if exc.reason == "token_cap":
+                    self._caps_hit.add("tokens")
                 return None, exc.reason
             self._usage = _add_usage(self._usage, judgement.usage)
             if judgement.cached:

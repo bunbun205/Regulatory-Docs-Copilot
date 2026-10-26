@@ -1,3 +1,4 @@
+import asyncio
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
@@ -8,9 +9,12 @@ from sqlalchemy import text
 
 from app.api.errors import register_exception_handlers
 from app.api.router import api_router
+from app.core.body_limit import RequestBodyLimitMiddleware
 from app.core.config import settings
 from app.core.logging import configure_logging
+from app.core.metrics import HTTPMetrics, PrometheusMetricsMiddleware
 from app.core.middleware import RequestContextMiddleware
+from app.core.rate_limit import TokenBucketRateLimiter
 from app.db.models import EMBEDDING_DIMENSION
 from app.db.session import Database
 from app.ingest.embedding import SentenceTransformerEmbedder
@@ -86,9 +90,13 @@ async def lifespan(application: FastAPI) -> AsyncIterator[None]:
         "qdrant" if settings.VECTOR_BACKEND == "qdrant" else "pgvector"
     )
     application.state.ingestion_vector_stores = (qdrant_store,) if qdrant_store is not None else ()
+    application.state.embedder_ready = False
     try:
+        await asyncio.to_thread(embedder.embed, ["Readiness probe."])
+        application.state.embedder_ready = True
         yield
     finally:
+        application.state.embedder_ready = False
         if qdrant_store is not None:
             await qdrant_store.close()
         await llm_client.close()
@@ -105,6 +113,13 @@ def create_app() -> FastAPI:
         ),
         lifespan=lifespan,
     )
+    application.state.rate_limiter = TokenBucketRateLimiter(
+        settings.RATE_LIMIT_PER_MINUTE,
+        max_identities=settings.RATE_LIMIT_MAX_IDENTITIES,
+    )
+    application.state.metrics = HTTPMetrics()
+    application.add_middleware(RequestBodyLimitMiddleware, max_bytes=settings.MAX_REQUEST_BYTES)
+    application.add_middleware(PrometheusMetricsMiddleware, metrics=application.state.metrics)
     application.add_middleware(RequestContextMiddleware)
     register_exception_handlers(application)
     application.include_router(api_router)
@@ -116,7 +131,7 @@ def create_app() -> FastAPI:
 
     @application.get("/readyz", tags=["health"])
     async def readyz(request: Request) -> JSONResponse:
-        """Readiness probe: the database and configured vector backend must answer."""
+        """Check stores and successful embedding-model startup."""
         checks: dict[str, str] = {}
         try:
             sessionmaker = request.app.state.sessionmaker
@@ -140,12 +155,19 @@ def create_app() -> FastAPI:
                     status_code=503,
                     content={"status": "error", "checks": checks},
                 )
+        if not getattr(request.app.state, "embedder_ready", False):
+            checks["embedder"] = "unavailable"
+            return JSONResponse(status_code=503, content={"status": "error", "checks": checks})
+        checks["embedder"] = "ok"
         return JSONResponse(content={"status": "ok", "checks": checks})
 
     @application.get("/metrics", tags=["health"])
     async def metrics() -> Response:
         """Prometheus scrape endpoint."""
-        return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
+        return Response(
+            content=generate_latest(application.state.metrics.registry),
+            media_type=CONTENT_TYPE_LATEST,
+        )
 
     return application
 

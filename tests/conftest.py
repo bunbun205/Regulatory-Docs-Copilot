@@ -99,6 +99,7 @@ def app(
     application = create_app()
     application.state.sessionmaker = sessionmaker
     application.state.embedder = fake_embedder
+    application.state.embedder_ready = True
     application.state.ingestion_config = ingestion_config
     application.state.upload_dir = tmp_path / "uploads"
     application.state.vector_stores = {"pgvector": PgVectorStore(sessionmaker)}

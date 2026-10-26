@@ -4,7 +4,7 @@ import hashlib
 import json
 import re
 from collections import OrderedDict
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import Any, Literal
 
 import structlog
@@ -14,6 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from app.db.models import GapCheckJudgementCache
 from app.gapcheck.requirements import Requirement
 from app.llm.base import LLMClient, LLMError, LLMMessage, TokenUsage
+from app.llm.budget import TokenBudget, TokenBudgetExceeded, active_token_budget
 from app.rag.grounding import parse_answer_payload
 from app.store.base import SearchHit
 
@@ -90,9 +91,10 @@ class RequirementJudgement:
 class JudgeFailure(Exception):
     """A judgement was unavailable or failed validation after one retry."""
 
-    def __init__(self, reason: str) -> None:
+    def __init__(self, reason: str, usage: TokenUsage | None = None) -> None:
         super().__init__(reason)
         self.reason = reason
+        self.usage = usage or TokenUsage()
 
 
 class GapCheckJudge:
@@ -110,6 +112,7 @@ class GapCheckJudge:
         self.namespace = namespace
         self.max_tokens = max_tokens
         self.temperature = temperature
+        self.budget: TokenBudget | None = None
         self._memory_cache: OrderedDict[str, dict[str, Any]] = OrderedDict()
 
     async def judge_clause(
@@ -162,7 +165,10 @@ class GapCheckJudge:
         usage = TokenUsage()
         last_reason = "invalid_judgement"
         for attempt in range(2):
-            result = await self._chat(messages)
+            try:
+                result = await self._chat(messages)
+            except JudgeFailure as exc:
+                raise JudgeFailure(exc.reason, _add_usage(usage, exc.usage)) from exc
             usage = _add_usage(usage, result.usage)
             parsed, reason = _parse_clause(result.text, source_by_id)
             if parsed is not None:
@@ -186,7 +192,7 @@ class GapCheckJudge:
                         ),
                     )
                 )
-        raise JudgeFailure(last_reason)
+        raise JudgeFailure(last_reason, usage)
 
     async def judge_requirement(
         self,
@@ -239,7 +245,10 @@ class GapCheckJudge:
         usage = TokenUsage()
         last_reason = "invalid_judgement"
         for attempt in range(2):
-            result = await self._chat(messages)
+            try:
+                result = await self._chat(messages)
+            except JudgeFailure as exc:
+                raise JudgeFailure(exc.reason, _add_usage(usage, exc.usage)) from exc
             usage = _add_usage(usage, result.usage)
             parsed, reason = _parse_requirement(result.text, clause_ids)
             if parsed is not None:
@@ -263,18 +272,31 @@ class GapCheckJudge:
                         ),
                     )
                 )
-        raise JudgeFailure(last_reason)
+        raise JudgeFailure(last_reason, usage)
 
     async def _chat(self, messages: list[LLMMessage]) -> Any:
+        context = active_token_budget.set(self.budget)
         try:
-            return await self.llm.chat(
+            reservation = None
+            if self.budget is not None and not getattr(self.llm, "manages_token_budget", False):
+                reservation = self.budget.reserve(
+                    [asdict(message) for message in messages], self.max_tokens
+                )
+            result = await self.llm.chat(
                 messages,
                 tools=(),
                 temperature=self.temperature,
                 max_tokens=self.max_tokens,
             )
+            if self.budget is not None and reservation is not None:
+                self.budget.settle(reservation, result.usage)
+            return result
+        except TokenBudgetExceeded as exc:
+            raise JudgeFailure("token_cap") from exc
         except LLMError as exc:
             raise JudgeFailure("llm_unavailable") from exc
+        finally:
+            active_token_budget.reset(context)
 
     def _key(self, kind: str, **values: Any) -> str:
         payload = {

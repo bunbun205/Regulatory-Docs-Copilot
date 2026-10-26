@@ -33,6 +33,8 @@ async def test_real_lifespan_wires_database_embedder_and_qdrant(
     application = create_app()
     async with application.router.lifespan_context(application):
         assert application.state.embedder is fake_embedder
+        assert application.state.embedder_ready is True
+        assert fake_embedder.calls == 1
         assert application.state.default_vector_backend == "pgvector"
         assert set(application.state.vector_stores) == {"pgvector", "qdrant"}
         assert application.state.ingestion_vector_stores == (
@@ -80,3 +82,21 @@ async def test_real_lifespan_wires_database_embedder_and_qdrant(
             assert [result["text"] for result in response.json()["results"]] == [content]
 
         assert await qdrant_store.count() > 0
+
+
+async def test_embedding_load_failure_prevents_startup(make_api_key, monkeypatch, tmp_path):
+    import pytest
+
+    class BrokenEmbedder(FakeEmbedder):
+        def embed(self, texts):
+            raise RuntimeError("embedding load failed")
+
+    monkeypatch.setattr(settings, "DATABASE_URL", TEST_DATABASE_URL)
+    monkeypatch.setattr(settings, "VECTOR_BACKEND", "pgvector")
+    monkeypatch.setattr(settings, "UPLOAD_DIR", tmp_path)
+    monkeypatch.setattr("app.main.SentenceTransformerEmbedder", lambda *a, **k: BrokenEmbedder())
+    application = create_app()
+    with pytest.raises(RuntimeError, match="embedding load failed"):
+        async with application.router.lifespan_context(application):
+            raise AssertionError("Startup incorrectly succeeded")
+    assert application.state.embedder_ready is False
