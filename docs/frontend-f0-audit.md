@@ -2,9 +2,9 @@
 
 Date: 2026-10-25. Branch: `feat/frontend-f0-audit`.
 
-Read first: [FRONTEND_SEED.md](../FRONTEND_SEED.md), [SEED.md](../SEED.md),
-[design decisions](design.md), [verification report](verification-report-2026-10-25.md)
-and [local testing](local-testing.md). FRONTEND_SEED controls frontend decisions.
+Read first: [design decisions](design.md),
+[verification report](verification-report-2026-10-25.md) and
+[local testing](local-testing.md). The approved decisions below control frontend work.
 F0 was approved with the decisions below. F1 starts after the baseline and F0
 PRs pass their checks and merge.
 

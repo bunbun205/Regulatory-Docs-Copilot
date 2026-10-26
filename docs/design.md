@@ -177,9 +177,9 @@ packaging decisions appear at the end; use the root README for setup.
 
 ### Frontend upgrade audit (F0, 2026-10-25)
 
-- [FRONTEND_SEED.md](../FRONTEND_SEED.md) overrides SEED on frontend design,
-  dependency and layout choices. [F0 audit and plan](frontend-f0-audit.md)
-  records the reuse map, file layout, gates and untracked-baseline Git issue.
+- [F0 audit and plan](frontend-f0-audit.md) records the approved frontend design,
+  dependency and layout choices, reuse map, file layout, gates and
+  untracked-baseline Git issue.
 - Use hand-written components, CSS Modules and shared tokens with system fonts.
   Settings context plus small async/polling hooks suffice; no query/state library.
   Retain the existing Oxlint installation; adding ESLint is outside the newly
@@ -248,7 +248,7 @@ lack a request ID; show unavailable and use `Retry-After` where provided.
 
 ### Scaffold (milestone 0)
 
-- 2026-10-23 — Python pinned to `>=3.12,<3.13` per SEED.md §5; `uv` provisions 3.12 (the system interpreter is 3.14).
+- 2026-10-23 — Python pinned to `>=3.12,<3.13` per the original scaffold requirements; `uv` provisions 3.12 (the system interpreter is 3.14).
 - 2026-10-23 — Trunk `main`; the initial scaffold commit landed on `main`, feature work uses short-lived `feat/<milestone>` branches.
 - 2026-10-23 — FastAPI 0.161.1 ships no `fastapi.mypy` plugin; mypy runs without it rather than pinning an older FastAPI.
 - 2026-10-23 — Git remote configured after the scaffold: `origin` = `git@github.com:bunbun205/Regulatory-Docs-Copilot.git` over SSH. CI runs on GitHub Actions. (Supersedes the earlier "no remote configured" note.)
@@ -643,7 +643,7 @@ lack a request ID; show unavailable and use `Retry-After` where provided.
   complete, the report; another API key receives `404`. Progress phases are
   `queued`, `clauses`, `requirements`, `finalizing`, then a terminal
   `completed`, `failed` or `cancelled`. `POST /v1/gapcheck/{job_id}/cancel`
-  (an addition beyond the two routes named in `SEED.md`) sets a cooperative
+  (an addition beyond the two originally specified routes) sets a cooperative
   cancellation flag; the runner stops between bounded steps and reports
   `cancelled`. Jobs live in `gapcheck_jobs`; lifecycle/progress persistence and
   background execution follow the ingestion-job pattern.

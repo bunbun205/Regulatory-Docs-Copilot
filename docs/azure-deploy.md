@@ -1,6 +1,6 @@
 # Azure deployment plan — not deployed
 
-This SEED deliverable is a written alternative. The currently prepared Compose
+This deployment plan is a written alternative. The currently prepared Compose
 configuration targets AWS; no Azure resources have been provisioned or tested.
 
 Use Azure Container Apps for the built web/API images, Azure Database for

@@ -7,8 +7,8 @@ revision is `2bdf9ea` (`main`, PR #8). Platform hardening, the frontend, Dockerf
 and README were uncommitted work at the start of this review. Milestones 7–10
 do **not** meet the complete SEED acceptance criteria.
 
-This review checks the implementation against [SEED.md](../SEED.md), runs the
-available checks against real local services, and records current results rather
+This review checked the implementation against the original project requirements,
+ran the available checks against real local services, and recorded results rather
 than treating earlier documentation as proof. Git records milestone changes but
 does not establish which OpenCode model authored individual lines. No historical
 remote CI result was independently checked. Existing work was preserved; limited

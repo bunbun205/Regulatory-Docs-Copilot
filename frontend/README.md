@@ -8,7 +8,8 @@ Install the locked Node dependencies with `npm ci`. With the native API on 8001,
 run `npm run dev -- --host 127.0.0.1 --port 3100 --strictPort`; Vite proxies `/api`
 to the API. Open Settings, validate a key, then use Documents, Search, Ask, Agent
 and Gap Check. Keys stay in sessionStorage; preferences (never keys) use localStorage.
-See the root SEED/design docs for scope and backend limitations.
+See the [root README](../README.md) and [design decisions](../docs/design.md)
+for scope and backend limitations.
 
 The local gates are `npm run typecheck`, `npm run lint`, `npm test`,
 `npm run check:types`, `npm run build`, and `npm run check:bundle`. Type freshness

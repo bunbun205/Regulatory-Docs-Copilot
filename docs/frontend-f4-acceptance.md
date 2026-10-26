@@ -1,7 +1,7 @@
 # F4 final acceptance — 2026-10-26
 
-Reviewed against SEED.md (Gap Check, security and tests), FRONTEND_SEED.md
-sections 7.4, 8–11, and frontend-f4-review.md. The user's conditional approval
+Reviewed against the original Gap Check, security, test and frontend criteria,
+plus [F4 review](frontend-f4-review.md). The user's conditional approval
 permits merging PR #14 after these checks and green CI. F5 remains a separate PR.
 
 | Criterion | Evidence and result |
