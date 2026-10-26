@@ -1,0 +1,1640 @@
+{
+  "generated_at": "2026-10-25T13:58:58.779056+00:00",
+  "verified_golden_entries": 0,
+  "warning": "Probe questions have group labels, no human-verified answer locations. These are diagnostic results, not verified recall/MRR/abstention quality.",
+  "latency_method": "20 sequential queries/backend; BGE warmed once; includes query embedding + store search; pgvector first then Qdrant; no concurrency/load test",
+  "corpus": {
+    "documents": 8,
+    "chunks": 238,
+    "pgvector_version": "0.8.7",
+    "qdrant_points": 238
+  },
+  "backends": {
+    "pgvector": {
+      "n": 20,
+      "top_k": 8,
+      "p50_retrieve_ms": 21.56,
+      "p95_retrieve_ms": 35.05650000000001,
+      "in_corpus_accepted": 10,
+      "out_of_corpus_abstained": 10,
+      "rows": [
+        {
+          "id": "in-01",
+          "group": "in_corpus",
+          "question": "What controls are required for closed electronic record systems under 21 CFR Part 11?",
+          "latency_ms": 31.48,
+          "hits": [
+            {
+              "chunk_id": "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "score": 0.8048084494585852
+            },
+            {
+              "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+              "score": 0.7915598029827968
+            },
+            {
+              "chunk_id": "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d",
+              "score": 0.781118512153631
+            },
+            {
+              "chunk_id": "29894d80-8813-4500-83f0-0ad2b56816ab",
+              "score": 0.7788850533297703
+            },
+            {
+              "chunk_id": "1b434880-2351-4731-8d6e-05560ad42d8a",
+              "score": 0.7595405578613336
+            },
+            {
+              "chunk_id": "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "score": 0.7587969159362875
+            },
+            {
+              "chunk_id": "da8e8aaa-39eb-47fd-9503-2212198136ab",
+              "score": 0.7381695948940287
+            },
+            {
+              "chunk_id": "13cf0e05-c56d-494b-b365-e7ba19142d2e",
+              "score": 0.7370837487528592
+            }
+          ]
+        },
+        {
+          "id": "in-02",
+          "group": "in_corpus",
+          "question": "How should audit trails be reviewed under FDA data integrity guidance?",
+          "latency_ms": 18.39,
+          "hits": [
+            {
+              "chunk_id": "c3488baf-f796-4cca-8541-7effa2ea98e5",
+              "score": 0.8221648792477151
+            },
+            {
+              "chunk_id": "9b68c1b3-b33f-480e-b922-3a4f86f68e4d",
+              "score": 0.8049983614685162
+            },
+            {
+              "chunk_id": "b783be0a-e468-41c4-81bd-56219425403f",
+              "score": 0.8049126616276526
+            },
+            {
+              "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+              "score": 0.7840865511791105
+            },
+            {
+              "chunk_id": "b28f17ba-ca4d-4e93-b069-06e55737f2ae",
+              "score": 0.7828082234606357
+            },
+            {
+              "chunk_id": "dd8656ae-16a5-4ca2-871d-72bdda88b1d3",
+              "score": 0.7813087962497771
+            },
+            {
+              "chunk_id": "b7895278-5297-4435-9dee-745dbbded186",
+              "score": 0.7680759706406682
+            },
+            {
+              "chunk_id": "7ac0c2c1-5bd1-4edf-a97f-c311ed5366c7",
+              "score": 0.7658566059130553
+            }
+          ]
+        },
+        {
+          "id": "in-03",
+          "group": "in_corpus",
+          "question": "What are the responsibilities of a study director in a nonclinical laboratory study?",
+          "latency_ms": 19.48,
+          "hits": [
+            {
+              "chunk_id": "18cbb223-dffe-410a-a9bf-345fed59c341",
+              "score": 0.8130821474243505
+            },
+            {
+              "chunk_id": "8f230445-0db9-4330-869a-26e4145eb849",
+              "score": 0.7330046733024534
+            },
+            {
+              "chunk_id": "33d0d181-61d9-4214-ba6d-a54f899573cf",
+              "score": 0.7196600866115158
+            },
+            {
+              "chunk_id": "1ead910a-9a01-403e-acb3-792668cf8fa8",
+              "score": 0.7155396172725939
+            },
+            {
+              "chunk_id": "4be5b2d9-2cd1-4433-87ee-588ee607d1f9",
+              "score": 0.701244157626878
+            },
+            {
+              "chunk_id": "dacac9de-6076-49eb-bd27-2cdf7e34f983",
+              "score": 0.6989947378036236
+            },
+            {
+              "chunk_id": "bb6256c7-8856-4ec9-a832-98d656017269",
+              "score": 0.6956143379211476
+            },
+            {
+              "chunk_id": "33a0945f-c295-45bb-8982-ec4058d05767",
+              "score": 0.6901530438752809
+            }
+          ]
+        },
+        {
+          "id": "in-04",
+          "group": "in_corpus",
+          "question": "What does the quality control unit do under 21 CFR Part 211?",
+          "latency_ms": 23.44,
+          "hits": [
+            {
+              "chunk_id": "b87efb99-aea0-4fe9-8241-207d0e7865b3",
+              "score": 0.7718386786080318
+            },
+            {
+              "chunk_id": "4b06abcb-9a4c-42c6-9fbf-951a07179d80",
+              "score": 0.7647768083613871
+            },
+            {
+              "chunk_id": "b274ffa6-f74a-4dab-86b4-8e20852eb2e4",
+              "score": 0.7323167206674731
+            },
+            {
+              "chunk_id": "689b496a-92e3-4829-8ec0-0dfe7e9a33e8",
+              "score": 0.7281640658085241
+            },
+            {
+              "chunk_id": "d8d5cd5a-8590-45c6-b9bb-5a7009667202",
+              "score": 0.7198893761766751
+            },
+            {
+              "chunk_id": "1dd1b559-b3cd-4627-9604-6a712cc2ce82",
+              "score": 0.7143297535980092
+            },
+            {
+              "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+              "score": 0.7132733209999468
+            },
+            {
+              "chunk_id": "9f60529f-0aa3-4315-9191-a9e83a94b454",
+              "score": 0.6998262167184144
+            }
+          ]
+        },
+        {
+          "id": "in-05",
+          "group": "in_corpus",
+          "question": "What are the stages of process validation described in FDA guidance?",
+          "latency_ms": 21.65,
+          "hits": [
+            {
+              "chunk_id": "c28257ee-c645-4688-b22c-600e17e79f88",
+              "score": 0.8556302189826965
+            },
+            {
+              "chunk_id": "07cad0eb-fff8-46de-822e-936a7781f16f",
+              "score": 0.8491841644534982
+            },
+            {
+              "chunk_id": "eca502b2-81fe-4c9c-a6b0-74f8f9f1239f",
+              "score": 0.8478672595103244
+            },
+            {
+              "chunk_id": "48280397-f17e-4266-ba27-bae6e7a0fd5b",
+              "score": 0.8446562793646041
+            },
+            {
+              "chunk_id": "cdf8c4a0-c0c1-4d12-9138-654b7e15eed5",
+              "score": 0.8443560004234314
+            },
+            {
+              "chunk_id": "d9cc3988-7b2e-4fc0-be74-f73feb009f67",
+              "score": 0.8321565389633179
+            },
+            {
+              "chunk_id": "f7288669-8529-4c34-84bc-acaf01e7e346",
+              "score": 0.8308225769294859
+            },
+            {
+              "chunk_id": "0a7ac532-b4cc-456a-bf78-8d4e1bb9f5e3",
+              "score": 0.8092095851898193
+            }
+          ]
+        },
+        {
+          "id": "in-06",
+          "group": "in_corpus",
+          "question": "When must employers provide hazard communication information and training?",
+          "latency_ms": 21.47,
+          "hits": [
+            {
+              "chunk_id": "883de09d-c250-456e-b20b-ba2831ae2c3d",
+              "score": 0.8553468161407928
+            },
+            {
+              "chunk_id": "e8d6cb59-b1a1-4c9f-b9fc-4e9d777bf543",
+              "score": 0.811472415924078
+            },
+            {
+              "chunk_id": "83cf5bc0-c24f-4004-94b8-52f1220aa74c",
+              "score": 0.7966472870146133
+            },
+            {
+              "chunk_id": "27d814af-9480-43ce-bd70-bd5bd7e75dfe",
+              "score": 0.7691189921952495
+            },
+            {
+              "chunk_id": "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "score": 0.7656209012495948
+            },
+            {
+              "chunk_id": "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+              "score": 0.7474131885274424
+            },
+            {
+              "chunk_id": "22ca7086-f4fe-4e88-a8da-0a3119d6f9d3",
+              "score": 0.7448818835686528
+            },
+            {
+              "chunk_id": "1e8562ca-270c-4780-83c8-c9f2f690ef57",
+              "score": 0.7444353852012537
+            }
+          ]
+        },
+        {
+          "id": "in-07",
+          "group": "in_corpus",
+          "question": "What employee exposure monitoring is required by the OSHA laboratory standard?",
+          "latency_ms": 16.84,
+          "hits": [
+            {
+              "chunk_id": "1e8562ca-270c-4780-83c8-c9f2f690ef57",
+              "score": 0.7789669632911682
+            },
+            {
+              "chunk_id": "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "score": 0.7723444104194641
+            },
+            {
+              "chunk_id": "e163d246-a5cf-4913-8f14-93d5e415e966",
+              "score": 0.7626886367797852
+            },
+            {
+              "chunk_id": "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+              "score": 0.7591567779089954
+            },
+            {
+              "chunk_id": "955b6e8a-b598-47df-956a-87ad236b28e5",
+              "score": 0.7365819654811613
+            },
+            {
+              "chunk_id": "5a333189-06f0-457b-86a5-04f04677a831",
+              "score": 0.7354225516319275
+            },
+            {
+              "chunk_id": "883de09d-c250-456e-b20b-ba2831ae2c3d",
+              "score": 0.7285356683411809
+            },
+            {
+              "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+              "score": 0.7267335816184545
+            }
+          ]
+        },
+        {
+          "id": "in-08",
+          "group": "in_corpus",
+          "question": "What must a chemical hygiene plan include under 29 CFR 1910.1450?",
+          "latency_ms": 21.4,
+          "hits": [
+            {
+              "chunk_id": "42144d7e-452f-47d8-906f-9b6dd73a8e8f",
+              "score": 0.8566105451219964
+            },
+            {
+              "chunk_id": "5a333189-06f0-457b-86a5-04f04677a831",
+              "score": 0.7923039917764683
+            },
+            {
+              "chunk_id": "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+              "score": 0.7914632807417773
+            },
+            {
+              "chunk_id": "ef4e07b0-a9f6-4611-b4ed-df4867164bd3",
+              "score": 0.7640451929542321
+            },
+            {
+              "chunk_id": "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "score": 0.7557129409484316
+            },
+            {
+              "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+              "score": 0.7556010179995277
+            },
+            {
+              "chunk_id": "e163d246-a5cf-4913-8f14-93d5e415e966",
+              "score": 0.7547753003373576
+            },
+            {
+              "chunk_id": "cfbba309-083e-476d-84d9-23bc3b1b6370",
+              "score": 0.7513399868404886
+            }
+          ]
+        },
+        {
+          "id": "in-09",
+          "group": "in_corpus",
+          "question": "What are the requirements for electronic signatures under 21 CFR Part 11?",
+          "latency_ms": 43.92,
+          "hits": [
+            {
+              "chunk_id": "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d",
+              "score": 0.8089996690154287
+            },
+            {
+              "chunk_id": "c0589c2b-10a7-4771-9d50-a41f45b5d506",
+              "score": 0.8011058807702629
+            },
+            {
+              "chunk_id": "13cf0e05-c56d-494b-b365-e7ba19142d2e",
+              "score": 0.7842803258561756
+            },
+            {
+              "chunk_id": "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "score": 0.7817988059760619
+            },
+            {
+              "chunk_id": "1b434880-2351-4731-8d6e-05560ad42d8a",
+              "score": 0.769547714617986
+            },
+            {
+              "chunk_id": "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "score": 0.7604144215583801
+            },
+            {
+              "chunk_id": "46c7bc44-3338-4b1d-83ed-da57b6602c05",
+              "score": 0.7536510825157166
+            },
+            {
+              "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+              "score": 0.7505303621292114
+            }
+          ]
+        },
+        {
+          "id": "in-10",
+          "group": "in_corpus",
+          "question": "What must batch production and control records contain under 21 CFR Part 211?",
+          "latency_ms": 34.59,
+          "hits": [
+            {
+              "chunk_id": "a1310ab0-dd27-4fc9-adf1-528869ca7061",
+              "score": 0.8138012400984039
+            },
+            {
+              "chunk_id": "689b496a-92e3-4829-8ec0-0dfe7e9a33e8",
+              "score": 0.7932617314741932
+            },
+            {
+              "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+              "score": 0.7730296389442911
+            },
+            {
+              "chunk_id": "feb977c4-1ec3-4f18-8869-c3c244eee3b0",
+              "score": 0.7635512633858605
+            },
+            {
+              "chunk_id": "fe6716dc-d152-4d5e-84b8-ffdf0d9d9e23",
+              "score": 0.7588897778588944
+            },
+            {
+              "chunk_id": "9f60529f-0aa3-4315-9191-a9e83a94b454",
+              "score": 0.7545524981884673
+            },
+            {
+              "chunk_id": "488263f7-4a6e-4cbc-bfdc-afe9ca00d897",
+              "score": 0.7500625401698042
+            },
+            {
+              "chunk_id": "4b06abcb-9a4c-42c6-9fbf-951a07179d80",
+              "score": 0.7490922511706053
+            }
+          ]
+        },
+        {
+          "id": "out-01",
+          "group": "out_of_corpus",
+          "question": "What are the HIPAA requirements for a covered entity's notice of privacy practices?",
+          "latency_ms": 24.11,
+          "hits": [
+            {
+              "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+              "score": 0.6942846568142008
+            },
+            {
+              "chunk_id": "955b6e8a-b598-47df-956a-87ad236b28e5",
+              "score": 0.6916065238362427
+            },
+            {
+              "chunk_id": "d7b78090-28f4-4306-b8f5-b468e609a005",
+              "score": 0.6848955358533724
+            },
+            {
+              "chunk_id": "880a2bc6-4338-4581-8e4b-d90c2413c3d4",
+              "score": 0.6785020626037725
+            },
+            {
+              "chunk_id": "1e8562ca-270c-4780-83c8-c9f2f690ef57",
+              "score": 0.6762470208480069
+            },
+            {
+              "chunk_id": "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "score": 0.6735010140984419
+            },
+            {
+              "chunk_id": "13cf0e05-c56d-494b-b365-e7ba19142d2e",
+              "score": 0.6671170591905436
+            },
+            {
+              "chunk_id": "4b282341-9262-4d02-98ee-198c4078c40a",
+              "score": 0.6639459927065969
+            }
+          ]
+        },
+        {
+          "id": "out-02",
+          "group": "out_of_corpus",
+          "question": "How should a public company prepare for a Sarbanes-Oxley Section 404 audit?",
+          "latency_ms": 22.35,
+          "hits": [
+            {
+              "chunk_id": "dd847184-a3e7-42ea-b3a7-48a89c9c92d7",
+              "score": 0.6528350917795257
+            },
+            {
+              "chunk_id": "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "score": 0.6448489043206641
+            },
+            {
+              "chunk_id": "9b68c1b3-b33f-480e-b922-3a4f86f68e4d",
+              "score": 0.643237492845209
+            },
+            {
+              "chunk_id": "13784d81-c92c-4e94-9c33-59720422d530",
+              "score": 0.6408679913439761
+            },
+            {
+              "chunk_id": "490f59e1-ee50-442e-8452-6278a7fa4f9f",
+              "score": 0.6399983596803713
+            },
+            {
+              "chunk_id": "c91d5da8-ccbc-434b-bbd1-1d8e0cf7cbc5",
+              "score": 0.6374347426036165
+            },
+            {
+              "chunk_id": "b783be0a-e468-41c4-81bd-56219425403f",
+              "score": 0.6369507745563061
+            },
+            {
+              "chunk_id": "f7288669-8529-4c34-84bc-acaf01e7e346",
+              "score": 0.6364130973815963
+            }
+          ]
+        },
+        {
+          "id": "out-03",
+          "group": "out_of_corpus",
+          "question": "When is a data protection impact assessment required under the EU GDPR?",
+          "latency_ms": 22.98,
+          "hits": [
+            {
+              "chunk_id": "9b68c1b3-b33f-480e-b922-3a4f86f68e4d",
+              "score": 0.6965310573577881
+            },
+            {
+              "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+              "score": 0.676101803779602
+            },
+            {
+              "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+              "score": 0.6738925174538792
+            },
+            {
+              "chunk_id": "b783be0a-e468-41c4-81bd-56219425403f",
+              "score": 0.6720518665282817
+            },
+            {
+              "chunk_id": "c4671ddd-d71c-477c-ad3c-aca771da7636",
+              "score": 0.6630440555188635
+            },
+            {
+              "chunk_id": "f7288669-8529-4c34-84bc-acaf01e7e346",
+              "score": 0.6507385760985968
+            },
+            {
+              "chunk_id": "c0589c2b-10a7-4771-9d50-a41f45b5d506",
+              "score": 0.6506353214572469
+            },
+            {
+              "chunk_id": "4b282341-9262-4d02-98ee-198c4078c40a",
+              "score": 0.6452221870422363
+            }
+          ]
+        },
+        {
+          "id": "out-04",
+          "group": "out_of_corpus",
+          "question": "What design controls does ISO 13485 require for medical devices?",
+          "latency_ms": 20.68,
+          "hits": [
+            {
+              "chunk_id": "4b06abcb-9a4c-42c6-9fbf-951a07179d80",
+              "score": 0.7016342878341725
+            },
+            {
+              "chunk_id": "d806540b-9f99-4b55-af92-13974d2c8526",
+              "score": 0.6948571023259832
+            },
+            {
+              "chunk_id": "b87efb99-aea0-4fe9-8241-207d0e7865b3",
+              "score": 0.6836624960497018
+            },
+            {
+              "chunk_id": "468a35ae-6351-4fd9-8bd7-7bd23a796c65",
+              "score": 0.6786101864940052
+            },
+            {
+              "chunk_id": "b274ffa6-f74a-4dab-86b4-8e20852eb2e4",
+              "score": 0.6740273833274889
+            },
+            {
+              "chunk_id": "00efdf79-53ea-4c0e-ba91-3f2e2a696d22",
+              "score": 0.6710955304560393
+            },
+            {
+              "chunk_id": "7b46097f-d8e6-4482-ba82-7621009f4f88",
+              "score": 0.6668153405322442
+            },
+            {
+              "chunk_id": "2cf92232-7806-4c7a-90e7-7c2c1cb0c013",
+              "score": 0.666034400463109
+            }
+          ]
+        },
+        {
+          "id": "out-05",
+          "group": "out_of_corpus",
+          "question": "How should a food manufacturer conduct a HACCP hazard analysis?",
+          "latency_ms": 21.15,
+          "hits": [
+            {
+              "chunk_id": "52d56f87-bd08-4aa2-9a25-c24eeaa6488b",
+              "score": 0.6906480008749974
+            },
+            {
+              "chunk_id": "f7288669-8529-4c34-84bc-acaf01e7e346",
+              "score": 0.6902268940345594
+            },
+            {
+              "chunk_id": "30311245-7c05-4ba6-a495-f50fd8f7b11e",
+              "score": 0.6898573246555726
+            },
+            {
+              "chunk_id": "856a477e-1526-4d58-81f4-66827b24e982",
+              "score": 0.6850094795227051
+            },
+            {
+              "chunk_id": "5d558425-e24e-4da0-b446-602fedb49452",
+              "score": 0.6812955520992862
+            },
+            {
+              "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+              "score": 0.6787005258381066
+            },
+            {
+              "chunk_id": "424bb888-8d96-42d8-a440-77d5ed95803e",
+              "score": 0.6785330367962709
+            },
+            {
+              "chunk_id": "6f322f96-f245-4da8-8281-8831e8b3980a",
+              "score": 0.6755288243293762
+            }
+          ]
+        },
+        {
+          "id": "out-06",
+          "group": "out_of_corpus",
+          "question": "What are the FDA requirements for biosimilar interchangeability?",
+          "latency_ms": 22.43,
+          "hits": [
+            {
+              "chunk_id": "f8ca8166-bf91-4c1b-b146-7f0313a02ce2",
+              "score": 0.7194879055023244
+            },
+            {
+              "chunk_id": "689b496a-92e3-4829-8ec0-0dfe7e9a33e8",
+              "score": 0.7190533280372671
+            },
+            {
+              "chunk_id": "b12813b3-134a-46c7-b35f-78b5c963a2ec",
+              "score": 0.7169539501098539
+            },
+            {
+              "chunk_id": "f665ab5e-ebe9-4e7b-8639-25a86f04674c",
+              "score": 0.7166791558265737
+            },
+            {
+              "chunk_id": "3fe90e55-551c-4bf1-83c0-05c4b99bcd8d",
+              "score": 0.7142354079625266
+            },
+            {
+              "chunk_id": "99e019bd-f355-4ccb-8e46-e8f7b54b405c",
+              "score": 0.7116311788559011
+            },
+            {
+              "chunk_id": "a18efa89-2b96-40a2-9fe2-8bc496a1905b",
+              "score": 0.7099440520968481
+            },
+            {
+              "chunk_id": "7b46097f-d8e6-4482-ba82-7621009f4f88",
+              "score": 0.7086965479281442
+            }
+          ]
+        },
+        {
+          "id": "out-07",
+          "group": "out_of_corpus",
+          "question": "How should informed consent be documented for clinical trials under ICH E6?",
+          "latency_ms": 21.8,
+          "hits": [
+            {
+              "chunk_id": "60ac0217-efbd-492d-b22c-fc234128fa71",
+              "score": 0.7198953962450747
+            },
+            {
+              "chunk_id": "33a0945f-c295-45bb-8982-ec4058d05767",
+              "score": 0.7162271311147743
+            },
+            {
+              "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+              "score": 0.7081811775945214
+            },
+            {
+              "chunk_id": "bb6256c7-8856-4ec9-a832-98d656017269",
+              "score": 0.7019508240281553
+            },
+            {
+              "chunk_id": "955b6e8a-b598-47df-956a-87ad236b28e5",
+              "score": 0.701258122920995
+            },
+            {
+              "chunk_id": "d8c2a5c9-da51-4840-ab06-aa7f08a077b6",
+              "score": 0.6861203499960703
+            },
+            {
+              "chunk_id": "2f7c9518-b49f-42c6-9752-ca7ea68273b0",
+              "score": 0.6751089289719516
+            },
+            {
+              "chunk_id": "8f230445-0db9-4330-869a-26e4145eb849",
+              "score": 0.6734222964392735
+            }
+          ]
+        },
+        {
+          "id": "out-08",
+          "group": "out_of_corpus",
+          "question": "What are the OSHA confined space entry requirements for construction work?",
+          "latency_ms": 21.45,
+          "hits": [
+            {
+              "chunk_id": "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+              "score": 0.6775154663613173
+            },
+            {
+              "chunk_id": "2bb0bdd8-63ca-4c79-9d80-8e1b25e6da72",
+              "score": 0.676651616296077
+            },
+            {
+              "chunk_id": "7b46097f-d8e6-4482-ba82-7621009f4f88",
+              "score": 0.6572284894355684
+            },
+            {
+              "chunk_id": "e163d246-a5cf-4913-8f14-93d5e415e966",
+              "score": 0.6517671346664429
+            },
+            {
+              "chunk_id": "ce9ab637-cac9-4792-b161-766e7a726266",
+              "score": 0.6472378355775354
+            },
+            {
+              "chunk_id": "fe05b6df-f462-4444-9676-df1e3501bd7f",
+              "score": 0.6462541818618774
+            },
+            {
+              "chunk_id": "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "score": 0.6452045440673828
+            },
+            {
+              "chunk_id": "df484b30-1f5b-4998-8969-dba495609840",
+              "score": 0.6383766531944275
+            }
+          ]
+        },
+        {
+          "id": "out-09",
+          "group": "out_of_corpus",
+          "question": "What climate-related disclosures does the SEC require from public companies?",
+          "latency_ms": 20.44,
+          "hits": [
+            {
+              "chunk_id": "880a2bc6-4338-4581-8e4b-d90c2413c3d4",
+              "score": 0.6630197569108299
+            },
+            {
+              "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+              "score": 0.6619373962953811
+            },
+            {
+              "chunk_id": "b2e0b6ae-1c43-46e1-8db2-88be79b7943d",
+              "score": 0.659859141119771
+            },
+            {
+              "chunk_id": "4b282341-9262-4d02-98ee-198c4078c40a",
+              "score": 0.6554480400414454
+            },
+            {
+              "chunk_id": "d7b78090-28f4-4306-b8f5-b468e609a005",
+              "score": 0.6444608185016633
+            },
+            {
+              "chunk_id": "e8d6cb59-b1a1-4c9f-b9fc-4e9d777bf543",
+              "score": 0.6352412700653122
+            },
+            {
+              "chunk_id": "b783be0a-e468-41c4-81bd-56219425403f",
+              "score": 0.6335933645256323
+            },
+            {
+              "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+              "score": 0.6331804613363479
+            }
+          ]
+        },
+        {
+          "id": "out-10",
+          "group": "out_of_corpus",
+          "question": "How should a bank perform anti-money laundering customer due diligence?",
+          "latency_ms": 21.16,
+          "hits": [
+            {
+              "chunk_id": "6a48e46e-806b-4f4c-ad43-f4004ee83c86",
+              "score": 0.6234604716300964
+            },
+            {
+              "chunk_id": "b783be0a-e468-41c4-81bd-56219425403f",
+              "score": 0.6094875568456924
+            },
+            {
+              "chunk_id": "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "score": 0.6089906096458435
+            },
+            {
+              "chunk_id": "13784d81-c92c-4e94-9c33-59720422d530",
+              "score": 0.6082328195433139
+            },
+            {
+              "chunk_id": "dd847184-a3e7-42ea-b3a7-48a89c9c92d7",
+              "score": 0.6065535545349121
+            },
+            {
+              "chunk_id": "6c21e396-8995-4812-ae3f-149b22352f8e",
+              "score": 0.6009718775749207
+            },
+            {
+              "chunk_id": "490f59e1-ee50-442e-8452-6278a7fa4f9f",
+              "score": 0.5968013646124991
+            },
+            {
+              "chunk_id": "7c30a1f6-0fb1-4613-92c4-c6920ff018cc",
+              "score": 0.5929577946662903
+            }
+          ]
+        }
+      ]
+    },
+    "qdrant": {
+      "n": 20,
+      "top_k": 8,
+      "p50_retrieve_ms": 23.130000000000003,
+      "p95_retrieve_ms": 26.506500000000003,
+      "in_corpus_accepted": 10,
+      "out_of_corpus_abstained": 10,
+      "rows": [
+        {
+          "id": "in-01",
+          "group": "in_corpus",
+          "question": "What controls are required for closed electronic record systems under 21 CFR Part 11?",
+          "latency_ms": 22.12,
+          "hits": [
+            {
+              "chunk_id": "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "score": 0.8048085
+            },
+            {
+              "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+              "score": 0.7915598
+            },
+            {
+              "chunk_id": "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d",
+              "score": 0.7811184
+            },
+            {
+              "chunk_id": "29894d80-8813-4500-83f0-0ad2b56816ab",
+              "score": 0.7788851
+            },
+            {
+              "chunk_id": "1b434880-2351-4731-8d6e-05560ad42d8a",
+              "score": 0.75954056
+            },
+            {
+              "chunk_id": "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "score": 0.7587969
+            },
+            {
+              "chunk_id": "da8e8aaa-39eb-47fd-9503-2212198136ab",
+              "score": 0.7381695
+            },
+            {
+              "chunk_id": "13cf0e05-c56d-494b-b365-e7ba19142d2e",
+              "score": 0.73708385
+            }
+          ]
+        },
+        {
+          "id": "in-02",
+          "group": "in_corpus",
+          "question": "How should audit trails be reviewed under FDA data integrity guidance?",
+          "latency_ms": 22.11,
+          "hits": [
+            {
+              "chunk_id": "c3488baf-f796-4cca-8541-7effa2ea98e5",
+              "score": 0.8221651
+            },
+            {
+              "chunk_id": "9b68c1b3-b33f-480e-b922-3a4f86f68e4d",
+              "score": 0.80499846
+            },
+            {
+              "chunk_id": "b783be0a-e468-41c4-81bd-56219425403f",
+              "score": 0.8049128
+            },
+            {
+              "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+              "score": 0.7840867
+            },
+            {
+              "chunk_id": "b28f17ba-ca4d-4e93-b069-06e55737f2ae",
+              "score": 0.78280836
+            },
+            {
+              "chunk_id": "dd8656ae-16a5-4ca2-871d-72bdda88b1d3",
+              "score": 0.7813088
+            },
+            {
+              "chunk_id": "b7895278-5297-4435-9dee-745dbbded186",
+              "score": 0.76807606
+            },
+            {
+              "chunk_id": "7ac0c2c1-5bd1-4edf-a97f-c311ed5366c7",
+              "score": 0.7658567
+            }
+          ]
+        },
+        {
+          "id": "in-03",
+          "group": "in_corpus",
+          "question": "What are the responsibilities of a study director in a nonclinical laboratory study?",
+          "latency_ms": 21.07,
+          "hits": [
+            {
+              "chunk_id": "18cbb223-dffe-410a-a9bf-345fed59c341",
+              "score": 0.8130821
+            },
+            {
+              "chunk_id": "8f230445-0db9-4330-869a-26e4145eb849",
+              "score": 0.7330045
+            },
+            {
+              "chunk_id": "33d0d181-61d9-4214-ba6d-a54f899573cf",
+              "score": 0.71966004
+            },
+            {
+              "chunk_id": "1ead910a-9a01-403e-acb3-792668cf8fa8",
+              "score": 0.7155396
+            },
+            {
+              "chunk_id": "4be5b2d9-2cd1-4433-87ee-588ee607d1f9",
+              "score": 0.70124406
+            },
+            {
+              "chunk_id": "dacac9de-6076-49eb-bd27-2cdf7e34f983",
+              "score": 0.6989947
+            },
+            {
+              "chunk_id": "bb6256c7-8856-4ec9-a832-98d656017269",
+              "score": 0.69561434
+            },
+            {
+              "chunk_id": "33a0945f-c295-45bb-8982-ec4058d05767",
+              "score": 0.690153
+            }
+          ]
+        },
+        {
+          "id": "in-04",
+          "group": "in_corpus",
+          "question": "What does the quality control unit do under 21 CFR Part 211?",
+          "latency_ms": 19.21,
+          "hits": [
+            {
+              "chunk_id": "b87efb99-aea0-4fe9-8241-207d0e7865b3",
+              "score": 0.7718388
+            },
+            {
+              "chunk_id": "4b06abcb-9a4c-42c6-9fbf-951a07179d80",
+              "score": 0.7647769
+            },
+            {
+              "chunk_id": "b274ffa6-f74a-4dab-86b4-8e20852eb2e4",
+              "score": 0.73231685
+            },
+            {
+              "chunk_id": "689b496a-92e3-4829-8ec0-0dfe7e9a33e8",
+              "score": 0.72816414
+            },
+            {
+              "chunk_id": "d8d5cd5a-8590-45c6-b9bb-5a7009667202",
+              "score": 0.7198894
+            },
+            {
+              "chunk_id": "1dd1b559-b3cd-4627-9604-6a712cc2ce82",
+              "score": 0.7143297
+            },
+            {
+              "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+              "score": 0.7132734
+            },
+            {
+              "chunk_id": "9f60529f-0aa3-4315-9191-a9e83a94b454",
+              "score": 0.69982636
+            }
+          ]
+        },
+        {
+          "id": "in-05",
+          "group": "in_corpus",
+          "question": "What are the stages of process validation described in FDA guidance?",
+          "latency_ms": 26.48,
+          "hits": [
+            {
+              "chunk_id": "c28257ee-c645-4688-b22c-600e17e79f88",
+              "score": 0.8556303
+            },
+            {
+              "chunk_id": "07cad0eb-fff8-46de-822e-936a7781f16f",
+              "score": 0.8491842
+            },
+            {
+              "chunk_id": "eca502b2-81fe-4c9c-a6b0-74f8f9f1239f",
+              "score": 0.84786725
+            },
+            {
+              "chunk_id": "48280397-f17e-4266-ba27-bae6e7a0fd5b",
+              "score": 0.8446562
+            },
+            {
+              "chunk_id": "cdf8c4a0-c0c1-4d12-9138-654b7e15eed5",
+              "score": 0.84435606
+            },
+            {
+              "chunk_id": "d9cc3988-7b2e-4fc0-be74-f73feb009f67",
+              "score": 0.83215654
+            },
+            {
+              "chunk_id": "f7288669-8529-4c34-84bc-acaf01e7e346",
+              "score": 0.8308226
+            },
+            {
+              "chunk_id": "0a7ac532-b4cc-456a-bf78-8d4e1bb9f5e3",
+              "score": 0.80920964
+            }
+          ]
+        },
+        {
+          "id": "in-06",
+          "group": "in_corpus",
+          "question": "When must employers provide hazard communication information and training?",
+          "latency_ms": 23.45,
+          "hits": [
+            {
+              "chunk_id": "883de09d-c250-456e-b20b-ba2831ae2c3d",
+              "score": 0.855347
+            },
+            {
+              "chunk_id": "e8d6cb59-b1a1-4c9f-b9fc-4e9d777bf543",
+              "score": 0.8114724
+            },
+            {
+              "chunk_id": "83cf5bc0-c24f-4004-94b8-52f1220aa74c",
+              "score": 0.7966474
+            },
+            {
+              "chunk_id": "27d814af-9480-43ce-bd70-bd5bd7e75dfe",
+              "score": 0.7691191
+            },
+            {
+              "chunk_id": "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "score": 0.765621
+            },
+            {
+              "chunk_id": "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+              "score": 0.74741334
+            },
+            {
+              "chunk_id": "22ca7086-f4fe-4e88-a8da-0a3119d6f9d3",
+              "score": 0.74488187
+            },
+            {
+              "chunk_id": "1e8562ca-270c-4780-83c8-c9f2f690ef57",
+              "score": 0.7444354
+            }
+          ]
+        },
+        {
+          "id": "in-07",
+          "group": "in_corpus",
+          "question": "What employee exposure monitoring is required by the OSHA laboratory standard?",
+          "latency_ms": 17.76,
+          "hits": [
+            {
+              "chunk_id": "1e8562ca-270c-4780-83c8-c9f2f690ef57",
+              "score": 0.77896696
+            },
+            {
+              "chunk_id": "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "score": 0.7723444
+            },
+            {
+              "chunk_id": "e163d246-a5cf-4913-8f14-93d5e415e966",
+              "score": 0.76268864
+            },
+            {
+              "chunk_id": "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+              "score": 0.7591569
+            },
+            {
+              "chunk_id": "955b6e8a-b598-47df-956a-87ad236b28e5",
+              "score": 0.7365819
+            },
+            {
+              "chunk_id": "5a333189-06f0-457b-86a5-04f04677a831",
+              "score": 0.7354226
+            },
+            {
+              "chunk_id": "883de09d-c250-456e-b20b-ba2831ae2c3d",
+              "score": 0.7285357
+            },
+            {
+              "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+              "score": 0.72673357
+            }
+          ]
+        },
+        {
+          "id": "in-08",
+          "group": "in_corpus",
+          "question": "What must a chemical hygiene plan include under 29 CFR 1910.1450?",
+          "latency_ms": 23.03,
+          "hits": [
+            {
+              "chunk_id": "42144d7e-452f-47d8-906f-9b6dd73a8e8f",
+              "score": 0.8566106
+            },
+            {
+              "chunk_id": "5a333189-06f0-457b-86a5-04f04677a831",
+              "score": 0.79230404
+            },
+            {
+              "chunk_id": "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+              "score": 0.79146326
+            },
+            {
+              "chunk_id": "ef4e07b0-a9f6-4611-b4ed-df4867164bd3",
+              "score": 0.76404524
+            },
+            {
+              "chunk_id": "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "score": 0.755713
+            },
+            {
+              "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+              "score": 0.7556011
+            },
+            {
+              "chunk_id": "e163d246-a5cf-4913-8f14-93d5e415e966",
+              "score": 0.7547752
+            },
+            {
+              "chunk_id": "cfbba309-083e-476d-84d9-23bc3b1b6370",
+              "score": 0.75134003
+            }
+          ]
+        },
+        {
+          "id": "in-09",
+          "group": "in_corpus",
+          "question": "What are the requirements for electronic signatures under 21 CFR Part 11?",
+          "latency_ms": 23.41,
+          "hits": [
+            {
+              "chunk_id": "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d",
+              "score": 0.8089997
+            },
+            {
+              "chunk_id": "c0589c2b-10a7-4771-9d50-a41f45b5d506",
+              "score": 0.8011058
+            },
+            {
+              "chunk_id": "13cf0e05-c56d-494b-b365-e7ba19142d2e",
+              "score": 0.78428054
+            },
+            {
+              "chunk_id": "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "score": 0.78179884
+            },
+            {
+              "chunk_id": "1b434880-2351-4731-8d6e-05560ad42d8a",
+              "score": 0.76954776
+            },
+            {
+              "chunk_id": "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "score": 0.7604145
+            },
+            {
+              "chunk_id": "46c7bc44-3338-4b1d-83ed-da57b6602c05",
+              "score": 0.75365114
+            },
+            {
+              "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+              "score": 0.75053036
+            }
+          ]
+        },
+        {
+          "id": "in-10",
+          "group": "in_corpus",
+          "question": "What must batch production and control records contain under 21 CFR Part 211?",
+          "latency_ms": 22.31,
+          "hits": [
+            {
+              "chunk_id": "a1310ab0-dd27-4fc9-adf1-528869ca7061",
+              "score": 0.8138013
+            },
+            {
+              "chunk_id": "689b496a-92e3-4829-8ec0-0dfe7e9a33e8",
+              "score": 0.7932619
+            },
+            {
+              "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+              "score": 0.7730297
+            },
+            {
+              "chunk_id": "feb977c4-1ec3-4f18-8869-c3c244eee3b0",
+              "score": 0.7635514
+            },
+            {
+              "chunk_id": "fe6716dc-d152-4d5e-84b8-ffdf0d9d9e23",
+              "score": 0.7588899
+            },
+            {
+              "chunk_id": "9f60529f-0aa3-4315-9191-a9e83a94b454",
+              "score": 0.75455254
+            },
+            {
+              "chunk_id": "488263f7-4a6e-4cbc-bfdc-afe9ca00d897",
+              "score": 0.7500626
+            },
+            {
+              "chunk_id": "4b06abcb-9a4c-42c6-9fbf-951a07179d80",
+              "score": 0.7490922
+            }
+          ]
+        },
+        {
+          "id": "out-01",
+          "group": "out_of_corpus",
+          "question": "What are the HIPAA requirements for a covered entity's notice of privacy practices?",
+          "latency_ms": 23.07,
+          "hits": [
+            {
+              "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+              "score": 0.6942847
+            },
+            {
+              "chunk_id": "955b6e8a-b598-47df-956a-87ad236b28e5",
+              "score": 0.69160646
+            },
+            {
+              "chunk_id": "d7b78090-28f4-4306-b8f5-b468e609a005",
+              "score": 0.6848955
+            },
+            {
+              "chunk_id": "880a2bc6-4338-4581-8e4b-d90c2413c3d4",
+              "score": 0.67850214
+            },
+            {
+              "chunk_id": "1e8562ca-270c-4780-83c8-c9f2f690ef57",
+              "score": 0.67624706
+            },
+            {
+              "chunk_id": "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "score": 0.6735011
+            },
+            {
+              "chunk_id": "13cf0e05-c56d-494b-b365-e7ba19142d2e",
+              "score": 0.6671171
+            },
+            {
+              "chunk_id": "4b282341-9262-4d02-98ee-198c4078c40a",
+              "score": 0.663946
+            }
+          ]
+        },
+        {
+          "id": "out-02",
+          "group": "out_of_corpus",
+          "question": "How should a public company prepare for a Sarbanes-Oxley Section 404 audit?",
+          "latency_ms": 27.01,
+          "hits": [
+            {
+              "chunk_id": "dd847184-a3e7-42ea-b3a7-48a89c9c92d7",
+              "score": 0.6528352
+            },
+            {
+              "chunk_id": "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "score": 0.6448489
+            },
+            {
+              "chunk_id": "9b68c1b3-b33f-480e-b922-3a4f86f68e4d",
+              "score": 0.64323753
+            },
+            {
+              "chunk_id": "13784d81-c92c-4e94-9c33-59720422d530",
+              "score": 0.64086807
+            },
+            {
+              "chunk_id": "490f59e1-ee50-442e-8452-6278a7fa4f9f",
+              "score": 0.63999856
+            },
+            {
+              "chunk_id": "c91d5da8-ccbc-434b-bbd1-1d8e0cf7cbc5",
+              "score": 0.6374348
+            },
+            {
+              "chunk_id": "b783be0a-e468-41c4-81bd-56219425403f",
+              "score": 0.63695085
+            },
+            {
+              "chunk_id": "f7288669-8529-4c34-84bc-acaf01e7e346",
+              "score": 0.6364131
+            }
+          ]
+        },
+        {
+          "id": "out-03",
+          "group": "out_of_corpus",
+          "question": "When is a data protection impact assessment required under the EU GDPR?",
+          "latency_ms": 23.45,
+          "hits": [
+            {
+              "chunk_id": "9b68c1b3-b33f-480e-b922-3a4f86f68e4d",
+              "score": 0.69653106
+            },
+            {
+              "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+              "score": 0.6761018
+            },
+            {
+              "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+              "score": 0.6738926
+            },
+            {
+              "chunk_id": "b783be0a-e468-41c4-81bd-56219425403f",
+              "score": 0.6720519
+            },
+            {
+              "chunk_id": "c4671ddd-d71c-477c-ad3c-aca771da7636",
+              "score": 0.6630441
+            },
+            {
+              "chunk_id": "f7288669-8529-4c34-84bc-acaf01e7e346",
+              "score": 0.65073854
+            },
+            {
+              "chunk_id": "c0589c2b-10a7-4771-9d50-a41f45b5d506",
+              "score": 0.6506354
+            },
+            {
+              "chunk_id": "4b282341-9262-4d02-98ee-198c4078c40a",
+              "score": 0.6452222
+            }
+          ]
+        },
+        {
+          "id": "out-04",
+          "group": "out_of_corpus",
+          "question": "What design controls does ISO 13485 require for medical devices?",
+          "latency_ms": 23.68,
+          "hits": [
+            {
+              "chunk_id": "4b06abcb-9a4c-42c6-9fbf-951a07179d80",
+              "score": 0.7016343
+            },
+            {
+              "chunk_id": "d806540b-9f99-4b55-af92-13974d2c8526",
+              "score": 0.69485706
+            },
+            {
+              "chunk_id": "b87efb99-aea0-4fe9-8241-207d0e7865b3",
+              "score": 0.68366235
+            },
+            {
+              "chunk_id": "468a35ae-6351-4fd9-8bd7-7bd23a796c65",
+              "score": 0.67861015
+            },
+            {
+              "chunk_id": "b274ffa6-f74a-4dab-86b4-8e20852eb2e4",
+              "score": 0.67402744
+            },
+            {
+              "chunk_id": "00efdf79-53ea-4c0e-ba91-3f2e2a696d22",
+              "score": 0.6710955
+            },
+            {
+              "chunk_id": "7b46097f-d8e6-4482-ba82-7621009f4f88",
+              "score": 0.6668153
+            },
+            {
+              "chunk_id": "2cf92232-7806-4c7a-90e7-7c2c1cb0c013",
+              "score": 0.66603446
+            }
+          ]
+        },
+        {
+          "id": "out-05",
+          "group": "out_of_corpus",
+          "question": "How should a food manufacturer conduct a HACCP hazard analysis?",
+          "latency_ms": 22.89,
+          "hits": [
+            {
+              "chunk_id": "52d56f87-bd08-4aa2-9a25-c24eeaa6488b",
+              "score": 0.690648
+            },
+            {
+              "chunk_id": "f7288669-8529-4c34-84bc-acaf01e7e346",
+              "score": 0.6902268
+            },
+            {
+              "chunk_id": "30311245-7c05-4ba6-a495-f50fd8f7b11e",
+              "score": 0.68985724
+            },
+            {
+              "chunk_id": "856a477e-1526-4d58-81f4-66827b24e982",
+              "score": 0.6850094
+            },
+            {
+              "chunk_id": "5d558425-e24e-4da0-b446-602fedb49452",
+              "score": 0.68129563
+            },
+            {
+              "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+              "score": 0.6787006
+            },
+            {
+              "chunk_id": "424bb888-8d96-42d8-a440-77d5ed95803e",
+              "score": 0.67853314
+            },
+            {
+              "chunk_id": "6f322f96-f245-4da8-8281-8831e8b3980a",
+              "score": 0.6755289
+            }
+          ]
+        },
+        {
+          "id": "out-06",
+          "group": "out_of_corpus",
+          "question": "What are the FDA requirements for biosimilar interchangeability?",
+          "latency_ms": 23.19,
+          "hits": [
+            {
+              "chunk_id": "f8ca8166-bf91-4c1b-b146-7f0313a02ce2",
+              "score": 0.71948797
+            },
+            {
+              "chunk_id": "689b496a-92e3-4829-8ec0-0dfe7e9a33e8",
+              "score": 0.7190533
+            },
+            {
+              "chunk_id": "b12813b3-134a-46c7-b35f-78b5c963a2ec",
+              "score": 0.7169539
+            },
+            {
+              "chunk_id": "f665ab5e-ebe9-4e7b-8639-25a86f04674c",
+              "score": 0.71667916
+            },
+            {
+              "chunk_id": "3fe90e55-551c-4bf1-83c0-05c4b99bcd8d",
+              "score": 0.7142353
+            },
+            {
+              "chunk_id": "99e019bd-f355-4ccb-8e46-e8f7b54b405c",
+              "score": 0.7116311
+            },
+            {
+              "chunk_id": "a18efa89-2b96-40a2-9fe2-8bc496a1905b",
+              "score": 0.709944
+            },
+            {
+              "chunk_id": "7b46097f-d8e6-4482-ba82-7621009f4f88",
+              "score": 0.70869637
+            }
+          ]
+        },
+        {
+          "id": "out-07",
+          "group": "out_of_corpus",
+          "question": "How should informed consent be documented for clinical trials under ICH E6?",
+          "latency_ms": 25.74,
+          "hits": [
+            {
+              "chunk_id": "60ac0217-efbd-492d-b22c-fc234128fa71",
+              "score": 0.7198954
+            },
+            {
+              "chunk_id": "33a0945f-c295-45bb-8982-ec4058d05767",
+              "score": 0.7162272
+            },
+            {
+              "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+              "score": 0.7081812
+            },
+            {
+              "chunk_id": "bb6256c7-8856-4ec9-a832-98d656017269",
+              "score": 0.7019509
+            },
+            {
+              "chunk_id": "955b6e8a-b598-47df-956a-87ad236b28e5",
+              "score": 0.70125824
+            },
+            {
+              "chunk_id": "d8c2a5c9-da51-4840-ab06-aa7f08a077b6",
+              "score": 0.6861204
+            },
+            {
+              "chunk_id": "2f7c9518-b49f-42c6-9752-ca7ea68273b0",
+              "score": 0.67510897
+            },
+            {
+              "chunk_id": "8f230445-0db9-4330-869a-26e4145eb849",
+              "score": 0.6734222
+            }
+          ]
+        },
+        {
+          "id": "out-08",
+          "group": "out_of_corpus",
+          "question": "What are the OSHA confined space entry requirements for construction work?",
+          "latency_ms": 24.97,
+          "hits": [
+            {
+              "chunk_id": "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+              "score": 0.67751557
+            },
+            {
+              "chunk_id": "2bb0bdd8-63ca-4c79-9d80-8e1b25e6da72",
+              "score": 0.6766517
+            },
+            {
+              "chunk_id": "7b46097f-d8e6-4482-ba82-7621009f4f88",
+              "score": 0.6572284
+            },
+            {
+              "chunk_id": "e163d246-a5cf-4913-8f14-93d5e415e966",
+              "score": 0.65176713
+            },
+            {
+              "chunk_id": "ce9ab637-cac9-4792-b161-766e7a726266",
+              "score": 0.6472377
+            },
+            {
+              "chunk_id": "fe05b6df-f462-4444-9676-df1e3501bd7f",
+              "score": 0.6462542
+            },
+            {
+              "chunk_id": "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "score": 0.64520454
+            },
+            {
+              "chunk_id": "df484b30-1f5b-4998-8969-dba495609840",
+              "score": 0.63837665
+            }
+          ]
+        },
+        {
+          "id": "out-09",
+          "group": "out_of_corpus",
+          "question": "What climate-related disclosures does the SEC require from public companies?",
+          "latency_ms": 22.41,
+          "hits": [
+            {
+              "chunk_id": "880a2bc6-4338-4581-8e4b-d90c2413c3d4",
+              "score": 0.6630198
+            },
+            {
+              "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+              "score": 0.6619375
+            },
+            {
+              "chunk_id": "b2e0b6ae-1c43-46e1-8db2-88be79b7943d",
+              "score": 0.65985924
+            },
+            {
+              "chunk_id": "4b282341-9262-4d02-98ee-198c4078c40a",
+              "score": 0.6554481
+            },
+            {
+              "chunk_id": "d7b78090-28f4-4306-b8f5-b468e609a005",
+              "score": 0.64446086
+            },
+            {
+              "chunk_id": "e8d6cb59-b1a1-4c9f-b9fc-4e9d777bf543",
+              "score": 0.6352412
+            },
+            {
+              "chunk_id": "b783be0a-e468-41c4-81bd-56219425403f",
+              "score": 0.63359344
+            },
+            {
+              "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+              "score": 0.6331805
+            }
+          ]
+        },
+        {
+          "id": "out-10",
+          "group": "out_of_corpus",
+          "question": "How should a bank perform anti-money laundering customer due diligence?",
+          "latency_ms": 24.0,
+          "hits": [
+            {
+              "chunk_id": "6a48e46e-806b-4f4c-ad43-f4004ee83c86",
+              "score": 0.6234605
+            },
+            {
+              "chunk_id": "b783be0a-e468-41c4-81bd-56219425403f",
+              "score": 0.6094876
+            },
+            {
+              "chunk_id": "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "score": 0.6089906
+            },
+            {
+              "chunk_id": "13784d81-c92c-4e94-9c33-59720422d530",
+              "score": 0.60823286
+            },
+            {
+              "chunk_id": "dd847184-a3e7-42ea-b3a7-48a89c9c92d7",
+              "score": 0.6065535
+            },
+            {
+              "chunk_id": "6c21e396-8995-4812-ae3f-149b22352f8e",
+              "score": 0.60097194
+            },
+            {
+              "chunk_id": "490f59e1-ee50-442e-8452-6278a7fa4f9f",
+              "score": 0.5968015
+            },
+            {
+              "chunk_id": "7c30a1f6-0fb1-4613-92c4-c6920ff018cc",
+              "score": 0.5929578
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "parity": {
+    "queries": 20,
+    "mean_top5_overlap": 5.0,
+    "identical_top5_order": 20,
+    "max_score_difference": 2.2075228489626397e-07
+  }
+}

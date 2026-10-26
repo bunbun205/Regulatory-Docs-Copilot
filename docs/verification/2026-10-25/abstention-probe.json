@@ -1,0 +1,530 @@
+[
+  {
+    "backend": "pgvector",
+    "top_k": 8,
+    "questions": [
+      {
+        "id": "in-01",
+        "group": "in_corpus",
+        "question": "What controls are required for closed electronic record systems under 21 CFR Part 11?",
+        "top1_score": 0.804808,
+        "top1_chunk": {
+          "chunk_id": "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+          "filename": "21 CFR Part 11 (up to date as of 10-21-2026).pdf",
+          "chunk_index": 7,
+          "page": 5
+        }
+      },
+      {
+        "id": "in-02",
+        "group": "in_corpus",
+        "question": "How should audit trails be reviewed under FDA data integrity guidance?",
+        "top1_score": 0.822165,
+        "top1_chunk": {
+          "chunk_id": "c3488baf-f796-4cca-8541-7effa2ea98e5",
+          "filename": "7883441_DataIntegrity.pdf",
+          "chunk_index": 22,
+          "page": 12
+        }
+      },
+      {
+        "id": "in-03",
+        "group": "in_corpus",
+        "question": "What are the responsibilities of a study director in a nonclinical laboratory study?",
+        "top1_score": 0.813082,
+        "top1_chunk": {
+          "chunk_id": "18cbb223-dffe-410a-a9bf-345fed59c341",
+          "filename": "21 CFR Part 58 (up to date as of 10-21-2026).pdf",
+          "chunk_index": 8,
+          "page": 6
+        }
+      },
+      {
+        "id": "in-04",
+        "group": "in_corpus",
+        "question": "What does the quality control unit do under 21 CFR Part 211?",
+        "top1_score": 0.771839,
+        "top1_chunk": {
+          "chunk_id": "b87efb99-aea0-4fe9-8241-207d0e7865b3",
+          "filename": "21 CFR Part 211 (up to date as of 10-21-2026).pdf",
+          "chunk_index": 5,
+          "page": 5
+        }
+      },
+      {
+        "id": "in-05",
+        "group": "in_corpus",
+        "question": "What are the stages of process validation described in FDA guidance?",
+        "top1_score": 0.85563,
+        "top1_chunk": {
+          "chunk_id": "c28257ee-c645-4688-b22c-600e17e79f88",
+          "filename": "Process-Validation--General-Principles-and-Practices.pdf",
+          "chunk_index": 10,
+          "page": 6
+        }
+      },
+      {
+        "id": "in-06",
+        "group": "in_corpus",
+        "question": "When must employers provide hazard communication information and training?",
+        "top1_score": 0.855347,
+        "top1_chunk": {
+          "chunk_id": "883de09d-c250-456e-b20b-ba2831ae2c3d",
+          "filename": "osha-1910-1200-hazard-communication.pdf",
+          "chunk_index": 28,
+          "page": 14
+        }
+      },
+      {
+        "id": "in-07",
+        "group": "in_corpus",
+        "question": "What employee exposure monitoring is required by the OSHA laboratory standard?",
+        "top1_score": 0.778967,
+        "top1_chunk": {
+          "chunk_id": "1e8562ca-270c-4780-83c8-c9f2f690ef57",
+          "filename": "osha-1910-1450-lab-standard.pdf",
+          "chunk_index": 9,
+          "page": 6
+        }
+      },
+      {
+        "id": "in-08",
+        "group": "in_corpus",
+        "question": "What must a chemical hygiene plan include under 29 CFR 1910.1450?",
+        "top1_score": 0.856611,
+        "top1_chunk": {
+          "chunk_id": "42144d7e-452f-47d8-906f-9b6dd73a8e8f",
+          "filename": "osha-1910-1450-lab-standard.pdf",
+          "chunk_index": 7,
+          "page": 4
+        }
+      },
+      {
+        "id": "in-09",
+        "group": "in_corpus",
+        "question": "What are the requirements for electronic signatures under 21 CFR Part 11?",
+        "top1_score": 0.809,
+        "top1_chunk": {
+          "chunk_id": "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d",
+          "filename": "Part-11--Electronic-Records--Electronic-Signatures---Scope-and-Application-(PDF).pdf",
+          "chunk_index": 9,
+          "page": 6
+        }
+      },
+      {
+        "id": "in-10",
+        "group": "in_corpus",
+        "question": "What must batch production and control records contain under 21 CFR Part 211?",
+        "top1_score": 0.813801,
+        "top1_chunk": {
+          "chunk_id": "a1310ab0-dd27-4fc9-adf1-528869ca7061",
+          "filename": "21 CFR Part 211 (up to date as of 10-21-2026).pdf",
+          "chunk_index": 44,
+          "page": 26
+        }
+      },
+      {
+        "id": "out-01",
+        "group": "out_of_corpus",
+        "question": "What are the HIPAA requirements for a covered entity's notice of privacy practices?",
+        "top1_score": 0.694285,
+        "top1_chunk": {
+          "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+          "filename": "osha-1910-1200-hazard-communication.pdf",
+          "chunk_index": 33,
+          "page": 16
+        }
+      },
+      {
+        "id": "out-02",
+        "group": "out_of_corpus",
+        "question": "How should a public company prepare for a Sarbanes-Oxley Section 404 audit?",
+        "top1_score": 0.652835,
+        "top1_chunk": {
+          "chunk_id": "dd847184-a3e7-42ea-b3a7-48a89c9c92d7",
+          "filename": "Part-11--Electronic-Records--Electronic-Signatures---Scope-and-Application-(PDF).pdf",
+          "chunk_index": 17,
+          "page": 10
+        }
+      },
+      {
+        "id": "out-03",
+        "group": "out_of_corpus",
+        "question": "When is a data protection impact assessment required under the EU GDPR?",
+        "top1_score": 0.696531,
+        "top1_chunk": {
+          "chunk_id": "9b68c1b3-b33f-480e-b922-3a4f86f68e4d",
+          "filename": "7883441_DataIntegrity.pdf",
+          "chunk_index": 31,
+          "page": 16
+        }
+      },
+      {
+        "id": "out-04",
+        "group": "out_of_corpus",
+        "question": "What design controls does ISO 13485 require for medical devices?",
+        "top1_score": 0.701634,
+        "top1_chunk": {
+          "chunk_id": "4b06abcb-9a4c-42c6-9fbf-951a07179d80",
+          "filename": "21 CFR Part 211 (up to date as of 10-21-2026).pdf",
+          "chunk_index": 1,
+          "page": 2
+        }
+      },
+      {
+        "id": "out-05",
+        "group": "out_of_corpus",
+        "question": "How should a food manufacturer conduct a HACCP hazard analysis?",
+        "top1_score": 0.690648,
+        "top1_chunk": {
+          "chunk_id": "52d56f87-bd08-4aa2-9a25-c24eeaa6488b",
+          "filename": "Process-Validation--General-Principles-and-Practices.pdf",
+          "chunk_index": 34,
+          "page": 20
+        }
+      },
+      {
+        "id": "out-06",
+        "group": "out_of_corpus",
+        "question": "What are the FDA requirements for biosimilar interchangeability?",
+        "top1_score": 0.719488,
+        "top1_chunk": {
+          "chunk_id": "f8ca8166-bf91-4c1b-b146-7f0313a02ce2",
+          "filename": "Part-11--Electronic-Records--Electronic-Signatures---Scope-and-Application-(PDF).pdf",
+          "chunk_index": 7,
+          "page": 5
+        }
+      },
+      {
+        "id": "out-07",
+        "group": "out_of_corpus",
+        "question": "How should informed consent be documented for clinical trials under ICH E6?",
+        "top1_score": 0.719895,
+        "top1_chunk": {
+          "chunk_id": "60ac0217-efbd-492d-b22c-fc234128fa71",
+          "filename": "21 CFR Part 58 (up to date as of 10-21-2026).pdf",
+          "chunk_index": 22,
+          "page": 14
+        }
+      },
+      {
+        "id": "out-08",
+        "group": "out_of_corpus",
+        "question": "What are the OSHA confined space entry requirements for construction work?",
+        "top1_score": 0.677515,
+        "top1_chunk": {
+          "chunk_id": "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+          "filename": "osha-1910-1450-lab-standard.pdf",
+          "chunk_index": 8,
+          "page": 5
+        }
+      },
+      {
+        "id": "out-09",
+        "group": "out_of_corpus",
+        "question": "What climate-related disclosures does the SEC require from public companies?",
+        "top1_score": 0.66302,
+        "top1_chunk": {
+          "chunk_id": "880a2bc6-4338-4581-8e4b-d90c2413c3d4",
+          "filename": "osha-1910-1200-hazard-communication.pdf",
+          "chunk_index": 36,
+          "page": 17
+        }
+      },
+      {
+        "id": "out-10",
+        "group": "out_of_corpus",
+        "question": "How should a bank perform anti-money laundering customer due diligence?",
+        "top1_score": 0.62346,
+        "top1_chunk": {
+          "chunk_id": "6a48e46e-806b-4f4c-ad43-f4004ee83c86",
+          "filename": "Process-Validation--General-Principles-and-Practices.pdf",
+          "chunk_index": 32,
+          "page": 19
+        }
+      }
+    ],
+    "summary": {
+      "in_corpus": {
+        "count": 10,
+        "min": 0.771839,
+        "p50": 0.813442,
+        "max": 0.856611,
+        "mean": 0.818125
+      },
+      "out_of_corpus": {
+        "count": 10,
+        "min": 0.62346,
+        "p50": 0.692466,
+        "max": 0.719895,
+        "mean": 0.683931
+      },
+      "separable": true,
+      "candidate_midpoint_threshold": 0.745867
+    }
+  },
+  {
+    "backend": "qdrant",
+    "top_k": 8,
+    "questions": [
+      {
+        "id": "in-01",
+        "group": "in_corpus",
+        "question": "What controls are required for closed electronic record systems under 21 CFR Part 11?",
+        "top1_score": 0.804809,
+        "top1_chunk": {
+          "chunk_id": "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+          "filename": "21 CFR Part 11 (up to date as of 10-21-2026).pdf",
+          "chunk_index": 7,
+          "page": 5
+        }
+      },
+      {
+        "id": "in-02",
+        "group": "in_corpus",
+        "question": "How should audit trails be reviewed under FDA data integrity guidance?",
+        "top1_score": 0.822165,
+        "top1_chunk": {
+          "chunk_id": "c3488baf-f796-4cca-8541-7effa2ea98e5",
+          "filename": "7883441_DataIntegrity.pdf",
+          "chunk_index": 22,
+          "page": 12
+        }
+      },
+      {
+        "id": "in-03",
+        "group": "in_corpus",
+        "question": "What are the responsibilities of a study director in a nonclinical laboratory study?",
+        "top1_score": 0.813082,
+        "top1_chunk": {
+          "chunk_id": "18cbb223-dffe-410a-a9bf-345fed59c341",
+          "filename": "21 CFR Part 58 (up to date as of 10-21-2026).pdf",
+          "chunk_index": 8,
+          "page": 6
+        }
+      },
+      {
+        "id": "in-04",
+        "group": "in_corpus",
+        "question": "What does the quality control unit do under 21 CFR Part 211?",
+        "top1_score": 0.771839,
+        "top1_chunk": {
+          "chunk_id": "b87efb99-aea0-4fe9-8241-207d0e7865b3",
+          "filename": "21 CFR Part 211 (up to date as of 10-21-2026).pdf",
+          "chunk_index": 5,
+          "page": 5
+        }
+      },
+      {
+        "id": "in-05",
+        "group": "in_corpus",
+        "question": "What are the stages of process validation described in FDA guidance?",
+        "top1_score": 0.85563,
+        "top1_chunk": {
+          "chunk_id": "c28257ee-c645-4688-b22c-600e17e79f88",
+          "filename": "Process-Validation--General-Principles-and-Practices.pdf",
+          "chunk_index": 10,
+          "page": 6
+        }
+      },
+      {
+        "id": "in-06",
+        "group": "in_corpus",
+        "question": "When must employers provide hazard communication information and training?",
+        "top1_score": 0.855347,
+        "top1_chunk": {
+          "chunk_id": "883de09d-c250-456e-b20b-ba2831ae2c3d",
+          "filename": "osha-1910-1200-hazard-communication.pdf",
+          "chunk_index": 28,
+          "page": 14
+        }
+      },
+      {
+        "id": "in-07",
+        "group": "in_corpus",
+        "question": "What employee exposure monitoring is required by the OSHA laboratory standard?",
+        "top1_score": 0.778967,
+        "top1_chunk": {
+          "chunk_id": "1e8562ca-270c-4780-83c8-c9f2f690ef57",
+          "filename": "osha-1910-1450-lab-standard.pdf",
+          "chunk_index": 9,
+          "page": 6
+        }
+      },
+      {
+        "id": "in-08",
+        "group": "in_corpus",
+        "question": "What must a chemical hygiene plan include under 29 CFR 1910.1450?",
+        "top1_score": 0.856611,
+        "top1_chunk": {
+          "chunk_id": "42144d7e-452f-47d8-906f-9b6dd73a8e8f",
+          "filename": "osha-1910-1450-lab-standard.pdf",
+          "chunk_index": 7,
+          "page": 4
+        }
+      },
+      {
+        "id": "in-09",
+        "group": "in_corpus",
+        "question": "What are the requirements for electronic signatures under 21 CFR Part 11?",
+        "top1_score": 0.809,
+        "top1_chunk": {
+          "chunk_id": "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d",
+          "filename": "Part-11--Electronic-Records--Electronic-Signatures---Scope-and-Application-(PDF).pdf",
+          "chunk_index": 9,
+          "page": 6
+        }
+      },
+      {
+        "id": "in-10",
+        "group": "in_corpus",
+        "question": "What must batch production and control records contain under 21 CFR Part 211?",
+        "top1_score": 0.813801,
+        "top1_chunk": {
+          "chunk_id": "a1310ab0-dd27-4fc9-adf1-528869ca7061",
+          "filename": "21 CFR Part 211 (up to date as of 10-21-2026).pdf",
+          "chunk_index": 44,
+          "page": 26
+        }
+      },
+      {
+        "id": "out-01",
+        "group": "out_of_corpus",
+        "question": "What are the HIPAA requirements for a covered entity's notice of privacy practices?",
+        "top1_score": 0.694285,
+        "top1_chunk": {
+          "chunk_id": "436c98d2-29ce-4db6-8795-68705831baed",
+          "filename": "osha-1910-1200-hazard-communication.pdf",
+          "chunk_index": 33,
+          "page": 16
+        }
+      },
+      {
+        "id": "out-02",
+        "group": "out_of_corpus",
+        "question": "How should a public company prepare for a Sarbanes-Oxley Section 404 audit?",
+        "top1_score": 0.652835,
+        "top1_chunk": {
+          "chunk_id": "dd847184-a3e7-42ea-b3a7-48a89c9c92d7",
+          "filename": "Part-11--Electronic-Records--Electronic-Signatures---Scope-and-Application-(PDF).pdf",
+          "chunk_index": 17,
+          "page": 10
+        }
+      },
+      {
+        "id": "out-03",
+        "group": "out_of_corpus",
+        "question": "When is a data protection impact assessment required under the EU GDPR?",
+        "top1_score": 0.696531,
+        "top1_chunk": {
+          "chunk_id": "9b68c1b3-b33f-480e-b922-3a4f86f68e4d",
+          "filename": "7883441_DataIntegrity.pdf",
+          "chunk_index": 31,
+          "page": 16
+        }
+      },
+      {
+        "id": "out-04",
+        "group": "out_of_corpus",
+        "question": "What design controls does ISO 13485 require for medical devices?",
+        "top1_score": 0.701634,
+        "top1_chunk": {
+          "chunk_id": "4b06abcb-9a4c-42c6-9fbf-951a07179d80",
+          "filename": "21 CFR Part 211 (up to date as of 10-21-2026).pdf",
+          "chunk_index": 1,
+          "page": 2
+        }
+      },
+      {
+        "id": "out-05",
+        "group": "out_of_corpus",
+        "question": "How should a food manufacturer conduct a HACCP hazard analysis?",
+        "top1_score": 0.690648,
+        "top1_chunk": {
+          "chunk_id": "52d56f87-bd08-4aa2-9a25-c24eeaa6488b",
+          "filename": "Process-Validation--General-Principles-and-Practices.pdf",
+          "chunk_index": 34,
+          "page": 20
+        }
+      },
+      {
+        "id": "out-06",
+        "group": "out_of_corpus",
+        "question": "What are the FDA requirements for biosimilar interchangeability?",
+        "top1_score": 0.719488,
+        "top1_chunk": {
+          "chunk_id": "f8ca8166-bf91-4c1b-b146-7f0313a02ce2",
+          "filename": "Part-11--Electronic-Records--Electronic-Signatures---Scope-and-Application-(PDF).pdf",
+          "chunk_index": 7,
+          "page": 5
+        }
+      },
+      {
+        "id": "out-07",
+        "group": "out_of_corpus",
+        "question": "How should informed consent be documented for clinical trials under ICH E6?",
+        "top1_score": 0.719895,
+        "top1_chunk": {
+          "chunk_id": "60ac0217-efbd-492d-b22c-fc234128fa71",
+          "filename": "21 CFR Part 58 (up to date as of 10-21-2026).pdf",
+          "chunk_index": 22,
+          "page": 14
+        }
+      },
+      {
+        "id": "out-08",
+        "group": "out_of_corpus",
+        "question": "What are the OSHA confined space entry requirements for construction work?",
+        "top1_score": 0.677516,
+        "top1_chunk": {
+          "chunk_id": "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+          "filename": "osha-1910-1450-lab-standard.pdf",
+          "chunk_index": 8,
+          "page": 5
+        }
+      },
+      {
+        "id": "out-09",
+        "group": "out_of_corpus",
+        "question": "What climate-related disclosures does the SEC require from public companies?",
+        "top1_score": 0.66302,
+        "top1_chunk": {
+          "chunk_id": "880a2bc6-4338-4581-8e4b-d90c2413c3d4",
+          "filename": "osha-1910-1200-hazard-communication.pdf",
+          "chunk_index": 36,
+          "page": 17
+        }
+      },
+      {
+        "id": "out-10",
+        "group": "out_of_corpus",
+        "question": "How should a bank perform anti-money laundering customer due diligence?",
+        "top1_score": 0.62346,
+        "top1_chunk": {
+          "chunk_id": "6a48e46e-806b-4f4c-ad43-f4004ee83c86",
+          "filename": "Process-Validation--General-Principles-and-Practices.pdf",
+          "chunk_index": 32,
+          "page": 19
+        }
+      }
+    ],
+    "summary": {
+      "in_corpus": {
+        "count": 10,
+        "min": 0.771839,
+        "p50": 0.813442,
+        "max": 0.856611,
+        "mean": 0.818125
+      },
+      "out_of_corpus": {
+        "count": 10,
+        "min": 0.62346,
+        "p50": 0.692466,
+        "max": 0.719895,
+        "mean": 0.683931
+      },
+      "separable": true,
+      "candidate_midpoint_threshold": 0.745867
+    }
+  }
+]

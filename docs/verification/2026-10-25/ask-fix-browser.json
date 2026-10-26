@@ -1,0 +1,23 @@
+{
+  "question": "What must a Chemical Hygiene Plan include under OSHA’s laboratory standard, 29 CFR 1910.1450?",
+  "checks": [
+    {
+      "name": "empty question prevents submission",
+      "passed": true
+    }
+  ],
+  "page_errors": [],
+  "live": {
+    "status": 502,
+    "duration_seconds": 185.344,
+    "body": {
+      "error": {
+        "code": "llm_unavailable",
+        "message": "The language model is unavailable.",
+        "request_id": "b9088deb6a8e471e97f24e19b024f5a5"
+      }
+    },
+    "requests": 1
+  },
+  "error": "Expected values to be strictly equal:\n\n502 !== 200\n"
+}

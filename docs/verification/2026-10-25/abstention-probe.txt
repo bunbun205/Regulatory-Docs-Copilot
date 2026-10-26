@@ -1,0 +1,61 @@
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 2051.91it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 13522.34it/s]
+
+Backend: pgvector (top_k=8)
+| id | group | top-1 | top document |
+| --- | --- | ---: | --- |
+| in-01 | in_corpus | 0.804808 | 21 CFR Part 11 (up to date as of 10-21-2026).pdf#7 |
+| in-02 | in_corpus | 0.822165 | 7883441_DataIntegrity.pdf#22 |
+| in-03 | in_corpus | 0.813082 | 21 CFR Part 58 (up to date as of 10-21-2026).pdf#8 |
+| in-04 | in_corpus | 0.771839 | 21 CFR Part 211 (up to date as of 10-21-2026).pdf#5 |
+| in-05 | in_corpus | 0.855630 | Process-Validation--General-Principles-and-Practices.pdf#10 |
+| in-06 | in_corpus | 0.855347 | osha-1910-1200-hazard-communication.pdf#28 |
+| in-07 | in_corpus | 0.778967 | osha-1910-1450-lab-standard.pdf#9 |
+| in-08 | in_corpus | 0.856611 | osha-1910-1450-lab-standard.pdf#7 |
+| in-09 | in_corpus | 0.809000 | Part-11--Electronic-Records--Electronic-Signatures---Scope-and-Application-(PDF).pdf#9 |
+| in-10 | in_corpus | 0.813801 | 21 CFR Part 211 (up to date as of 10-21-2026).pdf#44 |
+| out-01 | out_of_corpus | 0.694285 | osha-1910-1200-hazard-communication.pdf#33 |
+| out-02 | out_of_corpus | 0.652835 | Part-11--Electronic-Records--Electronic-Signatures---Scope-and-Application-(PDF).pdf#17 |
+| out-03 | out_of_corpus | 0.696531 | 7883441_DataIntegrity.pdf#31 |
+| out-04 | out_of_corpus | 0.701634 | 21 CFR Part 211 (up to date as of 10-21-2026).pdf#1 |
+| out-05 | out_of_corpus | 0.690648 | Process-Validation--General-Principles-and-Practices.pdf#34 |
+| out-06 | out_of_corpus | 0.719488 | Part-11--Electronic-Records--Electronic-Signatures---Scope-and-Application-(PDF).pdf#7 |
+| out-07 | out_of_corpus | 0.719895 | 21 CFR Part 58 (up to date as of 10-21-2026).pdf#22 |
+| out-08 | out_of_corpus | 0.677515 | osha-1910-1450-lab-standard.pdf#8 |
+| out-09 | out_of_corpus | 0.663020 | osha-1910-1200-hazard-communication.pdf#36 |
+| out-10 | out_of_corpus | 0.623460 | Process-Validation--General-Principles-and-Practices.pdf#32 |
+
+Summary:
+- in_corpus: n=10 min=0.771839 p50=0.813442 max=0.856611 mean=0.818125
+- out_of_corpus: n=10 min=0.623460 p50=0.692466 max=0.719895 mean=0.683931
+- separable=True candidate_midpoint=0.745867
+
+Backend: qdrant (top_k=8)
+| id | group | top-1 | top document |
+| --- | --- | ---: | --- |
+| in-01 | in_corpus | 0.804809 | 21 CFR Part 11 (up to date as of 10-21-2026).pdf#7 |
+| in-02 | in_corpus | 0.822165 | 7883441_DataIntegrity.pdf#22 |
+| in-03 | in_corpus | 0.813082 | 21 CFR Part 58 (up to date as of 10-21-2026).pdf#8 |
+| in-04 | in_corpus | 0.771839 | 21 CFR Part 211 (up to date as of 10-21-2026).pdf#5 |
+| in-05 | in_corpus | 0.855630 | Process-Validation--General-Principles-and-Practices.pdf#10 |
+| in-06 | in_corpus | 0.855347 | osha-1910-1200-hazard-communication.pdf#28 |
+| in-07 | in_corpus | 0.778967 | osha-1910-1450-lab-standard.pdf#9 |
+| in-08 | in_corpus | 0.856611 | osha-1910-1450-lab-standard.pdf#7 |
+| in-09 | in_corpus | 0.809000 | Part-11--Electronic-Records--Electronic-Signatures---Scope-and-Application-(PDF).pdf#9 |
+| in-10 | in_corpus | 0.813801 | 21 CFR Part 211 (up to date as of 10-21-2026).pdf#44 |
+| out-01 | out_of_corpus | 0.694285 | osha-1910-1200-hazard-communication.pdf#33 |
+| out-02 | out_of_corpus | 0.652835 | Part-11--Electronic-Records--Electronic-Signatures---Scope-and-Application-(PDF).pdf#17 |
+| out-03 | out_of_corpus | 0.696531 | 7883441_DataIntegrity.pdf#31 |
+| out-04 | out_of_corpus | 0.701634 | 21 CFR Part 211 (up to date as of 10-21-2026).pdf#1 |
+| out-05 | out_of_corpus | 0.690648 | Process-Validation--General-Principles-and-Practices.pdf#34 |
+| out-06 | out_of_corpus | 0.719488 | Part-11--Electronic-Records--Electronic-Signatures---Scope-and-Application-(PDF).pdf#7 |
+| out-07 | out_of_corpus | 0.719895 | 21 CFR Part 58 (up to date as of 10-21-2026).pdf#22 |
+| out-08 | out_of_corpus | 0.677516 | osha-1910-1450-lab-standard.pdf#8 |
+| out-09 | out_of_corpus | 0.663020 | osha-1910-1200-hazard-communication.pdf#36 |
+| out-10 | out_of_corpus | 0.623460 | Process-Validation--General-Principles-and-Practices.pdf#32 |
+
+Summary:
+- in_corpus: n=10 min=0.771839 p50=0.813442 max=0.856611 mean=0.818125
+- out_of_corpus: n=10 min=0.623460 p50=0.692466 max=0.719895 mean=0.683931
+- separable=True candidate_midpoint=0.745867

@@ -1,0 +1,6 @@
+{
+  "documents": 8,
+  "chunks": 238,
+  "pgvector_version": "0.8.7",
+  "qdrant_points": 238
+}

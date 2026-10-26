@@ -137,7 +137,13 @@ jobs:
         run: uv run alembic check
 
       - name: Run tests
-        run: uv run pytest
+        run: uv run pytest --cov=app --cov-report=term-missing --cov-report=xml --cov-fail-under=80
+
+      - name: Save backend coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: coverage.xml
 
       - name: Synthetic evaluation regression (no human quality claims)
         run: uv run python -m eval.run --fixture --output-dir /tmp/labdocs-fixture-eval
@@ -201,3 +207,49 @@ jobs:
             frontend/test-results/
             docs/screenshots/f6/
             docs/verification/frontend-f6/
+
+  containers:
+    name: Container build and browser journey
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      POSTGRES_DB: labdocs_frontend_test
+      WEB_PORT: '3300'
+      LABDOCS_IMAGE_TAG: ci
+      FRONTEND_SCREENSHOT_MILESTONE: packaging
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: docker/setup-buildx-action@v3
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Validate production configuration with placeholders only
+        run: docker compose --env-file .env.compose.example -f docker-compose.yml -f compose.aws.yml config -q
+      - name: Build production and isolated browser images
+        run: docker compose -p labdocs-ci -f docker-compose.yml -f compose.test.yml build
+      - name: Start fresh test stack and run real migrations
+        run: docker compose -p labdocs-ci -f docker-compose.yml -f compose.test.yml up -d --wait --wait-timeout 180
+      - name: Install locked browser dependencies
+        working-directory: frontend
+        run: npm ci && npx playwright install --with-deps chromium
+      - name: Browser journey through built nginx frontend
+        working-directory: frontend
+        run: npm run test:compose
+      - name: Save container logs
+        if: always()
+        run: docker compose -p labdocs-ci -f docker-compose.yml -f compose.test.yml logs --no-color > /tmp/labdocs-compose.log
+      - name: Save container acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-browser-evidence
+          path: |
+            /tmp/labdocs-compose.log
+            frontend/test-results/
+            docs/screenshots/packaging/
+            docs/verification/frontend-packaging/
+      - name: Stop disposable CI stack
+        if: always()
+        run: docker compose -p labdocs-ci -f docker-compose.yml -f compose.test.yml down -v

@@ -1,0 +1,109 @@
+{
+  "warning": "Synthetic fixtures, FakeEmbedder and text-driven DeterministicFixtureJudge. Tests pipeline wiring and reference validation, not model quality or legal correctness.",
+  "human_verified_mutations": 0,
+  "fixtures": [
+    {
+      "fixture": "clean_sop",
+      "verified": false,
+      "counts_by_verdict": {
+        "compliant": 5,
+        "partial": 0,
+        "conflict": 0,
+        "not_covered_by_corpus": 0,
+        "judge_failed": 0,
+        "addressed": 3,
+        "partially_addressed": 0,
+        "missing": 0
+      },
+      "findings": 8,
+      "regulation_citations_validated": 8,
+      "sop_references_validated": 8,
+      "expected_synthetic_defects": 0,
+      "candidate_matches": []
+    },
+    {
+      "fixture": "mutated_conflict",
+      "verified": false,
+      "counts_by_verdict": {
+        "compliant": 4,
+        "partial": 0,
+        "conflict": 1,
+        "not_covered_by_corpus": 0,
+        "judge_failed": 0,
+        "addressed": 2,
+        "partially_addressed": 0,
+        "missing": 1
+      },
+      "findings": 8,
+      "regulation_citations_validated": 8,
+      "sop_references_validated": 7,
+      "expected_synthetic_defects": 1,
+      "candidate_matches": [
+        "GAP-0003"
+      ]
+    },
+    {
+      "fixture": "mutated_missing",
+      "verified": false,
+      "counts_by_verdict": {
+        "compliant": 4,
+        "partial": 0,
+        "conflict": 0,
+        "not_covered_by_corpus": 0,
+        "judge_failed": 0,
+        "addressed": 2,
+        "partially_addressed": 0,
+        "missing": 1
+      },
+      "findings": 7,
+      "regulation_citations_validated": 7,
+      "sop_references_validated": 6,
+      "expected_synthetic_defects": 1,
+      "candidate_matches": [
+        "GAP-0006"
+      ]
+    },
+    {
+      "fixture": "mutated_unsupported",
+      "verified": false,
+      "counts_by_verdict": {
+        "compliant": 5,
+        "partial": 0,
+        "conflict": 1,
+        "not_covered_by_corpus": 0,
+        "judge_failed": 0,
+        "addressed": 3,
+        "partially_addressed": 0,
+        "missing": 0
+      },
+      "findings": 9,
+      "regulation_citations_validated": 9,
+      "sop_references_validated": 9,
+      "expected_synthetic_defects": 1,
+      "candidate_matches": [
+        "GAP-0005"
+      ]
+    },
+    {
+      "fixture": "injection",
+      "verified": false,
+      "counts_by_verdict": {
+        "compliant": 3,
+        "partial": 0,
+        "conflict": 1,
+        "not_covered_by_corpus": 0,
+        "judge_failed": 0,
+        "addressed": 2,
+        "partially_addressed": 0,
+        "missing": 1
+      },
+      "findings": 7,
+      "regulation_citations_validated": 7,
+      "sop_references_validated": 6,
+      "expected_synthetic_defects": 1,
+      "candidate_matches": [
+        "GAP-0002"
+      ]
+    }
+  ]
+}

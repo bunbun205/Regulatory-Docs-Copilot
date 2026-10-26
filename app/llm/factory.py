@@ -17,6 +17,7 @@ def build_llm_client(settings: Settings) -> LLMClient:
             base_url=settings.LLM_BASE_URL,
             model=settings.LLM_MODEL,
             api_key=settings.LLM_API_KEY,
+            reasoning_effort=settings.LLM_REASONING_EFFORT,
             timeout_seconds=settings.LLM_TIMEOUT_SECONDS,
             max_retries=settings.LLM_MAX_RETRIES,
         )

@@ -1,0 +1,38 @@
+{
+  "profile": {
+    "model": "llama3.1:8b",
+    "llm_timeout_seconds": 180,
+    "max_tokens": 512,
+    "top_k": 2
+  },
+  "status": 200,
+  "body": {
+    "query": "What controls are required for closed electronic record systems under 21 CFR Part 11?",
+    "backend": "pgvector",
+    "answer": "Closed electronic record systems under 21 CFR Part 11 require controls such as document encryption, use of digital signature standards, and linking electronic signatures to their respective records to ensure authenticity, integrity, and confidentiality.",
+    "citations": [
+      {
+        "chunk_id": "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+        "document_id": "c851afb0-82f4-4b79-a401-0750e528cb8c",
+        "title": "21 CFR Part 11: Electronic Records; Electronic Signatures",
+        "page": 5,
+        "snippet": "\u00a7 11.30 Controls for open systems. Persons who use open systems to create, modify, maintain, or transmit electronic records shall employ procedures and controls designed to ensure the authenticity, integrity, and, as appropriate, the confidentiality of electronic records from the point of their crea",
+        "score": 0.8048084494585852
+      }
+    ],
+    "grounded": true,
+    "grounding_reason": null,
+    "insufficient_evidence": false,
+    "top_score": 0.8048084494585852,
+    "usage": {
+      "input_tokens": 1133,
+      "output_tokens": 76,
+      "total_tokens": 1209
+    },
+    "latency_ms": {
+      "retrieve_ms": 622.67,
+      "generate_ms": 16872.19
+    }
+  },
+  "duration_s": 17.61414495099598
+}

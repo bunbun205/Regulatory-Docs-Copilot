@@ -1,0 +1,35 @@
+{
+  "head": "2bdf9ea",
+  "test_counts": {
+    "passed": 157,
+    "failed": 0,
+    "skipped": 0,
+    "api": 44,
+    "contract": 10,
+    "integration": 17,
+    "unit": 86
+  },
+  "test_duration_seconds_with_coverage": 33.87,
+  "line_coverage_percent": 87.90876614454521,
+  "covered_lines": 3199,
+  "statements": 3639,
+  "corpus": {
+    "documents": 8,
+    "chunks": 238,
+    "pgvector_version": "0.8.7",
+    "qdrant_points": 238
+  },
+  "retrieval_parity": {
+    "queries": 20,
+    "mean_top5_overlap": 5.0,
+    "identical_top5_order": 20,
+    "max_score_difference": 2.2075228489626397e-07
+  },
+  "human_verified_golden_entries": 0,
+  "human_verified_mutations": 0,
+  "completed_live_mutation_reports": 0,
+  "browser_js_errors": 0,
+  "browser_failed_requests": 0,
+  "local_frontend": "http://127.0.0.1:3100",
+  "local_api_docs": "http://127.0.0.1:8001/docs"
+}

@@ -17,6 +17,83 @@ TOOL = ToolDefinition(
 )
 
 
+@pytest.mark.parametrize(
+    "base_url,model",
+    [
+        ("https://generativelanguage.googleapis.com/v1beta/openai", "gemini-test"),
+        ("https://api.groq.com/openai/v1", "groq-test"),
+    ],
+)
+async def test_cloud_agent_roundtrip_preserves_opaque_protocol_state(base_url, model):
+    from unittest.mock import AsyncMock
+
+    from app.agent.loop import AgentLoop
+    from app.agent.tools import ToolResult
+
+    calls = 0
+    signature = {"google": {"thought_signature": "opaque-test-signature"}}
+
+    def handler(request):
+        nonlocal calls
+        calls += 1
+        body = json.loads(request.content)
+        assert str(request.url) == base_url + "/chat/completions"
+        assert request.headers["Authorization"] == "Bearer test-key"
+        assert body["reasoning_effort"] == "low"
+        assert body["model"] == model
+        assert all("name" not in message for message in body["messages"])
+        if calls == 1:
+            response = _openai_body()
+            message = response["choices"][0]["message"]
+            message["extra_content"] = signature
+            message["tool_calls"][0]["extra_content"] = signature
+            return httpx.Response(200, json=response)
+        assistant = body["messages"][-2]
+        assert assistant["extra_content"] == signature
+        assert assistant["tool_calls"][0]["extra_content"] == signature
+        assert body["messages"][-1]["tool_call_id"] == "call-1"
+        return httpx.Response(
+            200,
+            json={
+                "choices": [
+                    {
+                        "message": {
+                            "content": json.dumps(
+                                {"answer": "No supporting source.", "citations": []}
+                            )
+                        }
+                    }
+                ]
+            },
+        )
+
+    client = OpenAICompatibleClient(
+        base_url=base_url,
+        model=model,
+        api_key="test-key",
+        reasoning_effort="low",
+        transport=httpx.MockTransport(handler),
+    )
+    agent_tools = AsyncMock()
+    agent_tools.execute.return_value = ToolResult(content='{"results":[]}', summary="No matches.")
+    try:
+        result = await AgentLoop(client, agent_tools).run("Find records")
+    finally:
+        await client.close()
+    assert calls == 2
+    assert result.step_count == 1 and not result.partial
+    assert "opaque-test-signature" not in repr(result)
+
+
+def test_invalid_provider_protocol_metadata_is_rejected():
+    from app.llm.openai_compat import parse_openai_result
+
+    body = _openai_body()
+    body["choices"][0]["message"]["tool_calls"][0]["extra_content"] = "malformed"
+    with pytest.raises(LLMError, match="protocol metadata"):
+        parse_openai_result(body, 1)
+
+
 def _openai_body() -> dict[str, object]:
     return {
         "choices": [

@@ -13,7 +13,8 @@
     "test:e2e": "playwright test",
     "test:performance": "playwright test --config playwright.performance.config.ts",
     "check:types": "node scripts/check-types.mjs",
-    "check:bundle": "node scripts/bundle-size.mjs"
+    "check:bundle": "node scripts/bundle-size.mjs",
+    "test:compose": "playwright test --config playwright.compose.config.ts"
   },
   "dependencies": {
     "lucide-react": "^1.61.0",

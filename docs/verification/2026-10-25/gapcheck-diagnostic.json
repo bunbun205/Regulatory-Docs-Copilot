@@ -1,0 +1,7 @@
+[
+  {
+    "fixture": "clean_sop",
+    "error": "TimeoutError",
+    "duration_s": 240.01227985700098
+  }
+]

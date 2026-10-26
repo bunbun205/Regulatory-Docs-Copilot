@@ -1,0 +1,263 @@
+[
+  {
+    "name": "search:pgvector",
+    "status": 200,
+    "duration_s": 0.04088672999932896,
+    "body": {
+      "query": "What controls are required for closed electronic record systems under 21 CFR Part 11?",
+      "backend": "pgvector",
+      "top_k": 3,
+      "results": [
+        {
+          "chunk_id": "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+          "document_id": "c851afb0-82f4-4b79-a401-0750e528cb8c",
+          "chunk_index": 7,
+          "text": "\u00a7 11.30 Controls for open systems. Persons who use open systems to create, modify, maintain, or transmit electronic records shall employ procedures\nand controls designed to ensure the authenticity, integrity, and, as appropriate, the confidentiality of electronic\nrecords from the point of their creation to the point of their receipt. Such procedures and controls shall include\nthose identified in \u00a7 11.10, as appropriate, and additional measures such as document encryption and use of\nappropriate digital signature standards to ensure, as necessary under the circumstances, record authenticity,\nintegrity, and confidentiality. \u00a7 11.50 Signature manifestations. \u00a7 11.70 Signature/record linking. Electronic signatures and handwritten signatures executed to electronic records shall be linked to their respective\nelectronic records to ensure that the signatures cannot be excised, copied, or otherwise transferred to falsify an\nelectronic record by ordinary means. Subpart C\u2014Electronic Signatures\n\u00a7 11.100 General requirements. (1) Adequate controls over the distribution of, access to, and use of documentation for system\noperation and maintenance. (2) Revision and change control procedures to maintain an audit trail that documents time-sequenced\ndevelopment and modification of systems documentation. (a) Signed electronic records shall contain information associated with the signing that clearly indicates all of\nthe following:\n(1) The printed name of the signer;\n(2) The date and time when the signature was executed; and\n(3) The meaning (such as review, approval, responsibility, or authorship) associated with the signature. (b) The items identified in paragraphs (a)(1), (a)(2), and (a)(3) of this section shall be subject to the same\ncontrols as for electronic records and shall be included as part of any human readable form of the\nelectronic record (such as electronic display or printout). (a) Each electronic signature shall be unique to one individual and shall not be reused by, or reassigned to,\nanyone else. (b) Before an organization establishes, assigns, certifies, or otherwise sanctions an individual's electronic\nsignature, or any element of such electronic signature, the organization shall verify the identity of the\nindividual. (c) Persons using electronic signatures shall, prior to or at the time of such use, certify to the agency that the\nelectronic signatures in their system, used on or after August 20, 1997, are intended to be the legally\nbinding equivalent of traditional handwritten signatures. (1) The certification shall be signed with a traditional handwritten signature and submitted in electronic\nor paper form.",
+          "score": 0.8048084494585852,
+          "page": 5,
+          "section_heading": null,
+          "filename": "21 CFR Part 11 (up to date as of 10-21-2026).pdf",
+          "title": "21 CFR Part 11: Electronic Records; Electronic Signatures",
+          "source_agency": "FDA",
+          "doc_type": "regulation",
+          "year": 2026,
+          "version": "eCFR up to date as of 2026-10-21"
+        },
+        {
+          "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+          "document_id": "0e14148f-7a1c-4caf-8f43-cc0042e9f763",
+          "chunk_index": 13,
+          "text": "\u2022 \u00a7\u00a7 211.22, 211.192, and 211.194(a) (requiring that production and control records be\n\u201creviewed\u201d and that laboratory records be \u201creviewed for accuracy, completeness, and\ncompliance with established standards\u201d).\n\u2022 \u00a7\u00a7 211.182, 211.186(a), 211.188(b)(11), and 211.194(a)(8) (requiring that records be\n\u201cchecked,\u201d \u201cverified,\u201d or \u201creviewed\u201d).\nWhen considering how to meet many of these regulatory requirements, it may be useful to ask\nthe following questions:\n\u2022 Are controls in place to ensure that data is complete?\n\u2022 Are activities documented at the time of performance?\n\u2022 Are activities attributable to a specific individual?\n\u2022 Can only authorized individuals make changes to records?\n\u2022 Is there a record of changes to data?\n\u2022 Are records reviewed for accuracy, completeness, and compliance with established\nstandards?\n\u2022 Are data maintained securely from data creation through disposition after the record\u2019s\nretention period?\nThis guidance helps answer these questions and enables an understanding of key concepts behind\nthe regulatory requirements.\nWhile not in the scope of this guidance, data integrity-related CGMP violations can also impact\nor be directly linked to application filing, review, and regulatory actions.\nElectronic signature and record-keeping requirements are laid out in 21 CFR part 11 and apply to\ncertain records subject to records requirements set forth in Agency regulations, including parts\n210, 211, and 212. For more information, see guidance for industry Part 11, Electronic Records;\nElectronic Signatures\u2014Scope and Application, which outlines FDA\u2019s current thinking regarding\nthe scope and application of part 11 pending FDA\u2019s reexamination of part 11 as it applies to all\nFDA-regulated products.",
+          "score": 0.7915598029827968,
+          "page": 7,
+          "section_heading": null,
+          "filename": "7883441_DataIntegrity.pdf",
+          "title": "Data Integrity and Compliance With Drug CGMP: Questions and Answers",
+          "source_agency": "FDA",
+          "doc_type": "guidance",
+          "year": 2018,
+          "version": "Final December 2018"
+        },
+        {
+          "chunk_id": "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d",
+          "document_id": "951f0481-d887-4230-bb44-ed3afb21d581",
+          "chunk_index": 9,
+          "text": "\u2022\u00a0 21 CFR Part 11; Electronic Records; Electronic Signatures, Validation  76\n\u2022\u00a0 21 CFR Part 11; Electronic Records; Electronic Signatures, Glossary of Terms  77\n\u2022\u00a0 21 CFR Part 11; Electronic Records; Electronic Signatures, Time Stamps 78\n\u2022\u00a0 21 CFR Part 11; Electronic Records; Electronic Signatures, Maintenance of Electronic 79\nRecords 80\n\u2022\u00a0 21 CFR Part 11; Electronic Records; Electronic Signatures, Electronic Copies of 81\nElectronic Records 82\nThroughout all of these communications, concerns have been raised that some interpretations of 84\nthe part 11 requirements would (1) unnecessarily restrict the use of electronic technology in a 85\nmanner that is inconsistent with FDA's stated intent in issuing the rule, (2) significantly increase 86\nthe costs of compliance to an extent that was not contemplated at the time the rule was drafted, 87\nand (3) discourage innovation and technological advances without providing a significant public 88\nhealth benefit. These concerns have been raised particularly in the areas of part 11 requirements 89\nfor validation, audit trails, record retention, record copying, and legacy systems. 90\nAs a result of these concerns, we decided to review the part 11 documents and related issues, 92\nparticularly in light of the Agency's CGMP initiative. In the Federal Register of February 4, 93\n2003 (68 FR 5645), we announced the withdrawal of the draft guidance for industry, 21 CFR 94\nPart 11; Electronic Records; Electronic Signatures, Electronic Copies of Electronic Records. 95\nWe had decided we wanted to minimize industry time spent reviewing and commenting on the 96\ndraft guidance when that draft guidance may no longer represent our approach under the CGMP 97\ninitiative. Then, in the Federal Register of February 25, 2003 (68 FR 8775), we announced the 98\nwithdrawal of the part 11 draft guidance documents on validation, glossary of terms, time 99\nstamps,5 maintenance of electronic records, and CPG 7153.17. We received valuable public 100\ncomments on these draft guidances, and we plan to use that information to help with future 101\ndecision-making with respect to part 11. We do not intend to re-issue these draft guidance 102\ndocuments or the CPG. 103\nWe are now re-examining part 11, and we anticipate initiating rulemaking to revise provisions of 105\nthat regulation. To avoid unnecessary resource expenditures to comply with part 11 106\nrequirements, we are issuing this guidance to describe how we intend to exercise enforcement 107\ndiscretion with regard to certain part 11 requirements during the re-examination of part 11.",
+          "score": 0.781118512153631,
+          "page": 6,
+          "section_heading": null,
+          "filename": "Part-11--Electronic-Records--Electronic-Signatures---Scope-and-Application-(PDF).pdf",
+          "title": "Part 11, Electronic Records; Electronic Signatures - Scope and Application",
+          "source_agency": "FDA",
+          "doc_type": "guidance",
+          "year": 2003,
+          "version": "Final September 2003"
+        }
+      ],
+      "latency_ms": 6.48
+    }
+  },
+  {
+    "name": "search:qdrant",
+    "status": 200,
+    "duration_s": 0.05791051800042624,
+    "body": {
+      "query": "What controls are required for closed electronic record systems under 21 CFR Part 11?",
+      "backend": "qdrant",
+      "top_k": 3,
+      "results": [
+        {
+          "chunk_id": "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+          "document_id": "c851afb0-82f4-4b79-a401-0750e528cb8c",
+          "chunk_index": 7,
+          "text": "\u00a7 11.30 Controls for open systems. Persons who use open systems to create, modify, maintain, or transmit electronic records shall employ procedures\nand controls designed to ensure the authenticity, integrity, and, as appropriate, the confidentiality of electronic\nrecords from the point of their creation to the point of their receipt. Such procedures and controls shall include\nthose identified in \u00a7 11.10, as appropriate, and additional measures such as document encryption and use of\nappropriate digital signature standards to ensure, as necessary under the circumstances, record authenticity,\nintegrity, and confidentiality. \u00a7 11.50 Signature manifestations. \u00a7 11.70 Signature/record linking. Electronic signatures and handwritten signatures executed to electronic records shall be linked to their respective\nelectronic records to ensure that the signatures cannot be excised, copied, or otherwise transferred to falsify an\nelectronic record by ordinary means. Subpart C\u2014Electronic Signatures\n\u00a7 11.100 General requirements. (1) Adequate controls over the distribution of, access to, and use of documentation for system\noperation and maintenance. (2) Revision and change control procedures to maintain an audit trail that documents time-sequenced\ndevelopment and modification of systems documentation. (a) Signed electronic records shall contain information associated with the signing that clearly indicates all of\nthe following:\n(1) The printed name of the signer;\n(2) The date and time when the signature was executed; and\n(3) The meaning (such as review, approval, responsibility, or authorship) associated with the signature. (b) The items identified in paragraphs (a)(1), (a)(2), and (a)(3) of this section shall be subject to the same\ncontrols as for electronic records and shall be included as part of any human readable form of the\nelectronic record (such as electronic display or printout). (a) Each electronic signature shall be unique to one individual and shall not be reused by, or reassigned to,\nanyone else. (b) Before an organization establishes, assigns, certifies, or otherwise sanctions an individual's electronic\nsignature, or any element of such electronic signature, the organization shall verify the identity of the\nindividual. (c) Persons using electronic signatures shall, prior to or at the time of such use, certify to the agency that the\nelectronic signatures in their system, used on or after August 20, 1997, are intended to be the legally\nbinding equivalent of traditional handwritten signatures. (1) The certification shall be signed with a traditional handwritten signature and submitted in electronic\nor paper form.",
+          "score": 0.8048085,
+          "page": 5,
+          "section_heading": null,
+          "filename": "21 CFR Part 11 (up to date as of 10-21-2026).pdf",
+          "title": "21 CFR Part 11: Electronic Records; Electronic Signatures",
+          "source_agency": "FDA",
+          "doc_type": "regulation",
+          "year": 2026,
+          "version": "eCFR up to date as of 2026-10-21"
+        },
+        {
+          "chunk_id": "d43410aa-beff-498d-8688-cf26e47c4788",
+          "document_id": "0e14148f-7a1c-4caf-8f43-cc0042e9f763",
+          "chunk_index": 13,
+          "text": "\u2022 \u00a7\u00a7 211.22, 211.192, and 211.194(a) (requiring that production and control records be\n\u201creviewed\u201d and that laboratory records be \u201creviewed for accuracy, completeness, and\ncompliance with established standards\u201d).\n\u2022 \u00a7\u00a7 211.182, 211.186(a), 211.188(b)(11), and 211.194(a)(8) (requiring that records be\n\u201cchecked,\u201d \u201cverified,\u201d or \u201creviewed\u201d).\nWhen considering how to meet many of these regulatory requirements, it may be useful to ask\nthe following questions:\n\u2022 Are controls in place to ensure that data is complete?\n\u2022 Are activities documented at the time of performance?\n\u2022 Are activities attributable to a specific individual?\n\u2022 Can only authorized individuals make changes to records?\n\u2022 Is there a record of changes to data?\n\u2022 Are records reviewed for accuracy, completeness, and compliance with established\nstandards?\n\u2022 Are data maintained securely from data creation through disposition after the record\u2019s\nretention period?\nThis guidance helps answer these questions and enables an understanding of key concepts behind\nthe regulatory requirements.\nWhile not in the scope of this guidance, data integrity-related CGMP violations can also impact\nor be directly linked to application filing, review, and regulatory actions.\nElectronic signature and record-keeping requirements are laid out in 21 CFR part 11 and apply to\ncertain records subject to records requirements set forth in Agency regulations, including parts\n210, 211, and 212. For more information, see guidance for industry Part 11, Electronic Records;\nElectronic Signatures\u2014Scope and Application, which outlines FDA\u2019s current thinking regarding\nthe scope and application of part 11 pending FDA\u2019s reexamination of part 11 as it applies to all\nFDA-regulated products.",
+          "score": 0.7915598,
+          "page": 7,
+          "section_heading": null,
+          "filename": "7883441_DataIntegrity.pdf",
+          "title": "Data Integrity and Compliance With Drug CGMP: Questions and Answers",
+          "source_agency": "FDA",
+          "doc_type": "guidance",
+          "year": 2018,
+          "version": "Final December 2018"
+        },
+        {
+          "chunk_id": "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d",
+          "document_id": "951f0481-d887-4230-bb44-ed3afb21d581",
+          "chunk_index": 9,
+          "text": "\u2022\u00a0 21 CFR Part 11; Electronic Records; Electronic Signatures, Validation  76\n\u2022\u00a0 21 CFR Part 11; Electronic Records; Electronic Signatures, Glossary of Terms  77\n\u2022\u00a0 21 CFR Part 11; Electronic Records; Electronic Signatures, Time Stamps 78\n\u2022\u00a0 21 CFR Part 11; Electronic Records; Electronic Signatures, Maintenance of Electronic 79\nRecords 80\n\u2022\u00a0 21 CFR Part 11; Electronic Records; Electronic Signatures, Electronic Copies of 81\nElectronic Records 82\nThroughout all of these communications, concerns have been raised that some interpretations of 84\nthe part 11 requirements would (1) unnecessarily restrict the use of electronic technology in a 85\nmanner that is inconsistent with FDA's stated intent in issuing the rule, (2) significantly increase 86\nthe costs of compliance to an extent that was not contemplated at the time the rule was drafted, 87\nand (3) discourage innovation and technological advances without providing a significant public 88\nhealth benefit. These concerns have been raised particularly in the areas of part 11 requirements 89\nfor validation, audit trails, record retention, record copying, and legacy systems. 90\nAs a result of these concerns, we decided to review the part 11 documents and related issues, 92\nparticularly in light of the Agency's CGMP initiative. In the Federal Register of February 4, 93\n2003 (68 FR 5645), we announced the withdrawal of the draft guidance for industry, 21 CFR 94\nPart 11; Electronic Records; Electronic Signatures, Electronic Copies of Electronic Records. 95\nWe had decided we wanted to minimize industry time spent reviewing and commenting on the 96\ndraft guidance when that draft guidance may no longer represent our approach under the CGMP 97\ninitiative. Then, in the Federal Register of February 25, 2003 (68 FR 8775), we announced the 98\nwithdrawal of the part 11 draft guidance documents on validation, glossary of terms, time 99\nstamps,5 maintenance of electronic records, and CPG 7153.17. We received valuable public 100\ncomments on these draft guidances, and we plan to use that information to help with future 101\ndecision-making with respect to part 11. We do not intend to re-issue these draft guidance 102\ndocuments or the CPG. 103\nWe are now re-examining part 11, and we anticipate initiating rulemaking to revise provisions of 105\nthat regulation. To avoid unnecessary resource expenditures to comply with part 11 106\nrequirements, we are issuing this guidance to describe how we intend to exercise enforcement 107\ndiscretion with regard to certain part 11 requirements during the re-examination of part 11.",
+          "score": 0.7811184,
+          "page": 6,
+          "section_heading": null,
+          "filename": "Part-11--Electronic-Records--Electronic-Signatures---Scope-and-Application-(PDF).pdf",
+          "title": "Part 11, Electronic Records; Electronic Signatures - Scope and Application",
+          "source_agency": "FDA",
+          "doc_type": "guidance",
+          "year": 2003,
+          "version": "Final September 2003"
+        }
+      ],
+      "latency_ms": 21.31
+    }
+  },
+  {
+    "name": "gapcheck empty filtered corpus submit",
+    "status": 202,
+    "duration_s": 0.010924074005743023,
+    "body": {
+      "job_id": "10629a0e-07e4-4437-9665-ae6986dcce01",
+      "status": "queued"
+    }
+  },
+  {
+    "name": "gapcheck empty filtered corpus result",
+    "status": 200,
+    "body": {
+      "id": "10629a0e-07e4-4437-9665-ae6986dcce01",
+      "status": "completed",
+      "progress": {
+        "phase": "completed",
+        "clauses_total": 1,
+        "clauses_done": 1,
+        "requirements_total": 0,
+        "requirements_done": 0
+      },
+      "report": {
+        "job_id": "10629a0e-07e4-4437-9665-ae6986dcce01",
+        "generated_at": "2026-10-25T14:09:08.924180Z",
+        "banner": "Decision support only, not legal advice. This report is limited to the ingested corpus and does not establish legal compliance.",
+        "metadata": {
+          "caps": {
+            "max_tokens": 200000,
+            "max_clauses": 80,
+            "max_requirements": 120,
+            "requirements_capped": false
+          },
+          "model": "openai_compatible:llama3.1:8b",
+          "backend": "pgvector",
+          "filters": {
+            "doc_type": null,
+            "year_max": null,
+            "year_min": null,
+            "source_agency": "__audit_no_matching_agency__"
+          },
+          "duration_ms": 38.87,
+          "token_usage": {
+            "input_tokens": 0,
+            "total_tokens": 0,
+            "output_tokens": 0
+          },
+          "clauses_total": 1,
+          "judge_failures": 0,
+          "retrieval_top_k": 5,
+          "sop_match_top_k": 3,
+          "judge_cache_hits": 0,
+          "judge_concurrency": 4,
+          "requirements_total": 0,
+          "relevance_threshold": 0.6,
+          "global_top_documents": 2,
+          "requirement_document_ids": []
+        },
+        "caps_hit": [],
+        "counts_by_verdict": {
+          "missing": 0,
+          "partial": 0,
+          "conflict": 0,
+          "addressed": 0,
+          "compliant": 0,
+          "judge_failed": 0,
+          "partially_addressed": 0,
+          "not_covered_by_corpus": 1
+        },
+        "counts_by_severity": {
+          "low": 1,
+          "high": 0,
+          "medium": 0
+        },
+        "counts_by_direction": {
+          "regulation_to_sop": 0,
+          "sop_to_regulation": 1
+        },
+        "sop_clauses": [
+          {
+            "clause_id": "SOP-001",
+            "section": "General",
+            "text": "Personnel complete training before using the system.",
+            "char_start": 0,
+            "char_end": 52
+          }
+        ],
+        "findings": [
+          {
+            "finding_id": "GAP-0001",
+            "direction": "sop_to_regulation",
+            "verdict": "not_covered_by_corpus",
+            "severity": "low",
+            "sop_clause_refs": [
+              "SOP-001"
+            ],
+            "regulation_citations": [],
+            "rationale": "No retrieved regulation chunk met the relevance threshold (0.60); no LLM judgement was made.",
+            "suggested_fix": "Suggested fix (not legal advice): Review whether the applicable regulation is in the ingested corpus; no conclusion is made from this run.",
+            "requirement_strength": null,
+            "requirement_id": null
+          }
+        ]
+      },
+      "error": null,
+      "created_at": "2026-10-25T14:09:08.879088Z",
+      "started_at": "2026-10-25T14:09:08.883757Z",
+      "finished_at": "2026-10-25T14:09:08.925072Z"
+    }
+  },
+  {
+    "name": "live RAG:pgvector",
+    "status": 502,
+    "duration_s": 60.11207754199859,
+    "body": {
+      "error": {
+        "code": "llm_unavailable",
+        "message": "The language model is unavailable.",
+        "request_id": "ee99d88261a54675975d74c444c6175e"
+      }
+    }
+  },
+  {
+    "name": "live agent:pgvector",
+    "status": 200,
+    "duration_s": 38.053521893001744,
+    "body": {
+      "query": "Find FDA documents about electronic signatures.",
+      "backend": "pgvector",
+      "answer": "The FDA has guidelines for electronic signatures in the context of medical devices and pharmaceuticals, specifically in the 21 CFR Part 11 regulation.",
+      "citations": [],
+      "grounded": false,
+      "grounding_reason": "no_valid_citations",
+      "trace": [],
+      "step_count": 0,
+      "partial": true,
+      "partial_reason": "timeout",
+      "usage": {
+        "input_tokens": 224,
+        "output_tokens": 44,
+        "total_tokens": 268
+      },
+      "latency_ms": 38017.83
+    }
+  }
+]

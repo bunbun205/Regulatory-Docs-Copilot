@@ -45,6 +45,7 @@ class Settings(BaseSettings):
     LLM_MAX_RETRIES: int = 2
     LLM_TEMPERATURE: float = 0.0
     LLM_MAX_TOKENS: int = 1024
+    LLM_REASONING_EFFORT: Literal["none", "minimal", "low", "medium", "high"] | None = None
 
     ANTHROPIC_API_KEY: str | None = None
     ANTHROPIC_BASE_URL: str = "https://api.anthropic.com"

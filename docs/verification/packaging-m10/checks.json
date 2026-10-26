@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-26",
+  "backend_tests_passed": 207,
+  "backend_coverage_percent": 89.01,
+  "frontend_unit_tests_passed": 113,
+  "container_browser_tests_passed": 11,
+  "frontend_ask_initial_gzip_bytes": 102197,
+  "frontend_ask_budget_gzip_bytes": 110000,
+  "local_production_migration": "0005",
+  "local_production_readiness": "Postgres, Qdrant and real embedding model ready",
+  "production_smoke_documents_ingested": 3,
+  "production_smoke_chunks_ingested": 9,
+  "production_smoke_rejections": 0,
+  "production_smoke_search": "both stores returned 5 authenticated results through nginx",
+  "production_smoke_provider": "synthetic unavailable endpoint; no live generation calls",
+  "production_smoke_note": "The already-built local image predated demo-manifest.csv; the manifest was copied only into the isolated smoke container. CI builds the image from the complete PR checkout.",
+  "human_quality_acceptance": "pending reviewed labels and author-supplied clean SOPs"
+}

@@ -1,0 +1,20 @@
+# Prepared deployment configuration only; no AWS resources are provisioned here.
+# Requires .env.compose and TLS termination at an ALB or another managed proxy.
+services:
+  postgres:
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a unique URL-safe database password}
+  backend:
+    environment:
+      LABDOCS_ENVIRONMENT: production
+      LABDOCS_LLM_PROVIDER: openai_compatible
+      LABDOCS_LLM_BASE_URL: ${LABDOCS_LLM_BASE_URL:?Set the Groq or Gemini endpoint}
+      LABDOCS_LLM_MODEL: ${LABDOCS_LLM_MODEL:?Set a model available to your provider account}
+      LABDOCS_LLM_API_KEY: ${LABDOCS_LLM_API_KEY:?Supply a provider key on the host}
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+  frontend:
+    # Restrict the host security group to the ALB's security group on this port.
+    ports: !override ["0.0.0.0:${WEB_PORT:-3000}:8080"]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]

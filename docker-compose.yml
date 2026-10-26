@@ -1,5 +1,11 @@
 name: labdocs
 
+x-api-environment: &api-environment
+  LABDOCS_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-labdocs}:${POSTGRES_PASSWORD:-labdocs}@postgres:5432/${POSTGRES_DB:-labdocs}
+  LABDOCS_VECTOR_BACKEND: ${LABDOCS_VECTOR_BACKEND:-both}
+  LABDOCS_QDRANT_URL: http://qdrant:6333
+  LABDOCS_UPLOAD_DIR: /app/data/uploads
+
 services:
   postgres:
     image: pgvector/pgvector:0.8.7-pg16
@@ -7,25 +13,93 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-labdocs}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-labdocs}
       POSTGRES_DB: ${POSTGRES_DB:-labdocs}
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./infra/postgres/01-create-test-db.sql:/docker-entrypoint-initdb.d/01-create-test-db.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 20
+    restart: unless-stopped
 
   qdrant:
     image: qdrant/qdrant:v1.20.0
-    ports:
-      - "6333:6333"
-      - "6334:6334"
     volumes:
       - qdrant_data:/qdrant/storage
+    healthcheck:
+      # The official image has bash, but no curl/wget. API readiness also checks Qdrant HTTP.
+      test: ["CMD-SHELL", "bash -c ': > /dev/tcp/127.0.0.1/6333'"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  migrate:
+    image: labdocs-api:${LABDOCS_IMAGE_TAG:-local}
+    build:
+      context: .
+      target: production
+    environment:
+      LABDOCS_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-labdocs}:${POSTGRES_PASSWORD:-labdocs}@postgres:5432/${POSTGRES_DB:-labdocs}
+    command: ["alembic", "upgrade", "head"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  backend:
+    image: labdocs-api:${LABDOCS_IMAGE_TAG:-local}
+    build:
+      context: .
+      target: production
+    env_file:
+      - path: .env.compose
+        required: false
+    environment: *api-environment
+    volumes:
+      - uploads:/app/data/uploads
+      - embedding_cache:/app/cache/huggingface
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/readyz', timeout=5).close()"]
+      interval: 10s
+      timeout: 8s
+      retries: 12
+      start_period: 300s
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 35s
+
+  frontend:
+    image: labdocs-web:${LABDOCS_IMAGE_TAG:-local}
+    build:
+      context: ./frontend
+    ports:
+      - "${WEB_BIND_IP:-127.0.0.1}:${WEB_PORT:-3000}:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:0.13.5
+    profiles: [ollama]
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
 
 volumes:
   postgres_data:
   qdrant_data:
+  uploads:
+  embedding_cache:
+  ollama_data:

@@ -58,7 +58,13 @@ async def test_metrics_use_route_templates_and_bound_unknown_paths(client, app, 
     assert 'endpoint="unmatched",method="GET",status_code="404"} 3.0' in metrics
     assert "/unknown-" not in metrics
     assert "http_request_duration_seconds_count" in metrics
-    assert (await client.get("/metrics")).text == metrics
+
+    # ProcessCollector gauges can change between scrapes. The application's
+    # request families must stay identical because /metrics is excluded.
+    def request_samples(body: str) -> list[str]:
+        return [line for line in body.splitlines() if line.startswith("http_request")]
+
+    assert request_samples((await client.get("/metrics")).text) == request_samples(metrics)
 
 
 async def test_unhandled_errors_are_counted_with_request_id(app):
