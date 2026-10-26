@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "dataset_kind": "synthetic_ci_fixture_only",
+  "verification_status": "synthetic_regression_pass",
+  "created_at": "2026-10-26T12:19:13.376079+00:00",
+  "corpus_snapshot": "3ab5a31aa457810e31886762190e18b092dd7373bac818c2941a133bd3a7de09",
+  "provider": "fake",
+  "model": "synthetic-fixture",
+  "top_k": 2,
+  "backends": {
+    "synthetic_numpy (not pgvector/Qdrant)": {
+      "questions": {
+        "summary": {
+          "verified_questions": 3,
+          "answerable_questions": 2,
+          "retrieval_recall_at_k": 1.0,
+          "retrieval_mrr": 1.0,
+          "raw_citation_validity": 1.0,
+          "valid_citations": 4,
+          "proposed_citations": 4,
+          "citation_valid_answer_rate": 1.0,
+          "abstention_accuracy": 1.0,
+          "unanswerable_questions": 1,
+          "failed_questions": 0,
+          "retrieval_latency": {
+            "samples": 3,
+            "p50_ms": 0.66,
+            "p95_ms": 0.669
+          },
+          "total_latency": {
+            "samples": 3,
+            "p50_ms": 0.886,
+            "p95_ms": 0.9480999999999999
+          }
+        },
+        "unverified_excluded": 0,
+        "diagnostic_unverified_queries": 0,
+        "diagnostics": {
+          "failed_queries": 0,
+          "retrieval_latency": {
+            "samples": 0,
+            "p50_ms": null,
+            "p95_ms": null
+          }
+        },
+        "rows": [
+          {
+            "id": "fixture-one",
+            "kind": "answerable",
+            "verified": true,
+            "generation_enabled": true,
+            "retrieve_ms": 0.66,
+            "retrieved_chunk_ids": [
+              "00000000-0000-0000-0000-000000000001",
+              "00000000-0000-0000-0000-000000000002"
+            ],
+            "targets": 1,
+            "targets_found": 1,
+            "recall_at_k": 1.0,
+            "reciprocal_rank": 1.0,
+            "all_sources_found": 1,
+            "abstained": false,
+            "grounded": true,
+            "grounding_reason": null,
+            "valid_citations": 2,
+            "proposed_citations": 2,
+            "generate_ms": 0.0,
+            "token_usage": {
+              "input_tokens": 40,
+              "output_tokens": 10
+            },
+            "total_ms": 0.886
+          },
+          {
+            "id": "fixture-multi",
+            "kind": "multi_document",
+            "verified": true,
+            "generation_enabled": true,
+            "retrieve_ms": 0.67,
+            "retrieved_chunk_ids": [
+              "00000000-0000-0000-0000-000000000001",
+              "00000000-0000-0000-0000-000000000002"
+            ],
+            "targets": 2,
+            "targets_found": 2,
+            "recall_at_k": 1.0,
+            "reciprocal_rank": 1.0,
+            "all_sources_found": 1,
+            "abstained": false,
+            "grounded": true,
+            "grounding_reason": null,
+            "valid_citations": 2,
+            "proposed_citations": 2,
+            "generate_ms": 0.0,
+            "token_usage": {
+              "input_tokens": 40,
+              "output_tokens": 10
+            },
+            "total_ms": 0.955
+          },
+          {
+            "id": "fixture-unknown",
+            "kind": "unanswerable",
+            "verified": true,
+            "generation_enabled": true,
+            "retrieve_ms": 0.24,
+            "retrieved_chunk_ids": [
+              "00000000-0000-0000-0000-000000000001",
+              "00000000-0000-0000-0000-000000000002"
+            ],
+            "abstained": true,
+            "grounded": false,
+            "grounding_reason": "below_threshold",
+            "valid_citations": 0,
+            "proposed_citations": 0,
+            "generate_ms": 0.0,
+            "token_usage": {
+              "input_tokens": 0,
+              "output_tokens": 0
+            },
+            "total_ms": 0.296
+          }
+        ]
+      },
+      "gaps": {
+        "verified_cases": 2,
+        "unverified_excluded": 0,
+        "defects_detected": 2,
+        "defects_expected_across_repeats": 2,
+        "injected_defect_recall": 1.0,
+        "valid_references": 14,
+        "references": 14,
+        "citation_validity": 1.0,
+        "clean_reviewed_runs": 0,
+        "clean_reviewed_determinate_findings": 0,
+        "clean_false_positives": 0,
+        "clean_false_positive_rate": null,
+        "failed_runs": 0,
+        "rows": [
+          {
+            "id": "fixture-clean",
+            "kind": "clean",
+            "runs": [
+              {
+                "repeat": 1,
+                "defects_expected": 0,
+                "report_sha256": "66b583d5408f9d1b0545980ba8921af50fe086ee03147eb1790663e720898727",
+                "defects_detected": [],
+                "valid_references": 4,
+                "references": 4,
+                "judge_failed": 0,
+                "caps_hit": [],
+                "duration_ms": 2.17
+              },
+              {
+                "repeat": 2,
+                "defects_expected": 0,
+                "report_sha256": "cf8d7e17ed20bf5ded873da55d1b34b0db7ace95b46c76357742084ca4b7648f",
+                "defects_detected": [],
+                "valid_references": 4,
+                "references": 4,
+                "judge_failed": 0,
+                "caps_hit": [],
+                "duration_ms": 1.31
+              }
+            ],
+            "stability": {
+              "comparisons": 1,
+              "verdict_set_jaccard": 1.0
+            }
+          },
+          {
+            "id": "fixture-mutation",
+            "kind": "mutation",
+            "runs": [
+              {
+                "repeat": 1,
+                "defects_expected": 1,
+                "report_sha256": "d567adec77faabb58fb87b646cf3fca14367d8dca7927aacefe7e4df5d526474",
+                "defects_detected": [
+                  "destroyed"
+                ],
+                "valid_references": 3,
+                "references": 3,
+                "judge_failed": 0,
+                "caps_hit": [],
+                "duration_ms": 1.16
+              },
+              {
+                "repeat": 2,
+                "defects_expected": 1,
+                "report_sha256": "d8bff306b965c21f8a3da11a49e826bbfdf32c404c930b06b7b89d3a6d0cb21c",
+                "defects_detected": [
+                  "destroyed"
+                ],
+                "valid_references": 3,
+                "references": 3,
+                "judge_failed": 0,
+                "caps_hit": [],
+                "duration_ms": 1.12
+              }
+            ],
+            "stability": {
+              "comparisons": 1,
+              "verdict_set_jaccard": 1.0
+            }
+          }
+        ]
+      }
+    }
+  },
+  "limitations": [
+    "All fixtures and expected outcomes are synthetic code-defined regression oracles, not human-verified quality evidence.",
+    "This does not measure either real vector backend or any production model.",
+    "No clean false-positive rate is invented without an exact-report human review."
+  ]
+}

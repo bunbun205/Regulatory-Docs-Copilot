@@ -1,0 +1,1376 @@
+{
+  "schema_version": 1,
+  "dataset_kind": "author_corpus",
+  "created_at": "2026-10-26T12:17:13.891002+00:00",
+  "corpus_snapshot": "47fbed48a812dc1b3e520b16e0b3fd5fba0989c607cfa97875173245b20433a1",
+  "documents": 8,
+  "postgres_chunks": 238,
+  "dataset_hashes": {
+    "questions": "774cff56305d4a16098e9c98fb2ea248ab6ed65402105d93489d81d69e3d70bf",
+    "mutations": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "provider": "openai_compatible",
+  "model": "qwen2.5:7b",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "top_k": 8,
+  "abstention_threshold": 0.75,
+  "retrieval_only": true,
+  "gap_repeats": 3,
+  "timing_method": "Sequential queries per backend, embedding warmed once, no generation cache; backend order as listed.",
+  "verification_status": "awaiting_human_review",
+  "backends": {
+    "pgvector": {
+      "store_chunks": 238,
+      "questions": {
+        "summary": {
+          "verified_questions": 0,
+          "answerable_questions": 0,
+          "retrieval_recall_at_k": null,
+          "retrieval_mrr": null,
+          "raw_citation_validity": null,
+          "valid_citations": 0,
+          "proposed_citations": 0,
+          "citation_valid_answer_rate": null,
+          "abstention_accuracy": null,
+          "unanswerable_questions": 0,
+          "failed_questions": 0,
+          "retrieval_latency": {
+            "samples": 0,
+            "p50_ms": null,
+            "p95_ms": null
+          },
+          "total_latency": {
+            "samples": 0,
+            "p50_ms": null,
+            "p95_ms": null
+          }
+        },
+        "unverified_excluded": 30,
+        "diagnostic_unverified_queries": 30,
+        "diagnostics": {
+          "failed_queries": 0,
+          "retrieval_latency": {
+            "samples": 30,
+            "p50_ms": 38.11,
+            "p95_ms": 209.29949999999957
+          }
+        },
+        "rows": [
+          {
+            "id": "q01",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 280.35,
+            "retrieved_chunk_ids": [
+              "c0589c2b-10a7-4771-9d50-a41f45b5d506",
+              "c4671ddd-d71c-477c-ad3c-aca771da7636",
+              "cdf8c4a0-c0c1-4d12-9138-654b7e15eed5",
+              "1eace84c-905d-4a6d-b823-e4254247166e",
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "eca502b2-81fe-4c9c-a6b0-74f8f9f1239f",
+              "d9cc3988-7b2e-4fc0-be74-f73feb009f67",
+              "f7288669-8529-4c34-84bc-acaf01e7e346"
+            ],
+            "total_ms": 280.498
+          },
+          {
+            "id": "q02",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 883.96,
+            "retrieved_chunk_ids": [
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "eb21916f-2cfb-44df-892b-daf7d05eb1fc",
+              "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d",
+              "13784d81-c92c-4e94-9c33-59720422d530",
+              "c3488baf-f796-4cca-8541-7effa2ea98e5",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "eb29db2a-97c8-41f7-a326-3f2bb3d65f4a"
+            ],
+            "total_ms": 884.101
+          },
+          {
+            "id": "q03",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 32.53,
+            "retrieved_chunk_ids": [
+              "46c7bc44-3338-4b1d-83ed-da57b6602c05",
+              "13cf0e05-c56d-494b-b365-e7ba19142d2e",
+              "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "c0589c2b-10a7-4771-9d50-a41f45b5d506",
+              "c056cfbe-727b-46df-bc30-b8090cd09115",
+              "6af0e111-cb1a-4c62-82f4-1c99c24ace81",
+              "29894d80-8813-4500-83f0-0ad2b56816ab",
+              "6eae33ba-5d0e-4fd3-91c4-4dc6ec479542"
+            ],
+            "total_ms": 32.671
+          },
+          {
+            "id": "q04",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 50.62,
+            "retrieved_chunk_ids": [
+              "b87efb99-aea0-4fe9-8241-207d0e7865b3",
+              "4b06abcb-9a4c-42c6-9fbf-951a07179d80",
+              "689b496a-92e3-4829-8ec0-0dfe7e9a33e8",
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "28848001-0e11-427a-982d-fdc8535a8c46",
+              "1eace84c-905d-4a6d-b823-e4254247166e",
+              "b274ffa6-f74a-4dab-86b4-8e20852eb2e4",
+              "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d"
+            ],
+            "total_ms": 50.762
+          },
+          {
+            "id": "q05",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 66.06,
+            "retrieved_chunk_ids": [
+              "fd425252-0c4e-4c96-82b5-cf5f94c7ac37",
+              "cd463acb-b00f-4834-af40-a23ee6900b58",
+              "09177c3a-ca1a-43c8-b3aa-fde7fedf19e7",
+              "86a53c33-0544-43d2-ae59-0274e71ae136",
+              "95d22b1d-5cb2-43d2-80fa-e9e994a0ae83",
+              "e7b7412f-6cd9-4cc7-b8a0-cc50fae48ab9",
+              "cc7969f5-79b2-44b1-b42b-1920e142dfb5",
+              "1eace84c-905d-4a6d-b823-e4254247166e"
+            ],
+            "total_ms": 66.186
+          },
+          {
+            "id": "q06",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 62.51,
+            "retrieved_chunk_ids": [
+              "a1310ab0-dd27-4fc9-adf1-528869ca7061",
+              "689b496a-92e3-4829-8ec0-0dfe7e9a33e8",
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "feb977c4-1ec3-4f18-8869-c3c244eee3b0",
+              "fe6716dc-d152-4d5e-84b8-ffdf0d9d9e23",
+              "488263f7-4a6e-4cbc-bfdc-afe9ca00d897",
+              "9f60529f-0aa3-4315-9191-a9e83a94b454",
+              "7e1dbd67-4c86-4fe6-becf-45a4ebe81811"
+            ],
+            "total_ms": 62.635
+          },
+          {
+            "id": "q07",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 40.33,
+            "retrieved_chunk_ids": [
+              "18cbb223-dffe-410a-a9bf-345fed59c341",
+              "8f230445-0db9-4330-869a-26e4145eb849",
+              "1ead910a-9a01-403e-acb3-792668cf8fa8",
+              "a1a4d598-8bb7-41ed-903a-613b498def42",
+              "33d0d181-61d9-4214-ba6d-a54f899573cf",
+              "dacac9de-6076-49eb-bd27-2cdf7e34f983",
+              "33a0945f-c295-45bb-8982-ec4058d05767",
+              "4be5b2d9-2cd1-4433-87ee-588ee607d1f9"
+            ],
+            "total_ms": 40.46
+          },
+          {
+            "id": "q08",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 27.42,
+            "retrieved_chunk_ids": [
+              "33d0d181-61d9-4214-ba6d-a54f899573cf",
+              "8f230445-0db9-4330-869a-26e4145eb849",
+              "bb6256c7-8856-4ec9-a832-98d656017269",
+              "18cbb223-dffe-410a-a9bf-345fed59c341",
+              "dacac9de-6076-49eb-bd27-2cdf7e34f983",
+              "60ac0217-efbd-492d-b22c-fc234128fa71",
+              "c509d943-2638-455c-bbc4-2fd4bb9827a2",
+              "1ead910a-9a01-403e-acb3-792668cf8fa8"
+            ],
+            "total_ms": 27.555
+          },
+          {
+            "id": "q09",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 26.08,
+            "retrieved_chunk_ids": [
+              "4fbfeacc-a43c-49b0-82ff-280520a7987d",
+              "2bb0bdd8-63ca-4c79-9d80-8e1b25e6da72",
+              "2cf92232-7806-4c7a-90e7-7c2c1cb0c013",
+              "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "cdf8c4a0-c0c1-4d12-9138-654b7e15eed5",
+              "436c98d2-29ce-4db6-8795-68705831baed",
+              "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "7b46097f-d8e6-4482-ba82-7621009f4f88"
+            ],
+            "total_ms": 26.21
+          },
+          {
+            "id": "q10",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 35.89,
+            "retrieved_chunk_ids": [
+              "42144d7e-452f-47d8-906f-9b6dd73a8e8f",
+              "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+              "5a333189-06f0-457b-86a5-04f04677a831",
+              "436c98d2-29ce-4db6-8795-68705831baed",
+              "cfbba309-083e-476d-84d9-23bc3b1b6370",
+              "81b6fa82-2411-4d12-8a36-ee63529c03d0",
+              "1e8562ca-270c-4780-83c8-c9f2f690ef57",
+              "f4b80283-c5b5-4d77-8053-168fb057ae9c"
+            ],
+            "total_ms": 36.021
+          },
+          {
+            "id": "q11",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 31.85,
+            "retrieved_chunk_ids": [
+              "436c98d2-29ce-4db6-8795-68705831baed",
+              "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+              "42144d7e-452f-47d8-906f-9b6dd73a8e8f",
+              "5a333189-06f0-457b-86a5-04f04677a831",
+              "883de09d-c250-456e-b20b-ba2831ae2c3d",
+              "db038946-05bd-4296-9373-338e08c75a10",
+              "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "1e8562ca-270c-4780-83c8-c9f2f690ef57"
+            ],
+            "total_ms": 31.975
+          },
+          {
+            "id": "q12",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 24.74,
+            "retrieved_chunk_ids": [
+              "1e8562ca-270c-4780-83c8-c9f2f690ef57",
+              "5a333189-06f0-457b-86a5-04f04677a831",
+              "42144d7e-452f-47d8-906f-9b6dd73a8e8f",
+              "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "ef4e07b0-a9f6-4611-b4ed-df4867164bd3",
+              "e163d246-a5cf-4913-8f14-93d5e415e966",
+              "cad6af43-34db-406c-8277-7876d94c155a",
+              "3618c12f-f527-4c8d-9cad-0e495166c98c"
+            ],
+            "total_ms": 24.869
+          },
+          {
+            "id": "q13",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 55.77,
+            "retrieved_chunk_ids": [
+              "6dd8976a-ee9c-49dc-8141-27823bdfa7a8",
+              "e8d6cb59-b1a1-4c9f-b9fc-4e9d777bf543",
+              "e1fa5f99-e53b-4ece-bff5-42907b936abb",
+              "7c6b65db-2826-4904-88f6-28d91cadeea1",
+              "442a6cae-29db-4004-9b36-1013eb78ea6f",
+              "db038946-05bd-4296-9373-338e08c75a10",
+              "649e9206-cb6e-4342-8247-be9162f13026",
+              "436c98d2-29ce-4db6-8795-68705831baed"
+            ],
+            "total_ms": 55.904
+          },
+          {
+            "id": "q14",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 30.29,
+            "retrieved_chunk_ids": [
+              "820ea3e3-c4a2-41a0-8a9c-a5b2f8fa5337",
+              "df484b30-1f5b-4998-8969-dba495609840",
+              "fe5c1833-523c-4f53-8765-ee3e376dfcc0",
+              "4615c618-cce7-4c24-a1c0-db48bfe5deb7",
+              "9b757f9a-2c47-457a-a961-d18429cb7286",
+              "7c6b65db-2826-4904-88f6-28d91cadeea1",
+              "27d814af-9480-43ce-bd70-bd5bd7e75dfe",
+              "83cf5bc0-c24f-4004-94b8-52f1220aa74c"
+            ],
+            "total_ms": 30.424
+          },
+          {
+            "id": "q15",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 34.65,
+            "retrieved_chunk_ids": [
+              "c3488baf-f796-4cca-8541-7effa2ea98e5",
+              "b783be0a-e468-41c4-81bd-56219425403f",
+              "b28f17ba-ca4d-4e93-b069-06e55737f2ae",
+              "43759ae1-7590-44ef-b66e-a7a9d2ea09a3",
+              "7ac0c2c1-5bd1-4edf-a97f-c311ed5366c7",
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "34896462-a556-460a-9c74-42947718c7b8",
+              "490f59e1-ee50-442e-8452-6278a7fa4f9f"
+            ],
+            "total_ms": 34.792
+          },
+          {
+            "id": "q16",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 25.31,
+            "retrieved_chunk_ids": [
+              "7ac0c2c1-5bd1-4edf-a97f-c311ed5366c7",
+              "b4b79f4e-61c5-4866-bd8e-fc43e03ad590",
+              "c6396229-45a2-420d-bab3-554c57dd932f",
+              "f25a5bfe-4e2e-41c7-bb17-1896b16f641f",
+              "b783be0a-e468-41c4-81bd-56219425403f",
+              "6a40bbc5-4dfd-4e2e-b426-d7d067979b1b",
+              "dd8656ae-16a5-4ca2-871d-72bdda88b1d3",
+              "dd847184-a3e7-42ea-b3a7-48a89c9c92d7"
+            ],
+            "total_ms": 25.449
+          },
+          {
+            "id": "q17",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 25.96,
+            "retrieved_chunk_ids": [
+              "8930614f-46d8-4240-8745-e8de013ec605",
+              "c28257ee-c645-4688-b22c-600e17e79f88",
+              "cdf8c4a0-c0c1-4d12-9138-654b7e15eed5",
+              "07cad0eb-fff8-46de-822e-936a7781f16f",
+              "eca502b2-81fe-4c9c-a6b0-74f8f9f1239f",
+              "48280397-f17e-4266-ba27-bae6e7a0fd5b",
+              "d9cc3988-7b2e-4fc0-be74-f73feb009f67",
+              "f7288669-8529-4c34-84bc-acaf01e7e346"
+            ],
+            "total_ms": 26.11
+          },
+          {
+            "id": "q18",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 24.47,
+            "retrieved_chunk_ids": [
+              "f7288669-8529-4c34-84bc-acaf01e7e346",
+              "48280397-f17e-4266-ba27-bae6e7a0fd5b",
+              "d9cc3988-7b2e-4fc0-be74-f73feb009f67",
+              "d8d5cd5a-8590-45c6-b9bb-5a7009667202",
+              "eca502b2-81fe-4c9c-a6b0-74f8f9f1239f",
+              "30311245-7c05-4ba6-a495-f50fd8f7b11e",
+              "cdf8c4a0-c0c1-4d12-9138-654b7e15eed5",
+              "c4671ddd-d71c-477c-ad3c-aca771da7636"
+            ],
+            "total_ms": 24.609
+          },
+          {
+            "id": "q19",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 65.93,
+            "retrieved_chunk_ids": [
+              "f8ca8166-bf91-4c1b-b146-7f0313a02ce2",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "b34bfde7-c776-4733-86ba-c2277b067a2f",
+              "6a381eff-3349-4358-ab02-17b07e9ddd56",
+              "c0589c2b-10a7-4771-9d50-a41f45b5d506",
+              "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d",
+              "1b434880-2351-4731-8d6e-05560ad42d8a",
+              "f665ab5e-ebe9-4e7b-8639-25a86f04674c"
+            ],
+            "total_ms": 66.065
+          },
+          {
+            "id": "q20",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 66.65,
+            "retrieved_chunk_ids": [
+              "f8ca8166-bf91-4c1b-b146-7f0313a02ce2",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "b34bfde7-c776-4733-86ba-c2277b067a2f",
+              "6a381eff-3349-4358-ab02-17b07e9ddd56",
+              "f665ab5e-ebe9-4e7b-8639-25a86f04674c",
+              "2ce1f319-2afc-4bbe-baa3-7212d32cd01f",
+              "0a7ac532-b4cc-456a-bf78-8d4e1bb9f5e3",
+              "43759ae1-7590-44ef-b66e-a7a9d2ea09a3"
+            ],
+            "total_ms": 66.785
+          },
+          {
+            "id": "q21",
+            "kind": "multi_document",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 40.39,
+            "retrieved_chunk_ids": [
+              "f8ca8166-bf91-4c1b-b146-7f0313a02ce2",
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "b34bfde7-c776-4733-86ba-c2277b067a2f",
+              "9b68c1b3-b33f-480e-b922-3a4f86f68e4d",
+              "b783be0a-e468-41c4-81bd-56219425403f",
+              "6a381eff-3349-4358-ab02-17b07e9ddd56",
+              "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d"
+            ],
+            "total_ms": 40.524
+          },
+          {
+            "id": "q22",
+            "kind": "multi_document",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 44.92,
+            "retrieved_chunk_ids": [
+              "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "46c7bc44-3338-4b1d-83ed-da57b6602c05",
+              "29894d80-8813-4500-83f0-0ad2b56816ab",
+              "c0589c2b-10a7-4771-9d50-a41f45b5d506",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "13cf0e05-c56d-494b-b365-e7ba19142d2e",
+              "6af0e111-cb1a-4c62-82f4-1c99c24ace81",
+              "c056cfbe-727b-46df-bc30-b8090cd09115"
+            ],
+            "total_ms": 45.058
+          },
+          {
+            "id": "q23",
+            "kind": "multi_document",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 57.45,
+            "retrieved_chunk_ids": [
+              "33d0d181-61d9-4214-ba6d-a54f899573cf",
+              "b87efb99-aea0-4fe9-8241-207d0e7865b3",
+              "c509d943-2638-455c-bbc4-2fd4bb9827a2",
+              "bb6256c7-8856-4ec9-a832-98d656017269",
+              "8f230445-0db9-4330-869a-26e4145eb849",
+              "4b06abcb-9a4c-42c6-9fbf-951a07179d80",
+              "dacac9de-6076-49eb-bd27-2cdf7e34f983",
+              "18cbb223-dffe-410a-a9bf-345fed59c341"
+            ],
+            "total_ms": 57.696
+          },
+          {
+            "id": "q24",
+            "kind": "multi_document",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 22.69,
+            "retrieved_chunk_ids": [
+              "df484b30-1f5b-4998-8969-dba495609840",
+              "883de09d-c250-456e-b20b-ba2831ae2c3d",
+              "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "7c6b65db-2826-4904-88f6-28d91cadeea1",
+              "ef4e07b0-a9f6-4611-b4ed-df4867164bd3",
+              "436c98d2-29ce-4db6-8795-68705831baed",
+              "9b757f9a-2c47-457a-a961-d18429cb7286",
+              "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732"
+            ],
+            "total_ms": 22.853
+          },
+          {
+            "id": "q25",
+            "kind": "multi_document",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 23.83,
+            "retrieved_chunk_ids": [
+              "f8ca8166-bf91-4c1b-b146-7f0313a02ce2",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "c0589c2b-10a7-4771-9d50-a41f45b5d506",
+              "c89a0ff0-c5a3-4636-ad3b-c58f25fe1800",
+              "6a381eff-3349-4358-ab02-17b07e9ddd56",
+              "b34bfde7-c776-4733-86ba-c2277b067a2f",
+              "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d",
+              "d43410aa-beff-498d-8688-cf26e47c4788"
+            ],
+            "total_ms": 23.962
+          },
+          {
+            "id": "q26",
+            "kind": "unanswerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 30.34,
+            "retrieved_chunk_ids": [
+              "955b6e8a-b598-47df-956a-87ad236b28e5",
+              "f316252d-f303-47e7-aad1-ec62f7e7fff3",
+              "436c98d2-29ce-4db6-8795-68705831baed",
+              "86a53c33-0544-43d2-ae59-0274e71ae136",
+              "880a2bc6-4338-4581-8e4b-d90c2413c3d4",
+              "3618c12f-f527-4c8d-9cad-0e495166c98c",
+              "d7b78090-28f4-4306-b8f5-b468e609a005",
+              "1e8562ca-270c-4780-83c8-c9f2f690ef57"
+            ],
+            "total_ms": 30.47
+          },
+          {
+            "id": "q27",
+            "kind": "unanswerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 62.49,
+            "retrieved_chunk_ids": [
+              "2ce1f319-2afc-4bbe-baa3-7212d32cd01f",
+              "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "b2e0b6ae-1c43-46e1-8db2-88be79b7943d",
+              "b783be0a-e468-41c4-81bd-56219425403f",
+              "eb21916f-2cfb-44df-892b-daf7d05eb1fc",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "436c98d2-29ce-4db6-8795-68705831baed"
+            ],
+            "total_ms": 62.637
+          },
+          {
+            "id": "q28",
+            "kind": "unanswerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 76.78,
+            "retrieved_chunk_ids": [
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "28848001-0e11-427a-982d-fdc8535a8c46",
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "b2e0b6ae-1c43-46e1-8db2-88be79b7943d",
+              "9b68c1b3-b33f-480e-b922-3a4f86f68e4d",
+              "9a1b3311-ae80-4c78-a2b5-79d9207cd23a",
+              "13cf0e05-c56d-494b-b365-e7ba19142d2e",
+              "13784d81-c92c-4e94-9c33-59720422d530"
+            ],
+            "total_ms": 76.921
+          },
+          {
+            "id": "q29",
+            "kind": "unanswerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 28.08,
+            "retrieved_chunk_ids": [
+              "00efdf79-53ea-4c0e-ba91-3f2e2a696d22",
+              "468a35ae-6351-4fd9-8bd7-7bd23a796c65",
+              "9b68c1b3-b33f-480e-b922-3a4f86f68e4d",
+              "0a7ac532-b4cc-456a-bf78-8d4e1bb9f5e3",
+              "4b06abcb-9a4c-42c6-9fbf-951a07179d80",
+              "c4e5d968-1311-466c-aef5-f9f33887a567",
+              "5a7abb91-7a50-4d75-8dd5-fe9fa3265041",
+              "30311245-7c05-4ba6-a495-f50fd8f7b11e"
+            ],
+            "total_ms": 28.216
+          },
+          {
+            "id": "q30",
+            "kind": "unanswerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 122.46,
+            "retrieved_chunk_ids": [
+              "6c21e396-8995-4812-ae3f-149b22352f8e",
+              "b28f17ba-ca4d-4e93-b069-06e55737f2ae",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "13784d81-c92c-4e94-9c33-59720422d530",
+              "6a48e46e-806b-4f4c-ad43-f4004ee83c86",
+              "2ebc203f-10cb-4d85-aa11-a0029140cac6",
+              "3570c147-424b-4e65-9775-2d3bfe3a4458",
+              "b2e0b6ae-1c43-46e1-8db2-88be79b7943d"
+            ],
+            "total_ms": 122.592
+          }
+        ]
+      },
+      "gaps": {
+        "verified_cases": 0,
+        "unverified_excluded": 0,
+        "defects_detected": 0,
+        "defects_expected_across_repeats": 0,
+        "injected_defect_recall": null,
+        "valid_references": 0,
+        "references": 0,
+        "citation_validity": null,
+        "clean_reviewed_runs": 0,
+        "clean_reviewed_determinate_findings": 0,
+        "clean_false_positives": 0,
+        "clean_false_positive_rate": null,
+        "failed_runs": 0,
+        "rows": [],
+        "skipped_retrieval_only": true
+      }
+    },
+    "qdrant": {
+      "store_chunks": 238,
+      "questions": {
+        "summary": {
+          "verified_questions": 0,
+          "answerable_questions": 0,
+          "retrieval_recall_at_k": null,
+          "retrieval_mrr": null,
+          "raw_citation_validity": null,
+          "valid_citations": 0,
+          "proposed_citations": 0,
+          "citation_valid_answer_rate": null,
+          "abstention_accuracy": null,
+          "unanswerable_questions": 0,
+          "failed_questions": 0,
+          "retrieval_latency": {
+            "samples": 0,
+            "p50_ms": null,
+            "p95_ms": null
+          },
+          "total_latency": {
+            "samples": 0,
+            "p50_ms": null,
+            "p95_ms": null
+          }
+        },
+        "unverified_excluded": 30,
+        "diagnostic_unverified_queries": 30,
+        "diagnostics": {
+          "failed_queries": 0,
+          "retrieval_latency": {
+            "samples": 30,
+            "p50_ms": 27.655,
+            "p95_ms": 36.30499999999999
+          }
+        },
+        "rows": [
+          {
+            "id": "q01",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 27.93,
+            "retrieved_chunk_ids": [
+              "c0589c2b-10a7-4771-9d50-a41f45b5d506",
+              "c4671ddd-d71c-477c-ad3c-aca771da7636",
+              "cdf8c4a0-c0c1-4d12-9138-654b7e15eed5",
+              "1eace84c-905d-4a6d-b823-e4254247166e",
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "eca502b2-81fe-4c9c-a6b0-74f8f9f1239f",
+              "d9cc3988-7b2e-4fc0-be74-f73feb009f67",
+              "f7288669-8529-4c34-84bc-acaf01e7e346"
+            ],
+            "total_ms": 28.136
+          },
+          {
+            "id": "q02",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 23.01,
+            "retrieved_chunk_ids": [
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "eb21916f-2cfb-44df-892b-daf7d05eb1fc",
+              "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d",
+              "13784d81-c92c-4e94-9c33-59720422d530",
+              "c3488baf-f796-4cca-8541-7effa2ea98e5",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "eb29db2a-97c8-41f7-a326-3f2bb3d65f4a"
+            ],
+            "total_ms": 23.219
+          },
+          {
+            "id": "q03",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 26.36,
+            "retrieved_chunk_ids": [
+              "46c7bc44-3338-4b1d-83ed-da57b6602c05",
+              "13cf0e05-c56d-494b-b365-e7ba19142d2e",
+              "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "c0589c2b-10a7-4771-9d50-a41f45b5d506",
+              "c056cfbe-727b-46df-bc30-b8090cd09115",
+              "6af0e111-cb1a-4c62-82f4-1c99c24ace81",
+              "29894d80-8813-4500-83f0-0ad2b56816ab",
+              "6eae33ba-5d0e-4fd3-91c4-4dc6ec479542"
+            ],
+            "total_ms": 26.591
+          },
+          {
+            "id": "q04",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 27.35,
+            "retrieved_chunk_ids": [
+              "b87efb99-aea0-4fe9-8241-207d0e7865b3",
+              "4b06abcb-9a4c-42c6-9fbf-951a07179d80",
+              "689b496a-92e3-4829-8ec0-0dfe7e9a33e8",
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "28848001-0e11-427a-982d-fdc8535a8c46",
+              "1eace84c-905d-4a6d-b823-e4254247166e",
+              "b274ffa6-f74a-4dab-86b4-8e20852eb2e4",
+              "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d"
+            ],
+            "total_ms": 27.555
+          },
+          {
+            "id": "q05",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 43.39,
+            "retrieved_chunk_ids": [
+              "fd425252-0c4e-4c96-82b5-cf5f94c7ac37",
+              "cd463acb-b00f-4834-af40-a23ee6900b58",
+              "09177c3a-ca1a-43c8-b3aa-fde7fedf19e7",
+              "86a53c33-0544-43d2-ae59-0274e71ae136",
+              "95d22b1d-5cb2-43d2-80fa-e9e994a0ae83",
+              "e7b7412f-6cd9-4cc7-b8a0-cc50fae48ab9",
+              "cc7969f5-79b2-44b1-b42b-1920e142dfb5",
+              "1eace84c-905d-4a6d-b823-e4254247166e"
+            ],
+            "total_ms": 43.601
+          },
+          {
+            "id": "q06",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 29.31,
+            "retrieved_chunk_ids": [
+              "a1310ab0-dd27-4fc9-adf1-528869ca7061",
+              "689b496a-92e3-4829-8ec0-0dfe7e9a33e8",
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "feb977c4-1ec3-4f18-8869-c3c244eee3b0",
+              "fe6716dc-d152-4d5e-84b8-ffdf0d9d9e23",
+              "488263f7-4a6e-4cbc-bfdc-afe9ca00d897",
+              "9f60529f-0aa3-4315-9191-a9e83a94b454",
+              "7e1dbd67-4c86-4fe6-becf-45a4ebe81811"
+            ],
+            "total_ms": 29.516
+          },
+          {
+            "id": "q07",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 27.17,
+            "retrieved_chunk_ids": [
+              "18cbb223-dffe-410a-a9bf-345fed59c341",
+              "8f230445-0db9-4330-869a-26e4145eb849",
+              "1ead910a-9a01-403e-acb3-792668cf8fa8",
+              "a1a4d598-8bb7-41ed-903a-613b498def42",
+              "33d0d181-61d9-4214-ba6d-a54f899573cf",
+              "dacac9de-6076-49eb-bd27-2cdf7e34f983",
+              "33a0945f-c295-45bb-8982-ec4058d05767",
+              "4be5b2d9-2cd1-4433-87ee-588ee607d1f9"
+            ],
+            "total_ms": 27.383
+          },
+          {
+            "id": "q08",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 32.98,
+            "retrieved_chunk_ids": [
+              "33d0d181-61d9-4214-ba6d-a54f899573cf",
+              "8f230445-0db9-4330-869a-26e4145eb849",
+              "bb6256c7-8856-4ec9-a832-98d656017269",
+              "18cbb223-dffe-410a-a9bf-345fed59c341",
+              "dacac9de-6076-49eb-bd27-2cdf7e34f983",
+              "60ac0217-efbd-492d-b22c-fc234128fa71",
+              "c509d943-2638-455c-bbc4-2fd4bb9827a2",
+              "1ead910a-9a01-403e-acb3-792668cf8fa8"
+            ],
+            "total_ms": 33.187
+          },
+          {
+            "id": "q09",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 24.76,
+            "retrieved_chunk_ids": [
+              "4fbfeacc-a43c-49b0-82ff-280520a7987d",
+              "2bb0bdd8-63ca-4c79-9d80-8e1b25e6da72",
+              "2cf92232-7806-4c7a-90e7-7c2c1cb0c013",
+              "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "cdf8c4a0-c0c1-4d12-9138-654b7e15eed5",
+              "436c98d2-29ce-4db6-8795-68705831baed",
+              "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "7b46097f-d8e6-4482-ba82-7621009f4f88"
+            ],
+            "total_ms": 24.981
+          },
+          {
+            "id": "q10",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 27.08,
+            "retrieved_chunk_ids": [
+              "42144d7e-452f-47d8-906f-9b6dd73a8e8f",
+              "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+              "5a333189-06f0-457b-86a5-04f04677a831",
+              "436c98d2-29ce-4db6-8795-68705831baed",
+              "cfbba309-083e-476d-84d9-23bc3b1b6370",
+              "81b6fa82-2411-4d12-8a36-ee63529c03d0",
+              "1e8562ca-270c-4780-83c8-c9f2f690ef57",
+              "f4b80283-c5b5-4d77-8053-168fb057ae9c"
+            ],
+            "total_ms": 27.294
+          },
+          {
+            "id": "q11",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 27.38,
+            "retrieved_chunk_ids": [
+              "436c98d2-29ce-4db6-8795-68705831baed",
+              "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+              "42144d7e-452f-47d8-906f-9b6dd73a8e8f",
+              "5a333189-06f0-457b-86a5-04f04677a831",
+              "883de09d-c250-456e-b20b-ba2831ae2c3d",
+              "db038946-05bd-4296-9373-338e08c75a10",
+              "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "1e8562ca-270c-4780-83c8-c9f2f690ef57"
+            ],
+            "total_ms": 27.593
+          },
+          {
+            "id": "q12",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 24.84,
+            "retrieved_chunk_ids": [
+              "1e8562ca-270c-4780-83c8-c9f2f690ef57",
+              "5a333189-06f0-457b-86a5-04f04677a831",
+              "42144d7e-452f-47d8-906f-9b6dd73a8e8f",
+              "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "ef4e07b0-a9f6-4611-b4ed-df4867164bd3",
+              "e163d246-a5cf-4913-8f14-93d5e415e966",
+              "cad6af43-34db-406c-8277-7876d94c155a",
+              "3618c12f-f527-4c8d-9cad-0e495166c98c"
+            ],
+            "total_ms": 25.054
+          },
+          {
+            "id": "q13",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 28.05,
+            "retrieved_chunk_ids": [
+              "6dd8976a-ee9c-49dc-8141-27823bdfa7a8",
+              "e8d6cb59-b1a1-4c9f-b9fc-4e9d777bf543",
+              "e1fa5f99-e53b-4ece-bff5-42907b936abb",
+              "7c6b65db-2826-4904-88f6-28d91cadeea1",
+              "442a6cae-29db-4004-9b36-1013eb78ea6f",
+              "db038946-05bd-4296-9373-338e08c75a10",
+              "649e9206-cb6e-4342-8247-be9162f13026",
+              "436c98d2-29ce-4db6-8795-68705831baed"
+            ],
+            "total_ms": 28.263
+          },
+          {
+            "id": "q14",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 37.88,
+            "retrieved_chunk_ids": [
+              "820ea3e3-c4a2-41a0-8a9c-a5b2f8fa5337",
+              "df484b30-1f5b-4998-8969-dba495609840",
+              "fe5c1833-523c-4f53-8765-ee3e376dfcc0",
+              "4615c618-cce7-4c24-a1c0-db48bfe5deb7",
+              "9b757f9a-2c47-457a-a961-d18429cb7286",
+              "7c6b65db-2826-4904-88f6-28d91cadeea1",
+              "27d814af-9480-43ce-bd70-bd5bd7e75dfe",
+              "83cf5bc0-c24f-4004-94b8-52f1220aa74c"
+            ],
+            "total_ms": 38.111
+          },
+          {
+            "id": "q15",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 28.77,
+            "retrieved_chunk_ids": [
+              "c3488baf-f796-4cca-8541-7effa2ea98e5",
+              "b783be0a-e468-41c4-81bd-56219425403f",
+              "b28f17ba-ca4d-4e93-b069-06e55737f2ae",
+              "43759ae1-7590-44ef-b66e-a7a9d2ea09a3",
+              "7ac0c2c1-5bd1-4edf-a97f-c311ed5366c7",
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "34896462-a556-460a-9c74-42947718c7b8",
+              "490f59e1-ee50-442e-8452-6278a7fa4f9f"
+            ],
+            "total_ms": 28.979
+          },
+          {
+            "id": "q16",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 26.94,
+            "retrieved_chunk_ids": [
+              "7ac0c2c1-5bd1-4edf-a97f-c311ed5366c7",
+              "b4b79f4e-61c5-4866-bd8e-fc43e03ad590",
+              "c6396229-45a2-420d-bab3-554c57dd932f",
+              "f25a5bfe-4e2e-41c7-bb17-1896b16f641f",
+              "b783be0a-e468-41c4-81bd-56219425403f",
+              "6a40bbc5-4dfd-4e2e-b426-d7d067979b1b",
+              "dd8656ae-16a5-4ca2-871d-72bdda88b1d3",
+              "dd847184-a3e7-42ea-b3a7-48a89c9c92d7"
+            ],
+            "total_ms": 27.154
+          },
+          {
+            "id": "q17",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 32.99,
+            "retrieved_chunk_ids": [
+              "8930614f-46d8-4240-8745-e8de013ec605",
+              "c28257ee-c645-4688-b22c-600e17e79f88",
+              "cdf8c4a0-c0c1-4d12-9138-654b7e15eed5",
+              "07cad0eb-fff8-46de-822e-936a7781f16f",
+              "eca502b2-81fe-4c9c-a6b0-74f8f9f1239f",
+              "48280397-f17e-4266-ba27-bae6e7a0fd5b",
+              "d9cc3988-7b2e-4fc0-be74-f73feb009f67",
+              "f7288669-8529-4c34-84bc-acaf01e7e346"
+            ],
+            "total_ms": 33.208
+          },
+          {
+            "id": "q18",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 31.03,
+            "retrieved_chunk_ids": [
+              "f7288669-8529-4c34-84bc-acaf01e7e346",
+              "48280397-f17e-4266-ba27-bae6e7a0fd5b",
+              "d9cc3988-7b2e-4fc0-be74-f73feb009f67",
+              "d8d5cd5a-8590-45c6-b9bb-5a7009667202",
+              "eca502b2-81fe-4c9c-a6b0-74f8f9f1239f",
+              "30311245-7c05-4ba6-a495-f50fd8f7b11e",
+              "cdf8c4a0-c0c1-4d12-9138-654b7e15eed5",
+              "c4671ddd-d71c-477c-ad3c-aca771da7636"
+            ],
+            "total_ms": 31.244
+          },
+          {
+            "id": "q19",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 34.38,
+            "retrieved_chunk_ids": [
+              "f8ca8166-bf91-4c1b-b146-7f0313a02ce2",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "b34bfde7-c776-4733-86ba-c2277b067a2f",
+              "6a381eff-3349-4358-ab02-17b07e9ddd56",
+              "c0589c2b-10a7-4771-9d50-a41f45b5d506",
+              "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d",
+              "1b434880-2351-4731-8d6e-05560ad42d8a",
+              "f665ab5e-ebe9-4e7b-8639-25a86f04674c"
+            ],
+            "total_ms": 34.598
+          },
+          {
+            "id": "q20",
+            "kind": "answerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 31.19,
+            "retrieved_chunk_ids": [
+              "f8ca8166-bf91-4c1b-b146-7f0313a02ce2",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "b34bfde7-c776-4733-86ba-c2277b067a2f",
+              "6a381eff-3349-4358-ab02-17b07e9ddd56",
+              "f665ab5e-ebe9-4e7b-8639-25a86f04674c",
+              "2ce1f319-2afc-4bbe-baa3-7212d32cd01f",
+              "0a7ac532-b4cc-456a-bf78-8d4e1bb9f5e3",
+              "43759ae1-7590-44ef-b66e-a7a9d2ea09a3"
+            ],
+            "total_ms": 31.411
+          },
+          {
+            "id": "q21",
+            "kind": "multi_document",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 31.89,
+            "retrieved_chunk_ids": [
+              "f8ca8166-bf91-4c1b-b146-7f0313a02ce2",
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "b34bfde7-c776-4733-86ba-c2277b067a2f",
+              "9b68c1b3-b33f-480e-b922-3a4f86f68e4d",
+              "b783be0a-e468-41c4-81bd-56219425403f",
+              "6a381eff-3349-4358-ab02-17b07e9ddd56",
+              "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d"
+            ],
+            "total_ms": 32.103
+          },
+          {
+            "id": "q22",
+            "kind": "multi_document",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 28.05,
+            "retrieved_chunk_ids": [
+              "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "46c7bc44-3338-4b1d-83ed-da57b6602c05",
+              "29894d80-8813-4500-83f0-0ad2b56816ab",
+              "c0589c2b-10a7-4771-9d50-a41f45b5d506",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "13cf0e05-c56d-494b-b365-e7ba19142d2e",
+              "6af0e111-cb1a-4c62-82f4-1c99c24ace81",
+              "c056cfbe-727b-46df-bc30-b8090cd09115"
+            ],
+            "total_ms": 28.274
+          },
+          {
+            "id": "q23",
+            "kind": "multi_document",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 26.7,
+            "retrieved_chunk_ids": [
+              "33d0d181-61d9-4214-ba6d-a54f899573cf",
+              "b87efb99-aea0-4fe9-8241-207d0e7865b3",
+              "c509d943-2638-455c-bbc4-2fd4bb9827a2",
+              "bb6256c7-8856-4ec9-a832-98d656017269",
+              "8f230445-0db9-4330-869a-26e4145eb849",
+              "4b06abcb-9a4c-42c6-9fbf-951a07179d80",
+              "dacac9de-6076-49eb-bd27-2cdf7e34f983",
+              "18cbb223-dffe-410a-a9bf-345fed59c341"
+            ],
+            "total_ms": 26.917
+          },
+          {
+            "id": "q24",
+            "kind": "multi_document",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 26.42,
+            "retrieved_chunk_ids": [
+              "df484b30-1f5b-4998-8969-dba495609840",
+              "883de09d-c250-456e-b20b-ba2831ae2c3d",
+              "372fa6e8-4a8b-4625-9dbd-32150e45969f",
+              "7c6b65db-2826-4904-88f6-28d91cadeea1",
+              "ef4e07b0-a9f6-4611-b4ed-df4867164bd3",
+              "436c98d2-29ce-4db6-8795-68705831baed",
+              "9b757f9a-2c47-457a-a961-d18429cb7286",
+              "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732"
+            ],
+            "total_ms": 26.631
+          },
+          {
+            "id": "q25",
+            "kind": "multi_document",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 25.56,
+            "retrieved_chunk_ids": [
+              "f8ca8166-bf91-4c1b-b146-7f0313a02ce2",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "c0589c2b-10a7-4771-9d50-a41f45b5d506",
+              "c89a0ff0-c5a3-4636-ad3b-c58f25fe1800",
+              "6a381eff-3349-4358-ab02-17b07e9ddd56",
+              "b34bfde7-c776-4733-86ba-c2277b067a2f",
+              "c88e08b7-a6fd-42c8-87ac-3828f80b1c7d",
+              "d43410aa-beff-498d-8688-cf26e47c4788"
+            ],
+            "total_ms": 25.769
+          },
+          {
+            "id": "q26",
+            "kind": "unanswerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 28.78,
+            "retrieved_chunk_ids": [
+              "955b6e8a-b598-47df-956a-87ad236b28e5",
+              "f316252d-f303-47e7-aad1-ec62f7e7fff3",
+              "436c98d2-29ce-4db6-8795-68705831baed",
+              "86a53c33-0544-43d2-ae59-0274e71ae136",
+              "880a2bc6-4338-4581-8e4b-d90c2413c3d4",
+              "3618c12f-f527-4c8d-9cad-0e495166c98c",
+              "d7b78090-28f4-4306-b8f5-b468e609a005",
+              "1e8562ca-270c-4780-83c8-c9f2f690ef57"
+            ],
+            "total_ms": 28.989
+          },
+          {
+            "id": "q27",
+            "kind": "unanswerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 26.42,
+            "retrieved_chunk_ids": [
+              "2ce1f319-2afc-4bbe-baa3-7212d32cd01f",
+              "37593cd8-832c-48b9-a85e-9e4f1dfe6260",
+              "b2e0b6ae-1c43-46e1-8db2-88be79b7943d",
+              "b783be0a-e468-41c4-81bd-56219425403f",
+              "eb21916f-2cfb-44df-892b-daf7d05eb1fc",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "436c98d2-29ce-4db6-8795-68705831baed"
+            ],
+            "total_ms": 26.629
+          },
+          {
+            "id": "q28",
+            "kind": "unanswerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 28.19,
+            "retrieved_chunk_ids": [
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "28848001-0e11-427a-982d-fdc8535a8c46",
+              "d43410aa-beff-498d-8688-cf26e47c4788",
+              "b2e0b6ae-1c43-46e1-8db2-88be79b7943d",
+              "9b68c1b3-b33f-480e-b922-3a4f86f68e4d",
+              "9a1b3311-ae80-4c78-a2b5-79d9207cd23a",
+              "13cf0e05-c56d-494b-b365-e7ba19142d2e",
+              "13784d81-c92c-4e94-9c33-59720422d530"
+            ],
+            "total_ms": 28.427
+          },
+          {
+            "id": "q29",
+            "kind": "unanswerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 25.57,
+            "retrieved_chunk_ids": [
+              "00efdf79-53ea-4c0e-ba91-3f2e2a696d22",
+              "468a35ae-6351-4fd9-8bd7-7bd23a796c65",
+              "9b68c1b3-b33f-480e-b922-3a4f86f68e4d",
+              "0a7ac532-b4cc-456a-bf78-8d4e1bb9f5e3",
+              "4b06abcb-9a4c-42c6-9fbf-951a07179d80",
+              "c4e5d968-1311-466c-aef5-f9f33887a567",
+              "5a7abb91-7a50-4d75-8dd5-fe9fa3265041",
+              "30311245-7c05-4ba6-a495-f50fd8f7b11e"
+            ],
+            "total_ms": 25.791
+          },
+          {
+            "id": "q30",
+            "kind": "unanswerable",
+            "verified": false,
+            "generation_enabled": false,
+            "retrieve_ms": 27.08,
+            "retrieved_chunk_ids": [
+              "6c21e396-8995-4812-ae3f-149b22352f8e",
+              "b28f17ba-ca4d-4e93-b069-06e55737f2ae",
+              "2695a745-940d-4298-9652-5c8c5656dbf4",
+              "13784d81-c92c-4e94-9c33-59720422d530",
+              "6a48e46e-806b-4f4c-ad43-f4004ee83c86",
+              "2ebc203f-10cb-4d85-aa11-a0029140cac6",
+              "3570c147-424b-4e65-9775-2d3bfe3a4458",
+              "b2e0b6ae-1c43-46e1-8db2-88be79b7943d"
+            ],
+            "total_ms": 27.287
+          }
+        ]
+      },
+      "gaps": {
+        "verified_cases": 0,
+        "unverified_excluded": 0,
+        "defects_detected": 0,
+        "defects_expected_across_repeats": 0,
+        "injected_defect_recall": null,
+        "valid_references": 0,
+        "references": 0,
+        "citation_validity": null,
+        "clean_reviewed_runs": 0,
+        "clean_reviewed_determinate_findings": 0,
+        "clean_false_positives": 0,
+        "clean_false_positive_rate": null,
+        "failed_runs": 0,
+        "rows": [],
+        "skipped_retrieval_only": true
+      }
+    }
+  },
+  "backend_agreement_diagnostic": [
+    {
+      "id": "q01",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q02",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q03",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q04",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q05",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q06",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q07",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q08",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q09",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q10",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q11",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q12",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q13",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q14",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q15",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q16",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q17",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q18",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q19",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q20",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q21",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q22",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q23",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q24",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q25",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q26",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q27",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q28",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q29",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    },
+    {
+      "id": "q30",
+      "same_order": true,
+      "hit_set_jaccard": 1.0
+    }
+  ],
+  "limitations": [
+    "Unverified labels are excluded from all quality denominators, including diagnostics.",
+    "Citation validity checks IDs/locations, not semantic support or legal correctness.",
+    "Failed verified queries and mutation runs remain in recall/abstention denominators.",
+    "Clean false-positive rates require a human review bound to each exact report hash.",
+    "Stability includes failure verdicts and is not an accuracy measure; raw gap evidence stays local in the review directory."
+  ]
+}

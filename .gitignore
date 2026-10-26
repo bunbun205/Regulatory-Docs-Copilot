@@ -24,3 +24,6 @@ htmlcov/
 # User-supplied corpus and runtime uploads (never commit)
 data/corpus/
 data/uploads/
+
+# Local evaluation review evidence may contain private SOP text.
+eval/review/
