@@ -20,7 +20,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+asyncpg://labdocs:labdocs@localhost:5432/labdocs"
 
     UPLOAD_DIR: Path = Path("data/uploads")
-    MAX_UPLOAD_BYTES: int = 25 * 1024 * 1024
+    MAX_UPLOAD_BYTES: int = Field(default=25 * 1024 * 1024, ge=1)
+    MAX_REQUEST_BYTES: int = Field(default=26 * 1024 * 1024, ge=1)
     CHUNK_MAX_TOKENS: int = 500
     CHUNK_OVERLAP_TOKENS: int = 80
 
@@ -74,7 +75,9 @@ class Settings(BaseSettings):
     GAPCHECK_JUDGE_CONCURRENCY: int = Field(default=4, ge=1, le=10)
     GAPCHECK_RETRIEVAL_CONCURRENCY: int = Field(default=8, ge=1, le=20)
     GAPCHECK_JUDGE_MAX_TOKENS: int = Field(default=512, ge=64, le=4096)
-    GAPCHECK_MAX_CONCURRENT_JOBS_PER_KEY: int = Field(default=1, ge=1, le=10)
+    GAPCHECK_MAX_CONCURRENT_JOBS_PER_KEY: int = Field(default=1, ge=1, le=1)
+    RATE_LIMIT_PER_MINUTE: int = Field(default=60, ge=1)
+    RATE_LIMIT_MAX_IDENTITIES: int = Field(default=10_000, ge=1)
 
     @property
     def is_production(self) -> bool:

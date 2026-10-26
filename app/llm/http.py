@@ -8,6 +8,7 @@ import httpx
 import structlog
 
 from app.llm.base import LLMError
+from app.llm.budget import active_token_budget, response_usage
 
 logger = structlog.get_logger("labdocs.llm")
 
@@ -16,6 +17,8 @@ Sleep = Callable[[float], Awaitable[None]]
 
 class HTTPLLMClient:
     """Shared HTTP transport, timeout and bounded-retry behavior."""
+
+    manages_token_budget = True
 
     def __init__(
         self,
@@ -45,6 +48,8 @@ class HTTPLLMClient:
     ) -> dict[str, Any]:
         last_reason = "request failed"
         for attempt in range(self._max_retries + 1):
+            budget = active_token_budget.get()
+            reservation = budget.reserve(payload, int(payload["max_tokens"])) if budget else 0
             try:
                 response = await self._client.post(url, headers=headers, json=payload)
             except (httpx.TimeoutException, httpx.TransportError) as exc:
@@ -57,6 +62,8 @@ class HTTPLLMClient:
                         raise LLMError("Language model returned invalid JSON.") from exc
                     if not isinstance(body, dict):
                         raise LLMError("Language model returned an unexpected response.")
+                    if budget is not None:
+                        budget.settle(reservation, response_usage(body))
                     return body
                 last_reason = f"HTTP {response.status_code}"
                 if response.status_code != 429 and response.status_code < 500:

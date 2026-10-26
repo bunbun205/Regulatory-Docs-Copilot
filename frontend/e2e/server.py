@@ -36,6 +36,7 @@ os.environ.update(
     LABDOCS_QDRANT_COLLECTION=COLLECTION,
     LABDOCS_LLM_PROVIDER="fake",
     LABDOCS_LLM_MODEL="frontend-fixture",
+    LABDOCS_RATE_LIMIT_PER_MINUTE="10000",
 )
 
 from app.core.security import hash_api_key
@@ -377,9 +378,13 @@ async def browser_lifespan(application):
         from app.core.config import settings
 
         settings.UPLOAD_DIR = Path(uploads)
-        async with original_lifespan(application):
-            await seed(application)
-            yield
+        # Exercise startup readiness using the deterministic test embedder.
+        from unittest.mock import patch
+
+        with patch("app.main.SentenceTransformerEmbedder", return_value=FakeEmbedder()):
+            async with original_lifespan(application):
+                await seed(application)
+                yield
 
 
 app.router.lifespan_context = browser_lifespan
