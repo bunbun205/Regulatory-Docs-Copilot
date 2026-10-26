@@ -66,7 +66,26 @@ qualification replaces the old unsupported claim of an absolute billed-token cap
 
 ## Verification
 
-Results and CI links are recorded below after the completed checks. Tests cover
+Local checks: **182 backend tests, 113 frontend unit tests and all 53 browser
+tests passed**, with zero failures/skips. Ruff/format, mypy, strict TypeScript,
+warning-fatal frontend lint, generated-type freshness and production build pass.
+Initial Ask JavaScript remains 102,197 bytes gzip (110,000-byte budget).
+[Check record](verification/platform-m7/checks.json),
+[backend JUnit](verification/platform-m7/pytest.xml),
+[browser cases](verification/platform-m7/browser.json).
+
+The browser suite covers the combined keyboard journey, PDF/TXT uploads, polling,
+cancellation, evidence/exports and accessibility at all three widths. Final report
+screenshots were opened and visually checked at
+[1280px](screenshots/m7/journey-report-dark-1280.png),
+[390px](screenshots/m7/journey-report-dark-390.png) and
+[360px](screenshots/m7/journey-report-dark-360.png); no clipping or overflow appeared.
+Provider judgements remain synthetic test scripts. CI (including the separate
+large-corpus regression) must pass before PR #17 merges.
+
+The initial local test attempts found stopped data services and missing temporary
+Chromium binaries; both were restored before these successful runs. A token-refill
+rounding boundary and prefixed-route metric labels were corrected during testing. Tests cover
 continuous refill and rounding, thread and request concurrency, identity eviction,
 401/429 isolation, request IDs and 500/413/429 metrics, route-label cardinality,
 chunked and misleading-length bodies, exact size boundaries, concurrent token

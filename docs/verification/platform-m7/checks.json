@@ -1,0 +1,33 @@
+{
+  "backend": {
+    "passed": 182,
+    "failed": 0,
+    "skipped": 0
+  },
+  "frontend_unit": {
+    "passed": 113,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "startTime": "2026-10-26T06:35:59.259Z",
+    "duration": 209981.373,
+    "expected": 53,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "ruff": "pass",
+  "format": "pass",
+  "mypy": "pass",
+  "typescript": "pass",
+  "frontend_lint": "pass, zero warnings",
+  "production_build": "pass",
+  "initial_route_gzip_bytes": 102197,
+  "generated_types": "pass in browser suite",
+  "screenshots_reviewed": [
+    "journey-report-dark-1280.png",
+    "journey-report-dark-390.png",
+    "journey-report-dark-360.png"
+  ]
+}

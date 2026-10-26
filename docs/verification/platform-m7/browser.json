@@ -1,0 +1,542 @@
+{
+  "stats": {
+    "startTime": "2026-10-26T06:35:59.259Z",
+    "duration": 209981.373,
+    "expected": 53,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "tests": [
+    {
+      "title": "Agent real tools, excerpts, partial and empty states fit 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1732
+        }
+      ]
+    },
+    {
+      "title": "Agent pending, Stop waiting and shared failure fit 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 892
+        }
+      ]
+    },
+    {
+      "title": "Agent real tools, excerpts, partial and empty states fit 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1226
+        }
+      ]
+    },
+    {
+      "title": "Agent pending, Stop waiting and shared failure fit 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 789
+        }
+      ]
+    },
+    {
+      "title": "Agent real tools, excerpts, partial and empty states fit 360px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1258
+        }
+      ]
+    },
+    {
+      "title": "Agent pending, Stop waiting and shared failure fit 360px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 858
+        }
+      ]
+    },
+    {
+      "title": "Gap real paste, reload, report, file upload and cancellation fit 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 9445
+        }
+      ]
+    },
+    {
+      "title": "Gap all verdicts, URL filters, exports and print fit 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 3001
+        }
+      ]
+    },
+    {
+      "title": "Gap phases, polling error and terminal failures fit 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 7627
+        }
+      ]
+    },
+    {
+      "title": "Gap real paste, reload, report, file upload and cancellation fit 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 9300
+        }
+      ]
+    },
+    {
+      "title": "Gap all verdicts, URL filters, exports and print fit 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2371
+        }
+      ]
+    },
+    {
+      "title": "Gap phases, polling error and terminal failures fit 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 7224
+        }
+      ]
+    },
+    {
+      "title": "Gap real paste, reload, report, file upload and cancellation fit 360px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 8918
+        }
+      ]
+    },
+    {
+      "title": "Gap all verdicts, URL filters, exports and print fit 360px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2346
+        }
+      ]
+    },
+    {
+      "title": "Gap phases, polling error and terminal failures fit 360px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 7130
+        }
+      ]
+    },
+    {
+      "title": "Ask answers, excerpts, controls and history fit 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2650
+        }
+      ]
+    },
+    {
+      "title": "Ask pending, stopped, abstention, ungrounded and errors fit 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 5862
+        }
+      ]
+    },
+    {
+      "title": "Ask answers, excerpts, controls and history fit 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2517
+        }
+      ]
+    },
+    {
+      "title": "Ask pending, stopped, abstention, ungrounded and errors fit 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 5800
+        }
+      ]
+    },
+    {
+      "title": "Ask answers, excerpts, controls and history fit 360px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2523
+        }
+      ]
+    },
+    {
+      "title": "Ask pending, stopped, abstention, ungrounded and errors fit 360px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 5781
+        }
+      ]
+    },
+    {
+      "title": "generated API types match the running committed-backend schema",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 581
+        }
+      ]
+    },
+    {
+      "title": "every route fits 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 3463
+        }
+      ]
+    },
+    {
+      "title": "every route fits 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 3672
+        }
+      ]
+    },
+    {
+      "title": "every route fits 360px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 3668
+        }
+      ]
+    },
+    {
+      "title": "Settings invalid key and shared error at 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1634
+        }
+      ]
+    },
+    {
+      "title": "read-only Settings and upload scope at 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 869
+        }
+      ]
+    },
+    {
+      "title": "dark shell and Settings at 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1281
+        }
+      ]
+    },
+    {
+      "title": "Settings invalid key and shared error at 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1287
+        }
+      ]
+    },
+    {
+      "title": "read-only Settings and upload scope at 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 881
+        }
+      ]
+    },
+    {
+      "title": "dark shell and Settings at 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 913
+        }
+      ]
+    },
+    {
+      "title": "mobile navigation keyboard, default route and theme persistence",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 880
+        }
+      ]
+    },
+    {
+      "title": "Documents table, page search, filters, pagination and failures fit 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 3465
+        }
+      ]
+    },
+    {
+      "title": "Documents real Markdown upload and duplicate metadata update fit 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 4392
+        }
+      ]
+    },
+    {
+      "title": "Documents progress, poll recovery, partial and sync failure fixtures fit 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 4677
+        }
+      ]
+    },
+    {
+      "title": "Documents read-only scope and dark library fit 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 821
+        }
+      ]
+    },
+    {
+      "title": "Documents table, page search, filters, pagination and failures fit 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 3425
+        }
+      ]
+    },
+    {
+      "title": "Documents real Markdown upload and duplicate metadata update fit 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2022
+        }
+      ]
+    },
+    {
+      "title": "Documents progress, poll recovery, partial and sync failure fixtures fit 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 4490
+        }
+      ]
+    },
+    {
+      "title": "Documents read-only scope and dark library fit 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 971
+        }
+      ]
+    },
+    {
+      "title": "Documents table, page search, filters, pagination and failures fit 360px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 3370
+        }
+      ]
+    },
+    {
+      "title": "Documents real Markdown upload and duplicate metadata update fit 360px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2173
+        }
+      ]
+    },
+    {
+      "title": "Documents progress, poll recovery, partial and sync failure fixtures fit 360px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 4533
+        }
+      ]
+    },
+    {
+      "title": "Documents read-only scope and dark library fit 360px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 958
+        }
+      ]
+    },
+    {
+      "title": "keyboard combined journey: Settings upload Search Ask citation Agent Gap exports 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 13520
+        }
+      ]
+    },
+    {
+      "title": "real PDF document and SOP upload, progress, report and export 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 7514
+        }
+      ]
+    },
+    {
+      "title": "real TXT document and SOP upload, progress, report and export 1280px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 5059
+        }
+      ]
+    },
+    {
+      "title": "keyboard combined journey: Settings upload Search Ask citation Agent Gap exports 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 8424
+        }
+      ]
+    },
+    {
+      "title": "real PDF document and SOP upload, progress, report and export 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 4719
+        }
+      ]
+    },
+    {
+      "title": "real TXT document and SOP upload, progress, report and export 390px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 4763
+        }
+      ]
+    },
+    {
+      "title": "keyboard combined journey: Settings upload Search Ask citation Agent Gap exports 360px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 8825
+        }
+      ]
+    },
+    {
+      "title": "real PDF document and SOP upload, progress, report and export 360px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 5056
+        }
+      ]
+    },
+    {
+      "title": "real TXT document and SOP upload, progress, report and export 360px",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 4946
+        }
+      ]
+    }
+  ]
+}
