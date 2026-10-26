@@ -1,0 +1,71 @@
+2026-10-25 19:37:53 [info     ] ingestion.manifest_loaded      job_id=186ced3f-b43b-495b-bc7f-e6230391eaaf rejected_rows=0 valid_rows=8
+2026-10-25 19:37:54 [info     ] ingestion.completed            chunks=0 documents=0 duplicates=8 failures=0 job_id=186ced3f-b43b-495b-bc7f-e6230391eaaf rejected=0 updates=0
+{
+  "job_id": "186ced3f-b43b-495b-bc7f-e6230391eaaf",
+  "report": {
+    "chunk_length": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null,
+      "p50": null,
+      "p90": null
+    },
+    "chunks": 0,
+    "documents": [],
+    "documents_duplicate": 8,
+    "documents_failed": 0,
+    "documents_ingested": 0,
+    "documents_metadata_updated": 0,
+    "documents_total": 8,
+    "documents_updated": 0,
+    "duplicates": [
+      {
+        "document_id": "c851afb0-82f4-4b79-a401-0750e528cb8c",
+        "filename": "21 CFR Part 11 (up to date as of 10-21-2026).pdf",
+        "metadata_updated": []
+      },
+      {
+        "document_id": "0c35de21-00d9-4857-8143-f432c8fb888c",
+        "filename": "21 CFR Part 58 (up to date as of 10-21-2026).pdf",
+        "metadata_updated": []
+      },
+      {
+        "document_id": "3882025c-0a5f-4761-b510-e6f0748d0d78",
+        "filename": "21 CFR Part 211 (up to date as of 10-21-2026).pdf",
+        "metadata_updated": []
+      },
+      {
+        "document_id": "02569200-7109-4074-93c5-c6773f9e45eb",
+        "filename": "osha-1910-1200-hazard-communication.pdf",
+        "metadata_updated": []
+      },
+      {
+        "document_id": "f965e01d-df57-4baf-87ab-f8903b0a41dd",
+        "filename": "osha-1910-1450-lab-standard.pdf",
+        "metadata_updated": []
+      },
+      {
+        "document_id": "0e14148f-7a1c-4caf-8f43-cc0042e9f763",
+        "filename": "7883441_DataIntegrity.pdf",
+        "metadata_updated": []
+      },
+      {
+        "document_id": "951f0481-d887-4230-bb44-ed3afb21d581",
+        "filename": "Part-11--Electronic-Records--Electronic-Signatures---Scope-and-Application-(PDF).pdf",
+        "metadata_updated": []
+      },
+      {
+        "document_id": "5ca39254-616d-42c5-b94a-0f6bda984afa",
+        "filename": "Process-Validation--General-Principles-and-Practices.pdf",
+        "metadata_updated": []
+      }
+    ],
+    "duration_ms": 269.92,
+    "failures": [],
+    "metadata_updates": [],
+    "rejected_rows": [],
+    "updates": []
+  },
+  "status": "completed"
+}

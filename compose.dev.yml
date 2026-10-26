@@ -1,0 +1,8 @@
+# Optional host access for native development. Never use this overlay on AWS.
+services:
+  postgres:
+    ports: ["127.0.0.1:5432:5432"]
+    volumes:
+      - ./infra/postgres/01-create-test-db.sql:/docker-entrypoint-initdb.d/01-create-test-db.sql:ro
+  qdrant:
+    ports: ["127.0.0.1:6333:6333", "127.0.0.1:6334:6334"]

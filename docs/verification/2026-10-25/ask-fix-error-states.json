@@ -1,0 +1,10 @@
+[
+  {
+    "name": "502 message and request ID visible; retry enabled",
+    "passed": true
+  },
+  {
+    "name": "network failure visible; retry enabled",
+    "passed": true
+  }
+]

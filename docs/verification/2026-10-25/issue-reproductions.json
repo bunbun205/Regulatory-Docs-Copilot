@@ -1,0 +1,33 @@
+{
+  "rate_limit_and_metrics": {
+    "first_status": 200,
+    "second_status": 429,
+    "second_body": {
+      "error": {
+        "code": "rate_limited",
+        "message": "Too many requests"
+      }
+    },
+    "second_request_id_header": null,
+    "second_retry_after": "59",
+    "metrics_recorded_429": false,
+    "distinct_unknown_path_labels": [
+      "/v1/unknown/cd5de860-e82a-4dfa-8f69-1092e18fc3f2",
+      "/v1/unknown/1138aa65-8e63-4e96-a091-8e8ce2a35788"
+    ],
+    "limiter_has_protocol": false,
+    "limiter_algorithm": "sliding window"
+  },
+  "token_cap_concurrency": {
+    "budget": 100,
+    "parallel_calls": 4,
+    "actual_accounted_tokens": 400,
+    "caps_hit": []
+  },
+  "failed_judge_usage": {
+    "llm_calls": 2,
+    "actual_fake_usage": 200,
+    "runner_reported_usage": 0,
+    "failure": "invalid_json"
+  }
+}

@@ -121,6 +121,7 @@ class AgentLoop:
                     role="assistant",
                     content=result.text,
                     tool_calls=result.tool_calls,
+                    extra_content=result.extra_content,
                 )
             )
             if not result.tool_calls:

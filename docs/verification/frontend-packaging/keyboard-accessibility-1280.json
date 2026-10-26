@@ -1,0 +1,209 @@
+{
+  "width": 1280,
+  "checks": {
+    "settings": {
+      "live_regions": [
+        {
+          "role": "status",
+          "live": "polite"
+        }
+      ],
+      "named_controls": 21,
+      "checked": 67,
+      "minimum": 4.81,
+      "failures": []
+    },
+    "upload": {
+      "live_regions": [],
+      "named_controls": 8,
+      "checked": 17,
+      "minimum": 4.61,
+      "failures": []
+    },
+    "documents": {
+      "live_regions": [
+        {
+          "role": "status",
+          "live": "polite"
+        }
+      ],
+      "named_controls": 16,
+      "checked": 81,
+      "minimum": 4.61,
+      "failures": []
+    },
+    "search": {
+      "live_regions": [],
+      "named_controls": 15,
+      "checked": 64,
+      "minimum": 4.81,
+      "failures": []
+    },
+    "ask": {
+      "live_regions": [
+        {
+          "role": "status",
+          "live": "polite"
+        }
+      ],
+      "named_controls": 19,
+      "checked": 50,
+      "minimum": 4.61,
+      "failures": []
+    },
+    "source": {
+      "live_regions": [
+        {
+          "role": "status",
+          "live": "polite"
+        }
+      ],
+      "named_controls": 2,
+      "checked": 16,
+      "minimum": 5.43,
+      "failures": []
+    },
+    "agent": {
+      "live_regions": [
+        {
+          "role": "status",
+          "live": "polite"
+        }
+      ],
+      "named_controls": 19,
+      "checked": 59,
+      "minimum": 4.61,
+      "failures": []
+    },
+    "gap": {
+      "live_regions": [
+        {
+          "role": "status",
+          "live": "polite"
+        },
+        {
+          "role": "status",
+          "live": "polite"
+        }
+      ],
+      "named_controls": 19,
+      "checked": 103,
+      "minimum": 4.61,
+      "failures": []
+    },
+    "dark_report": {
+      "live_regions": [
+        {
+          "role": "status",
+          "live": "polite"
+        },
+        {
+          "role": "status",
+          "live": "polite"
+        }
+      ],
+      "named_controls": 19,
+      "checked": 103,
+      "minimum": 6.71,
+      "failures": []
+    },
+    "dark_ask": {
+      "live_regions": [],
+      "named_controls": 13,
+      "checked": 33,
+      "minimum": 6.74,
+      "failures": []
+    },
+    "dark_search": {
+      "live_regions": [],
+      "named_controls": 13,
+      "checked": 33,
+      "minimum": 6.74,
+      "failures": []
+    },
+    "dark_agent": {
+      "live_regions": [],
+      "named_controls": 15,
+      "checked": 33,
+      "minimum": 6.74,
+      "failures": []
+    },
+    "dark_gap-check": {
+      "live_regions": [],
+      "named_controls": 14,
+      "checked": 41,
+      "minimum": 6.74,
+      "failures": []
+    },
+    "dark_documents": {
+      "live_regions": [
+        {
+          "role": "status",
+          "live": "polite"
+        }
+      ],
+      "named_controls": 13,
+      "checked": 60,
+      "minimum": 6.71,
+      "failures": []
+    },
+    "dark_settings": {
+      "live_regions": [
+        {
+          "role": "status",
+          "live": "polite"
+        }
+      ],
+      "named_controls": 21,
+      "checked": 67,
+      "minimum": 6.74,
+      "failures": []
+    },
+    "dark_all_verdicts": {
+      "live_regions": [
+        {
+          "role": "status",
+          "live": "polite"
+        },
+        {
+          "role": "status",
+          "live": "polite"
+        },
+        {
+          "role": "status",
+          "live": "polite"
+        },
+        {
+          "role": "status",
+          "live": "polite"
+        }
+      ],
+      "named_controls": 19,
+      "checked": 170,
+      "minimum": 6.71,
+      "failures": []
+    },
+    "dark_error": {
+      "live_regions": [
+        {
+          "role": "alert",
+          "live": "assertive"
+        },
+        {
+          "role": "status",
+          "live": "polite"
+        }
+      ],
+      "named_controls": 17,
+      "checked": 41,
+      "minimum": 6.74,
+      "failures": []
+    }
+  },
+  "exports": [
+    "JSON",
+    "Markdown"
+  ],
+  "reduced_motion": true,
+  "scope": "Keyboard controls and Chromium accessibility tree/contrast; no claim of a human screen-reader session or WCAG certification."
+}

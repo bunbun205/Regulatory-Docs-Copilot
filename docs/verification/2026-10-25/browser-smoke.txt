@@ -1,0 +1,50 @@
+{
+  "url": "http://127.0.0.1:3100",
+  "steps": [
+    {
+      "name": "whoami through proxy",
+      "status": 200,
+      "body": {
+        "name": "local-review-20261025",
+        "scopes": [
+          "read",
+          "write"
+        ]
+      }
+    },
+    {
+      "name": "save key updates UI and document library loads",
+      "documents": 8
+    },
+    {
+      "name": "key storage",
+      "session": true,
+      "persistent": false
+    },
+    {
+      "name": "real vector search",
+      "status": 200,
+      "displayed_chunks": 5
+    },
+    {
+      "name": "real RAG abstention",
+      "status": 200,
+      "insufficient_evidence": true,
+      "citations": 0,
+      "answer": "Insufficient evidence in the ingested corpus to answer this question."
+    },
+    {
+      "name": "agent trace UI with mocked response",
+      "tool_visible": true,
+      "arguments_visible": true,
+      "partial_warning_visible": false
+    },
+    {
+      "name": "gap check form visible",
+      "textarea": true,
+      "file_input_count": 0
+    }
+  ],
+  "console_errors": [],
+  "request_failures": []
+}

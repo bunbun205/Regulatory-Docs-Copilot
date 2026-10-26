@@ -1,0 +1,127 @@
+{
+  "description": "Actual document and SOP file uploads using app factory, real isolated stores and deterministic test-only LLM. Synthetic text, no quality claim.",
+  "job": {
+    "id": "e8a277e2-2eca-4436-8a0c-d696a1ca7c46",
+    "status": "completed",
+    "progress": {
+      "phase": "completed",
+      "clauses_total": 1,
+      "clauses_done": 1,
+      "requirements_total": 0,
+      "requirements_done": 0
+    },
+    "report": {
+      "job_id": "e8a277e2-2eca-4436-8a0c-d696a1ca7c46",
+      "generated_at": "2026-10-26T17:21:16.378335Z",
+      "banner": "Decision support only, not legal advice. This report is limited to the ingested corpus and does not establish legal compliance.",
+      "metadata": {
+        "caps": {
+          "max_tokens": 200000,
+          "max_clauses": 80,
+          "max_requirements": 120,
+          "requirements_capped": false
+        },
+        "model": "fake:frontend-fixture",
+        "backend": "pgvector",
+        "filters": {
+          "doc_type": null,
+          "year_max": null,
+          "year_min": null,
+          "source_agency": null
+        },
+        "duration_ms": 1534.42,
+        "token_usage": {
+          "input_tokens": 24,
+          "total_tokens": 32,
+          "output_tokens": 8
+        },
+        "token_budget": {
+          "cap_hit": false,
+          "accounting": "utf8_reservation",
+          "charged_tokens": 32,
+          "provider_overrun": false,
+          "provider_attempts": 1,
+          "unreported_tokens_reserved": 0
+        },
+        "clauses_total": 1,
+        "judge_failures": 0,
+        "retrieval_top_k": 5,
+        "sop_match_top_k": 3,
+        "judge_cache_hits": 0,
+        "judge_concurrency": 4,
+        "requirements_total": 0,
+        "relevance_threshold": 0.6,
+        "global_top_documents": 2,
+        "requirement_document_ids": [
+          "7c89bee9-5765-4b6d-92ee-04c9448b12e2"
+        ]
+      },
+      "caps_hit": [],
+      "counts_by_verdict": {
+        "missing": 0,
+        "partial": 0,
+        "conflict": 0,
+        "addressed": 0,
+        "compliant": 1,
+        "judge_failed": 0,
+        "partially_addressed": 0,
+        "not_covered_by_corpus": 0
+      },
+      "counts_by_severity": {
+        "low": 1,
+        "high": 0,
+        "medium": 0
+      },
+      "counts_by_direction": {
+        "regulation_to_sop": 0,
+        "sop_to_regulation": 1
+      },
+      "sop_clauses": [
+        {
+          "clause_id": "SOP-001",
+          "section": "F6 PDF SOP 360",
+          "text": "Staff must record instrument checks in a training log before using the equipment.",
+          "char_start": 15,
+          "char_end": 96
+        }
+      ],
+      "findings": [
+        {
+          "finding_id": "GAP-0001",
+          "direction": "sop_to_regulation",
+          "verdict": "compliant",
+          "severity": "low",
+          "sop_clause_refs": [
+            "SOP-001"
+          ],
+          "regulation_citations": [
+            {
+              "chunk_id": "fc255a95-9f04-4003-af76-727dbcce0ba8",
+              "document_id": "9e22c2a3-54b0-4ec1-b90f-87d7b3020b36",
+              "title": "F6 PDF journey 360",
+              "page": 1,
+              "snippet": "Staff must record instrument checks in a training log before using the equipment.",
+              "score": 1
+            },
+            {
+              "chunk_id": "10000000-0000-4000-8000-000000000004",
+              "document_id": "10000000-0000-4000-8000-000000000005",
+              "title": "Instrument checks — synthetic browser fixture",
+              "page": 1,
+              "snippet": "Staff must record instrument checks in a training log before using the equipment.",
+              "score": 1
+            }
+          ],
+          "rationale": "Synthetic browser fixture: the provided training-log text matches the seeded requirement.",
+          "suggested_fix": "Suggested fix (not legal advice): No change suggested.",
+          "requirement_strength": null,
+          "requirement_id": null
+        }
+      ]
+    },
+    "error": null,
+    "created_at": "2026-10-26T17:21:14.839843Z",
+    "started_at": "2026-10-26T17:21:14.842359Z",
+    "finished_at": "2026-10-26T17:21:16.379357Z"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "status": "aborted_after_repeated_timeouts",
+  "completed_real_llm_fixture_reports": 0,
+  "fixtures_attempted": [
+    "clean_sop",
+    "mutated_conflict"
+  ],
+  "clean_fixture_deadline_seconds": 240,
+  "per_call_timeout_seconds": 30,
+  "max_retries": 0,
+  "retrieval_top_k": 3,
+  "max_requirements": 12,
+  "judge_concurrency": 1,
+  "model": "llama3.1:8b",
+  "note": "Clean fixture hit deadline; conflict fixture interrupted during repeated upstream timeouts. No real-model mutation quality metrics can be reported. Synthetic fixture labels are unverified."
+}

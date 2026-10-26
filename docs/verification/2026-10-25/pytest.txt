@@ -1,0 +1,48 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.7.0
+rootdir: /home/Beany/Dev/RDC
+configfile: pyproject.toml
+testpaths: tests
+plugins: asyncio-1.4.0, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 157 items
+
+tests/api/test_agent.py ...                                              [  1%]
+tests/api/test_ask.py .....                                              [  5%]
+tests/api/test_auth.py ......                                            [  8%]
+tests/api/test_documents.py .....                                        [ 12%]
+tests/api/test_errors.py ...                                             [ 14%]
+tests/api/test_gapcheck.py .....                                         [ 17%]
+tests/api/test_hardening.py ..                                           [ 18%]
+tests/api/test_health.py ......                                          [ 22%]
+tests/api/test_request_id.py ...                                         [ 24%]
+tests/api/test_search.py ......                                          [ 28%]
+tests/contract/test_vector_store.py ..........                           [ 34%]
+tests/integration/test_filtered_search.py .                              [ 35%]
+tests/integration/test_ingestion.py ........                             [ 40%]
+tests/integration/test_lifespan.py .                                     [ 40%]
+tests/integration/test_migrations.py .                                   [ 41%]
+tests/integration/test_reindex.py .                                      [ 42%]
+tests/integration/test_score_parity.py .                                 [ 42%]
+tests/integration/test_startup_checks.py ....                            [ 45%]
+tests/unit/test_agent_tools.py .......                                   [ 49%]
+tests/unit/test_answerer.py ..                                           [ 50%]
+tests/unit/test_chunk.py ......                                          [ 54%]
+tests/unit/test_cli.py ..                                                [ 56%]
+tests/unit/test_embedding.py ....                                        [ 58%]
+tests/unit/test_extract.py ...........                                   [ 65%]
+tests/unit/test_gapcheck_judge.py ......                                 [ 69%]
+tests/unit/test_gapcheck_mutations.py ...                                [ 71%]
+tests/unit/test_gapcheck_report.py ...                                   [ 73%]
+tests/unit/test_gapcheck_requirements.py ...                             [ 75%]
+tests/unit/test_gapcheck_runner.py ......                                [ 78%]
+tests/unit/test_gapcheck_segment.py .....                                [ 82%]
+tests/unit/test_grounding.py ........                                    [ 87%]
+tests/unit/test_llm_clients.py ........                                  [ 92%]
+tests/unit/test_logging.py .                                             [ 92%]
+tests/unit/test_manifest.py .....                                        [ 96%]
+tests/unit/test_pgvector_store.py ..                                     [ 97%]
+tests/unit/test_security.py ....                                         [100%]
+
+- generated xml file: /home/Beany/Dev/RDC/docs/verification/2026-10-25/pytest.xml -
+============================= 157 passed in 33.87s =============================

@@ -1,6 +1,8 @@
 # Design
 
-Working notes and decision records for `labdocs`.
+Working notes and decision records for `labdocs`. Historical milestone entries
+retain the facts measured at their dates. Current platform, evaluation and
+packaging decisions appear at the end; use the root README for setup.
 
 ## Decisions
 
@@ -213,7 +215,7 @@ until an approved endpoint/type change exists.
 | Need / affected milestone | Current contract | Minimal proposed change | Frontend behavior now |
 | --- | --- | --- | --- |
 | Structured errors and field validation (F1) | Most runtime errors use `{error:{code,message,request_id}}`, but OpenAPI advertises FastAPI's different `HTTPValidationError` for 422 and omits other error responses. Field errors are not returned | Document the existing envelope on response models; optional safe field-name/message details | Parse unknown bodies with guards; validate known field constraints locally; otherwise show form-level error. Never copy request headers/key into details |
-| Readiness detail (F1) | `/readyz` response is only a generic string-keyed object in generated types; runtime returns nested status/checks. No embedder-loaded check | Typed readiness response and optional embedding status | Narrow nested values at runtime. Show only supplied checks; say model readiness is unknown. Do not infer model readiness from database success |
+| Readiness detail (F1) | `/readyz` response is only a generic string-keyed object in generated types; runtime returns nested status/checks. M7 now includes embedder warmup status | Typed readiness response remains a possible follow-up | Narrow nested values at runtime and show only supplied checks |
 | Live limits and backend capabilities (F1/F4/F5) | No endpoint reports enabled backends, upload bytes, SOP chars/clause cap or model configuration. Defaults are 25 MiB, 200,000 SOP chars, 80 clauses; env may change them | Optional typed capabilities/limits response | Validate documented default file limits/types, bound fields using known schema constraints, and handle authoritative 413/422. Do not claim defaults reflect runtime overrides; backend selection failures remain visible |
 | Cited chunk text and passage position (F2/F3/F4) | Ask/Agent and gap citations include `document_id`, `chunk_id`, title, page, score and excerpt; no full-chunk lookup or cited-span offsets. Search has full text for its own returned hits | Optional read-scoped chunk lookup with text/span metadata | Show the supplied excerpt labelled as an excerpt. Reuse exact known search-hit text only for the same chunk ID. Enrich agency/year/version with existing document detail; show unavailable if that fails |
 | Inline citation placement (F2/F3) | `answer` is an unconstrained string and citations are an array. `[n]` markers are not guaranteed by the API | Optional structured answer segments or documented stable marker-to-citation ordering | Parse only valid in-range markers as React text/chip nodes. Supply a numbered source list when no markers exist; never invent inline placement or render HTML |
@@ -231,6 +233,18 @@ lack a request ID; show unavailable and use `Retry-After` where provided.
 
 ## Decisions (continued)
 
+### Local verification and browser key handling (2026-10-25)
+
+- The milestone audit is recorded in `verification-report-2026-10-25.md`; it
+  distinguishes merged backend work from the uncommitted frontend/platform work.
+- Pasting an API key into this browser UI is acceptable for the local demo.
+  Keys are stored in sessionStorage only. A production deployment would use a
+  backend-for-frontend or OAuth rather than this demo key-entry flow.
+- Vite proxies `/api` to the backend; `LABDOCS_API_PROXY_TARGET` supports a
+  separate local testing API. This keeps CORS off for the development browser.
+- `local-testing.md` records a CPU-specific Ollama configuration and restart
+  commands. These environment overrides do not change the service defaults or
+  establish completion of milestones 7–10.
 
 ### Scaffold (milestone 0)
 
@@ -251,7 +265,8 @@ lack a request ID; show unavailable and use `Retry-After` where provided.
 - 2026-10-23 — A single stored scope (`read` or `write`); `write` implies `read`. `/v1/whoami` reports effective scopes, so a write key returns `["read", "write"]`. This is the simplest reading of SEED's single-scope model that still lets write keys read.
 - 2026-10-23 — Error envelope is exactly `{"error": {"code", "message", "request_id"}}`. Validation details are logged, not returned; 500 responses never include exception text.
 - 2026-10-23 — Request IDs: a caller-supplied `X-Request-ID` is accepted when it matches `[A-Za-z0-9._-]{1,128}`, otherwise a UUID4 hex is generated. The value is echoed on every response and bound to structlog context for that request.
-- 2026-10-23 — `/readyz` checks the database. Milestone 3 adds a Qdrant check when that backend is configured; the lazy embedder is not force-loaded by readiness.
+- 2026-10-23 — Foundation readiness initially checked the database only. The accepted
+  milestone-7 implementation now also verifies configured Qdrant and embedding warmup.
 - 2026-10-23 — Only the `api_keys` table is introduced in milestone 1. Documents, chunks and job tables land with the milestones that actually use them rather than being designed speculatively.
 
 ### Ingestion + ETL (milestone 2)
@@ -728,6 +743,12 @@ lack a request ID; show unavailable and use `Retry-After` where provided.
   real Ollama mutation run is recorded in the milestone section; its
   `mutated_missing` false negative and the LLM timeouts are reported as
   limitations, not suppressed.
+- 2026-10-26 — The accepted platform work replaces the earlier draft limiter
+  with a token bucket and adds complete response/body/budget checks. Its 182-test
+  result and browser evidence are recorded in `verification/platform-m7/`.
+- 2026-10-26 — Evaluation PR #18 passed 204 backend tests, including 22 harness
+  tests, and all PR/main CI gates. The committed real-store report is diagnostic;
+  verified-data acceptance remains pending author inputs.
 
 ## Known limitations
 
@@ -781,15 +802,36 @@ lack a request ID; show unavailable and use `Retry-After` where provided.
 - Gap-check findings are decision support only. The LLM judge can produce
   false positives/negatives, and `judge_failed` findings require manual review;
   the report banner and suggested-fix labels make this explicit.
+
+### Platform hardening (milestone 7, accepted 2026-10-26)
+
+The authoritative implementation and evidence are in
+[platform-hardening.md](platform-hardening.md). PR #17 passed all backend, web
+and browser gates and post-merge CI.
+
+- Rate limiting uses a per-app token bucket keyed by validated key UUID, with
+  continuous monotonic refill, bounded identity state and positive Retry-After.
+  There is no testing-environment bypass; tests explicitly configure capacity.
+  One API worker/replica is required until a shared limiter is implemented.
+- Metrics use a per-app registry, bounded method/route-template labels and count
+  early 413/429 responses as well as application failures. Scrape `/metrics`
+  privately; the packaged nginx proxy blocks access from the browser route.
+- The 26 MiB request-body cap runs before parsing and side effects, spools above
+  1 MiB, and counts actual received bytes. Uploads have a separate 25 MiB cap.
+- Readiness requires the embedding model's successful warmup as well as live
+  configured stores. First cold startup can download the model.
+- Gap jobs share a token admission allowance across concurrent provider calls,
+  retries and validation retries. Observed usage and unknown reservations remain
+  distinct. This is not a universal bound on provider billing or hidden reasoning.
+
 - `reindex --backend qdrant` deletes and recreates the collection rather than
   swapping a temporary collection atomically. A failed rebuild can leave a
   partial Qdrant collection; retry the command.
 - If Qdrant is configured, startup now requires it to be reachable and to have
   a compatible collection. A Qdrant outage therefore prevents application
   startup rather than surfacing only through `/readyz`.
-- `/readyz` checks the database and the configured Qdrant backend. It does not
-  force-load the lazy sentence-transformer model, so the first query can still
-  pay model-loading latency.
+- `/readyz` checks the database, configured Qdrant backend and embedding warmup.
+  It does not validate the configured generation-provider account or model.
 - The low-level `PgVectorStore.upsert` updates records but does not remove stale
   chunks when supplied fewer chunks for an existing document. The ingestion
   update path and `reindex` handle replacement explicitly; callers using the raw
@@ -805,3 +847,51 @@ lack a request ID; show unavailable and use `Retry-After` where provided.
   without re-chunking. Renaming a file or changing its source agency creates a
   new document rather than updating the old one. A changed file with the same
   agency and filename updates the existing document.
+
+### Evaluation (milestone 9, engineering accepted; author review pending)
+
+The runner reuses application retrieval, answer and gap pipelines. Eligibility
+requires explicit author review, exact source hashes/locations and a corpus
+snapshot; zero eligible samples yield unavailable metrics. Failed eligible runs
+remain in recall/abstention denominators. Raw citation proposals are counted
+before invalid IDs are stripped. Human false-positive reviews bind to complete
+local report hashes, and repeated gap checks use fresh uncached judges. See
+[eval/README.md](../eval/README.md) for definitions and the private-review flow.
+
+All 30 drafted questions remain unverified. No author-supplied clean SOPs or
+verified mutation set exists yet. Packaging proceeds under the user's explicit
+authorization to complete independent work; this is a documented ordering
+exception, not a claim that the verified-data part of milestone 9 is complete.
+
+### Packaging and external providers (milestone 10)
+
+- Locked multi-stage Python and npm builds run as non-root users. A one-shot
+  migration service gates API startup, data services have health checks and the
+  frontend waits for API readiness. The embedder cache and uploads persist in
+  separate volumes. The Dockerfile also supports the classic builder; BuildKit
+  is optional. Base-image tags receive patch updates; release operators should
+  record/pin the resolved digests when promoting an image.
+- Production images contain application code and explicit synthetic sample data,
+  with no corpus, credentials, tests or fixed browser keys. A separate
+  `browser-test` target supplies the isolated browser factory for CI only.
+- The default Compose stack exposes one loopback web port. Data services and
+  `/metrics` are private. The development overlay exposes store ports only on
+  loopback. The AWS overlay prepares an ALB-facing web port, external generation
+  and production mode; it provisions nothing and has not been deployed.
+- nginx streams bodies to the API so the application enforces its byte limit and
+  JSON error envelope. Proxy timeouts exceed the bounded agent request and allow
+  configured provider retries. A timed-out client does not imply server work was
+  cancelled. Cold model startup can take several minutes; generation-provider
+  credentials are not part of readiness.
+- Groq and Gemini use the existing OpenAI-compatible adapter. Optional reasoning
+  effort is configured explicitly, and opaque `extra_content` protocol metadata
+  is preserved on assistant/tool messages (including Gemini thought signatures).
+  It is not returned in traces or logs. Mock HTTP tests exercise the agent
+  roundtrip; they do not establish live account/model availability or quality.
+- The existing short-answer prompt repair is retained: up to 120 words and three
+  relevant source IDs. This bounds verbosity for local CPU models; it does not
+  change citation validation or guarantee completeness.
+- The browser key flow remains a demo trade-off. Public deployment needs TLS,
+  restrictive network rules, secret handling and a real identity/session design.
+  Keep one API worker/replica. Durable jobs, shared limiting, backups/restores
+  and broader quality evaluation remain explicit operational work.

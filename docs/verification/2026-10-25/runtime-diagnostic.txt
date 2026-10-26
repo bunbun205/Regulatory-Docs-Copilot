@@ -1,0 +1,52 @@
+Corpus {'documents': 8, 'chunks': 238, 'pgvector_version': '0.8.7', 'qdrant_points': 238}
+Could not reach the Hub (Cannot reach https://huggingface.co/api/models/BAAI/bge-small-en-v1.5: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.). Using cached commit hash for 'BAAI/bge-small-en-v1.5'.
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 13909.02it/s]
+Retrieval complete {'queries': 20, 'mean_top5_overlap': 5.0, 'identical_top5_order': 20, 'max_score_difference': 2.2075228489626397e-07}
+Starting real-LLM synthetic fixture clean_sop
+2026-10-25 19:29:28 [error    ] llm.request_failed             provider=openai_compatible reason=ReadTimeout
+2026-10-25 19:29:58 [error    ] llm.request_failed             provider=openai_compatible reason=ReadTimeout
+2026-10-25 19:30:28 [error    ] llm.request_failed             provider=openai_compatible reason=ReadTimeout
+2026-10-25 19:30:58 [error    ] llm.request_failed             provider=openai_compatible reason=ReadTimeout
+2026-10-25 19:31:28 [error    ] llm.request_failed             provider=openai_compatible reason=ReadTimeout
+clean_sop failed TimeoutError
+Starting real-LLM synthetic fixture mutated_conflict
+2026-10-25 19:33:29 [error    ] llm.request_failed             provider=openai_compatible reason=ReadTimeout
+Traceback (most recent call last):
+  File "/home/Beany/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Beany/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/tmp/rdc_snapshot.py", line 101, in main
+    report = await asyncio.wait_for(runner.run(sop), timeout=240)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Beany/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/home/Beany/Dev/RDC/app/gapcheck/runner.py", line 177, in run
+    clause_results = await asyncio.gather(
+                     ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Beany/Dev/RDC/app/gapcheck/runner.py", line 138, in analyze_clause
+    judgement, failure = await self._judge_clause(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Beany/Dev/RDC/app/gapcheck/runner.py", line 394, in _judge_clause
+    async with semaphore:
+               ^^^^^^^^^
+  File "/home/Beany/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/home/Beany/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/locks.py", line 386, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/rdc_snapshot.py", line 152, in <module>
+    asyncio.run(main())
+  File "/home/Beany/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/Beany/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt

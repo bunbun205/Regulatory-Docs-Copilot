@@ -1,0 +1,100 @@
+{
+  "model": "qwen2.5:3b",
+  "question": "What must a Chemical Hygiene Plan include under OSHA’s laboratory standard, 29 CFR 1910.1450?",
+  "checks": [
+    {
+      "name": "empty question prevents submission",
+      "passed": true
+    },
+    {
+      "name": "submit is disabled during generation",
+      "passed": true
+    },
+    {
+      "name": "question is disabled during generation",
+      "passed": true
+    },
+    {
+      "name": "OSHA request succeeds",
+      "passed": true
+    },
+    {
+      "name": "answer has a validated laboratory-standard citation",
+      "passed": true
+    },
+    {
+      "name": "answer appears in the page",
+      "passed": true
+    },
+    {
+      "name": "duplicate submit makes one API request",
+      "passed": true
+    },
+    {
+      "name": "submit is enabled after completion",
+      "passed": true
+    },
+    {
+      "name": "502 message and request ID are visible",
+      "passed": true
+    },
+    {
+      "name": "retry is enabled after 502",
+      "passed": true
+    },
+    {
+      "name": "network error is visible",
+      "passed": true
+    },
+    {
+      "name": "retry is enabled after network error",
+      "passed": true
+    },
+    {
+      "name": "no uncaught browser exceptions",
+      "passed": true
+    }
+  ],
+  "page_errors": [],
+  "live": {
+    "status": 200,
+    "duration_seconds": 4.592,
+    "requests": 1,
+    "body": {
+      "query": "What must a Chemical Hygiene Plan include under OSHA’s laboratory standard, 29 CFR 1910.1450?",
+      "backend": "pgvector",
+      "answer": "The Chemical Hygiene Plan must include standard operating procedures, criteria for control measures, provisions for proper equipment functioning, employee information and training, and specific requirements for hazardous substances.",
+      "citations": [
+        {
+          "chunk_id": "42144d7e-452f-47d8-906f-9b6dd73a8e8f",
+          "document_id": "f965e01d-df57-4baf-87ab-f8903b0a41dd",
+          "title": "29 CFR 1910.1450: Occupational Exposure to Hazardous Chemicals in Laboratories",
+          "page": 4,
+          "snippet": "1910.1450(e)(2) The Chemical Hygiene Plan shall be readily available to employees, employee representatives and, upon request, to the Assistant Secretary. 1910.1450(e)(3) The Chemical Hygiene Plan shall include each of the following elements and shall indicate specific measures that the employer wil",
+          "score": 0.8509984612464905
+        },
+        {
+          "chunk_id": "7aeb274a-a4f0-4a40-ae9a-6fa46fc62732",
+          "document_id": "f965e01d-df57-4baf-87ab-f8903b0a41dd",
+          "title": "29 CFR 1910.1450: Occupational Exposure to Hazardous Chemicals in Laboratories",
+          "page": 5,
+          "snippet": "Provisions for additional employee protection for work with particularly hazardous substances. These include \"select carcinogens,\" reproductive toxins and substances which have a high degree of acute toxicity. Specific consideration shall be given to the following provisions which shall be included ",
+          "score": 0.8086679691870245
+        }
+      ],
+      "grounded": true,
+      "grounding_reason": null,
+      "insufficient_evidence": false,
+      "top_score": 0.8509984612464905,
+      "usage": {
+        "input_tokens": 1322,
+        "output_tokens": 113,
+        "total_tokens": 1435
+      },
+      "latency_ms": {
+        "retrieve_ms": 45.97,
+        "generate_ms": 4493.07
+      }
+    }
+  }
+}

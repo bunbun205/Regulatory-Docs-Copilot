@@ -1,0 +1,12 @@
+# Disposable, synthetic browser stack. Always use a separate Compose project.
+# No fixed keys/test factory are copied into the production image.
+services:
+  backend:
+    image: labdocs-api-browser:${LABDOCS_IMAGE_TAG:-local}
+    build:
+      target: browser-test
+    environment:
+      LABDOCS_ENVIRONMENT: testing
+      LABDOCS_LLM_PROVIDER: fake
+      FRONTEND_E2E_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-labdocs}:${POSTGRES_PASSWORD:-labdocs}@postgres:5432/${POSTGRES_DB:-labdocs_frontend_test}
+    command: ["uvicorn", "frontend.e2e.server:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]

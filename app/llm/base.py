@@ -21,6 +21,8 @@ class ToolCall:
     id: str
     name: str
     arguments: dict[str, Any]
+    # Opaque provider protocol state (e.g. Gemini thought signatures). Never log it.
+    extra_content: dict[str, Any] = field(default_factory=dict, repr=False)
 
 
 @dataclass(frozen=True)
@@ -30,6 +32,7 @@ class LLMMessage:
     tool_calls: tuple[ToolCall, ...] = ()
     tool_call_id: str | None = None
     name: str | None = None
+    extra_content: dict[str, Any] = field(default_factory=dict, repr=False)
 
 
 @dataclass(frozen=True)
@@ -48,6 +51,7 @@ class LLMResult:
     tool_calls: tuple[ToolCall, ...] = ()
     usage: TokenUsage = field(default_factory=TokenUsage)
     latency_ms: float = 0.0
+    extra_content: dict[str, Any] = field(default_factory=dict, repr=False)
 
 
 class LLMClient(Protocol):

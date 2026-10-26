@@ -1,0 +1,5 @@
+npm notice run frontend@0.0.0 lint
+npm notice run oxlint
+src/views/DocumentsView.tsx:88:14: warning eslint(no-unused-vars): Catch parameter 'err' is caught but never used. help: Consider handling this error.
+src/views/DocumentsView.tsx:14:36: warning react(purity): Cannot call impure function during render help: `Date` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component re-renders
+src/views/DocumentsView.tsx:35:5: warning react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
