@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-26",
+  "backend_tests_passed": 204,
+  "evaluation_tests_passed": 22,
+  "ruff_lint": "passed",
+  "ruff_format": "passed",
+  "mypy_app": "passed",
+  "uv_lock_check": "passed",
+  "fixture": "synthetic_regression_pass",
+  "real_corpus_report": "eval/reports/20261026T121717184366Z.json",
+  "real_generation_calls": 0,
+  "human_quality_acceptance": "pending; no verified questions or supplied clean SOP baselines"
+}

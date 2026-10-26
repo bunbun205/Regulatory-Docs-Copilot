@@ -139,6 +139,15 @@ jobs:
       - name: Run tests
         run: uv run pytest
 
+      - name: Synthetic evaluation regression (no human quality claims)
+        run: uv run python -m eval.run --fixture --output-dir /tmp/labdocs-fixture-eval
+
+      - name: Save evaluation regression report
+        uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-evaluation-regression
+          path: /tmp/labdocs-fixture-eval/
+
   browser:
     name: Browser (fake provider)
     runs-on: ubuntu-latest
